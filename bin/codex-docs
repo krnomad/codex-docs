@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+INSTALL_DIR="${CODEX_DOCS_HOME:-$HOME/.codex-docs}"
+MANUAL_PATH="$INSTALL_DIR/docs/codex-manual.md"
+MANIFEST_PATH="$INSTALL_DIR/docs/manifest.json"
+
+usage() {
+  cat <<'EOF'
+Usage: codex-docs <search|status|update> [terms]
+
+Search the locally mirrored official Codex CLI manual.
+EOF
+}
+
+require_manual() {
+  [[ -f "$MANUAL_PATH" && -f "$MANIFEST_PATH" ]] || {
+    echo "codex-docs: local documentation is missing at $INSTALL_DIR" >&2
+    exit 1
+  }
+}
+
+git_net() {
+  if command -v timeout >/dev/null 2>&1; then
+    timeout 30 git "$@"
+  else
+    GIT_HTTP_LOW_SPEED_LIMIT=1000 GIT_HTTP_LOW_SPEED_TIME=30 git "$@"
+  fi
+}
+
+case "${1:-}" in
+  search)
+    shift
+    require_manual
+    [[ $# -gt 0 ]] || { echo 'codex-docs: provide search terms' >&2; exit 2; }
+    rg -n -i -- "$*" "$MANUAL_PATH"
+    ;;
+  status)
+    require_manual
+    echo "Documentation: $MANUAL_PATH"
+    sed -n 's/^  "source_url": "\(.*\)",$/Source: \1/p' "$MANIFEST_PATH"
+    sed -n 's/^  "sha256": "\(.*\)",$/SHA-256: \1/p' "$MANIFEST_PATH"
+    sed -n 's/^  "bytes": \([0-9][0-9]*\),$/Bytes: \1/p' "$MANIFEST_PATH"
+    sed -n 's/^  "updated_at": "\(.*\)"$/Updated: \1/p' "$MANIFEST_PATH"
+    echo 'Offline search: available'
+    ;;
+  update)
+    require_manual
+    if [[ ! -d "$INSTALL_DIR/.git" ]] || ! git -C "$INSTALL_DIR" config --get remote.origin.url >/dev/null; then
+      echo 'codex-docs: update unavailable; local cache retained' >&2
+      exit 1
+    fi
+    branch="$(git -C "$INSTALL_DIR" branch --show-current)"
+    [[ -n "$branch" ]] || branch=main
+    if ! git_net -C "$INSTALL_DIR" fetch --quiet origin "$branch"; then
+      echo 'codex-docs: could not reach GitHub; local cache retained' >&2
+      exit 1
+    fi
+    if ! git -C "$INSTALL_DIR" merge --ff-only "origin/$branch"; then
+      echo 'codex-docs: update could not fast-forward; local cache retained' >&2
+      exit 1
+    fi
+    echo 'codex-docs: update complete'
+    ;;
+  -h|--help|help|'') usage ;;
+  *) usage >&2; exit 2 ;;
+esac

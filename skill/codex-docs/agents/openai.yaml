@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Docs"
+  short_description: "Search the local Codex CLI manual offline."
+  default_prompt: "Use $codex-docs to search the installed local Codex CLI manual."
