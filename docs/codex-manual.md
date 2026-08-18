@@ -3909,16 +3909,17 @@ cover that finding's original path.
 
 #### How do deep-scan time limits work
 
-Set a discovery deadline when starting a deep scan:
+Set a worker deadline when starting a deep scan:
 
 ```bash
 npx @openai/codex-security scan . --mode deep --max-time-hours 1.5
 ```
 
 The default is `96` hours. Use any positive value up to `96`, including
-fractions. The limit applies only to discovery, so validation and reporting
-can continue after the deadline. If no source review finishes, the report
-records partial coverage and the CLI returns exit code `2`.
+fractions. At the deadline, Codex Security stops unfinished workers, keeps
+completed standard-scan results, and aggregates them into the final report. If
+no worker finishes source review, the report records partial coverage and the
+CLI returns exit code `2`.
 
 For persistent settings or bulk campaigns, set `max_time_hours` under
 `[deep_scan]` in the [deep-scan
@@ -3933,9 +3934,10 @@ npx @openai/codex-security scan . --max-cost 5
 ```
 
 The limit is an estimate, not a hard spending cap. Requests already in
-progress can finish above it. If a deep scan reaches the limit after discovery
-finishes, the CLI saves the completed report with partial coverage and exits
-with code `2`. Otherwise, it preserves any available partial output.
+progress can finish above it. If a deep scan reaches the limit after Codex
+Security aggregates completed worker results, the CLI saves the completed
+report with partial coverage and exits with code `2`. Otherwise, it preserves
+any available partial output.
 
 #### Can scans check commits and pull requests
 
@@ -4191,7 +4193,7 @@ Use deep mode when a repository or path needs broader review:
 npx @openai/codex-security scan "$REPOSITORY" --mode deep
 ```
 
-To control discovery workers, subagents, and when the scan stops:
+To control workers, subagents, and when the scan stops:
 
 ```bash
 npx @openai/codex-security scan "$REPOSITORY" \
@@ -4204,11 +4206,11 @@ npx @openai/codex-security scan "$REPOSITORY" \
 ```
 
 These options require deep mode, which supports repository and path targets,
-not diff or working-tree scans. Here, `--workers` controls discovery workers
-within one scan; `bulk-scan --workers` controls concurrent repository scans.
-`--max-time-hours` accepts a positive number up to `96`, including fractional
-hours. When discovery reaches that limit, the scan preserves completed work
-and continues with validation and reporting.
+not diff or working-tree scans. Here, `--workers` controls independent
+standard-scan workers within one scan; `bulk-scan --workers` controls concurrent
+repository scans. `--max-time-hours` accepts a positive number up to `96`,
+including fractional hours. At the limit, the scan stops unfinished workers,
+preserves completed scan results, and aggregates them into the final report.
 
 #### Add architecture and security context
 
@@ -4249,10 +4251,10 @@ npx @openai/codex-security scan "$REPOSITORY" --max-cost 5
 ```
 
 Requests already in progress can finish slightly above the limit. If a deep
-scan reaches the limit after discovery finishes, the CLI saves the completed
-report, marks its coverage as `partial`, and returns exit code `2`. If the
-scan can't produce a completed report, any available partial output stays on
-disk.
+scan reaches the limit after Codex Security aggregates completed worker
+results, the CLI saves the completed report, marks its coverage as `partial`,
+and returns exit code `2`. If the scan can't produce a completed report, any
+available partial output stays on disk.
 
 #### Scan changes before each commit
 
@@ -4638,23 +4640,22 @@ npx @openai/codex-security scan . --mode deep
 
 #### Configure deep scans
 
-Use these options with `--mode deep` to control discovery concurrency and
-runtime:
+Use these options with `--mode deep` to control worker concurrency and runtime:
 
-| Argument                 | Description                                                             |
-| ------------------------ | ----------------------------------------------------------------------- |
-| `--workers N`            | Limit on concurrent discovery workers. Defaults to automatic selection. |
-| `--subagents N`          | Subagents available to each discovery worker. Defaults to `3`.          |
-| `--stop-after-no-new N`  | Stop after `N` consecutive runs find no new issues. Defaults to `6`.    |
-| `--max-discovery-runs N` | Limit on total discovery runs. Defaults to `60`.                        |
-| `--max-time-hours HOURS` | Discovery time limit in hours. Defaults to `96`; accepts fractions.     |
+| Argument                 | Description                                                                            |
+| ------------------------ | -------------------------------------------------------------------------------------- |
+| `--workers N`            | Limit on concurrent independent standard-scan workers. Defaults to `4`.                |
+| `--subagents N`          | Subagents available to each worker. Defaults to `3`.                                   |
+| `--stop-after-no-new N`  | Stop after `N` consecutive completed worker scans find no new issues. Defaults to `4`. |
+| `--max-discovery-runs N` | Limit on total independent standard-scan runs. Defaults to `40`.                       |
+| `--max-time-hours HOURS` | Worker execution time limit in hours. Defaults to `96`; accepts fractions.             |
 
 `--subagents` accepts zero or a positive integer. `--max-time-hours` accepts a
 positive number no greater than `96`. The remaining options require a positive
 integer. These options aren't available for standard scans.
 
-For example, use two discovery workers, allow up to ten runs, and stop
-discovery after 1.5 hours:
+For example, use two workers, allow up to ten runs, and stop worker execution
+after 1.5 hours:
 
 ```bash
 npx @openai/codex-security scan . \
@@ -4666,10 +4667,9 @@ npx @openai/codex-security scan . \
   --max-time-hours 1.5
 ```
 
-The time limit applies only to discovery. When it expires, the scan stops
-unfinished discovery, keeps completed discovery results, and continues with
-validation and reporting. If no source review finishes, the scan records
-partial coverage and returns exit code `2`.
+When the time limit expires, the scan stops unfinished workers, keeps completed
+scan results, and aggregates them into the final report. If no worker finishes
+source review, the scan records partial coverage and returns exit code `2`.
 
 Set persistent defaults in `~/.codex/codex-security/config.toml`, or in
 `$CODEX_HOME/codex-security/config.toml` when you set `CODEX_HOME`:
@@ -4684,9 +4684,9 @@ max_time_hours = 1.5
 ```
 
 Command-line options override these defaults. `scan --workers` controls
-discovery workers within one scan; `bulk-scan --workers` controls concurrent
-repository scans. Set `stop_after_consecutive_errors` only in the TOML file;
-its default is `3`.
+independent standard-scan workers within one deep scan; `bulk-scan --workers`
+controls concurrent repository scans. Set `stop_after_consecutive_errors` only
+in the TOML file; its default is `3`.
 
 #### Add security context
 
@@ -4743,9 +4743,9 @@ machine-readable result.
 
 The cost limit is an estimate, not a hard spending cap. Requests already in
 progress can finish slightly above the limit. If a deep scan reaches the limit
-after discovery finishes, the CLI seals the available results, marks coverage
-as `partial`, and returns exit code `2`. Otherwise, it returns `2` and leaves
-any available partial output on disk.
+after Codex Security aggregates completed worker results, the CLI seals the
+available results, marks coverage as `partial`, and returns exit code `2`.
+Otherwise, it returns `2` and leaves any available partial output on disk.
 
 When you omit `--output-dir`, results persist under
 `$CODEX_HOME/state/plugins/codex-security/scans/`. `CODEX_HOME`
@@ -5643,7 +5643,7 @@ Source: [Codex Security plugin changelog](https://learn.chatgpt.com/docs/securit
 
 Use this changelog to see what changed in the Codex Security plugin.
 
-**Latest plugin version:** `0.1.19`.
+**Latest plugin version:** `0.1.20`.
 
 Check the plugin version in your current Codex environment before you use a
 feature from a newer release.
@@ -5651,6 +5651,49 @@ feature from a newer release.
 Changelog entries follow the plugin version, not the package version. CLI and
 SDK users can run `npx @openai/codex-security info --json` to check the
 package and bundled plugin versions together.
+
+#### 0.1.20 (August 17, 2026)
+
+#### Run deep scans as complete independent audits
+
+- Run each deep scan worker through the same end-to-end audit used by standard
+  scans, including threat modeling, validation, attack-path analysis, and
+  coverage reporting.
+- Combine completed worker reports into one scan while preserving configured
+  time limits, partial coverage, restart recovery, and cancellation.
+- Use four concurrent workers by default, stop after four consecutive completed
+  scans add no new findings, and limit a deep scan to 40 worker runs. Existing
+  `workers = "auto"` settings now resolve to four workers. See
+  [Configure deep-scan runtime](https://learn.chatgpt.com/docs/security/plugin/deep-scans#configure-deep-scan-runtime).
+- Resume workers that finished source review but lost their final draft instead
+  of repeating the complete audit.
+
+#### Check Trusted Access for Cyber before hosted scans
+
+- In Codex hosts that expose the Codex Security Access app, check Trusted Access
+  status before standard, change, and deep scans begin.
+- See a prominent warning when protected scan output might not be available,
+  with an enrollment link when access isn't granted.
+- Continue the scan when the check can't verify Trusted Access status or access
+  isn't granted; the advisory doesn't control whether the scan runs.
+- The public CLI and SDK packages don't run this advisory in `0.1.20`.
+
+#### Run deep scans in more environments
+
+- Launch deep scan workers from packaged CLI and SDK installations, including
+  Windows installations without a global `codex` executable.
+- Keep standalone CLI and SDK deep scan settings isolated from other running
+  scans.
+- Keep non-interactive approval settings in nested deep scan workers.
+
+#### Preserve scan results through more failures
+
+- Preserve more saved scans and completed worker results across restart,
+  archive, and handoff recovery paths.
+- Recover valid findings from older or incomplete scan data.
+- Complete scans when independent coverage reports overlap.
+- Report cached input correctly in token usage totals across current and older
+  provider responses.
 
 #### 0.1.19 (August 13, 2026)
 
@@ -6327,15 +6370,16 @@ const result = await security.run("/path/to/repository", {
 ```
 
 Deep mode supports repository and path targets. Use standard mode for diff and
-working-tree scans. The optional settings control concurrent discovery workers,
-subagents per worker, consecutive discovery runs without new findings, and the
-total number and duration of discovery runs. They require `mode: "deep"`.
+working-tree scans. The optional settings control concurrent independent
+standard-scan workers, subagents per worker, consecutive completed worker scans
+without new findings, and the total number and duration of worker runs. They
+require `mode: "deep"`.
 
 `maxTimeHours` defaults to `96` and accepts a positive number up to `96`,
 including fractional hours. At the deadline, Codex Security stops unfinished
-discovery, keeps completed discovery results, and continues with validation
-and reporting. Review `result.coverage.completeness` before treating a
-time-limited scan as evidence of full coverage.
+workers, keeps completed scan results, and aggregates them into the final
+report. Review `result.coverage.completeness` before treating a time-limited
+scan as evidence of full coverage.
 
 #### Add a security knowledge base
 
@@ -6389,8 +6433,9 @@ console.log(result.cost?.estimatedUsd);
 
 The limit estimates spending but isn't a hard cap, so requests already in
 progress can finish slightly above it. If a deep scan reaches the limit after
-discovery finishes, `run` returns a result with `coverage.completeness` set to
-`"partial"` and reports the budget warning through `onWarning`.
+Codex Security aggregates completed worker results, `run` returns a result
+with `coverage.completeness` set to `"partial"` and reports the budget warning
+through `onWarning`.
 
 If the scan can't produce a completed partial result, `run` throws
 `ScanCostLimitExceededError` and preserves any available output.
@@ -7556,22 +7601,22 @@ max_discovery_runs = 10
 max_time_hours = 1.5
 ```
 
-| Setting                         | Default | Description                                                                                      |
-| ------------------------------- | ------- | ------------------------------------------------------------------------------------------------ |
-| `workers`                       | `auto`  | Number of discovery workers allowed to run at the same time. Set a positive integer or `"auto"`. |
-| `subagents`                     | `3`     | Number of subagents each discovery worker may start. Set `0` to disable them.                    |
-| `stop_after_no_new`             | `6`     | Stop discovery after this many consecutive runs produce no new candidates.                       |
-| `stop_after_consecutive_errors` | `3`     | Stop discovery after this many consecutive worker errors.                                        |
-| `max_discovery_runs`            | `60`    | Limit on discovery runs before the scan moves to validation.                                     |
-| `max_time_hours`                | `96`    | Limit discovery to a positive number of hours up to `96`; use fractions as needed.               |
+| Setting                         | Default | Description                                                                                                        |
+| ------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
+| `workers`                       | `4`     | Number of independent standard-scan workers allowed to run at the same time. Legacy `"auto"` also resolves to `4`. |
+| `subagents`                     | `3`     | Number of subagents each worker may start. Set `0` to disable them.                                                |
+| `stop_after_no_new`             | `4`     | Stop after this many consecutive completed worker scans produce no new findings.                                   |
+| `stop_after_consecutive_errors` | `3`     | Stop after this many consecutive worker errors.                                                                    |
+| `max_discovery_runs`            | `40`    | Limit the number of independent standard-scan runs before aggregation.                                             |
+| `max_time_hours`                | `96`    | Limit worker execution to a positive number of hours up to `96`; use fractions as needed.                          |
 
 Lower values can reduce scan time and token use but may miss findings.
 Configuration changes apply to new deep scans, not scans already in progress.
 
-The time limit applies only to discovery. When it expires, Codex Security
-stops unfinished discovery, keeps completed results, and continues with
-validation and reporting. If no source review finishes before the deadline,
-the report records partial coverage.
+When the time limit expires, Codex Security stops unfinished workers, keeps
+completed scan results, and aggregates them into the final report. If no worker
+finishes source review before the deadline, the report records partial
+coverage.
 
 The `max_time_hours` setting requires plugin version `0.1.19` or later. See the
 [plugin changelog](https://learn.chatgpt.com/docs/security/plugin/changelog) for release details.
@@ -7609,17 +7654,13 @@ with `xhigh` reasoning effort.
 4. Open **Additional context** for concrete attack vectors, sensitive
    application areas, or repository context that the code can't reveal.
 5. Select **Start scan**.
-6. Review any setup or capability warning before you approve a configuration
-   change.
 
-Deep scans require delegated workers. If the current runtime doesn't meet the
-capability requirements, use a standard scan or try again when enough capacity
-is available.
-
-Discovery workers inherit your selected model and reasoning settings. Follow
-the saved scan from **Scans**, or select **View activity** to inspect its Codex
-task. Check the [plugin changelog](https://learn.chatgpt.com/docs/security/plugin/changelog) before you
-update the plugin or start a long-running scan.
+Deep scan workers inherit your selected model and reasoning settings. Each
+worker runs a complete standard scan, and Codex Security aggregates the
+completed results. Follow the saved scan from **Scans**, or select **View
+activity** to inspect its Codex task. Check the [plugin
+changelog](https://learn.chatgpt.com/docs/security/plugin/changelog) before you update the plugin or
+start a long-running scan.
 
     Track the active deep-scan phase and inspect its Codex activity before
     reviewing the completed result.
@@ -7745,13 +7786,14 @@ npx @openai/codex-security bulk-scan repositories.csv \
 ```
 
 `--workers` controls concurrent repository scans and defaults to `4`. It does
-not set the number of discovery workers within each deep scan; configure those
-limits through [`[deep_scan]`](/codex/security/cli/reference#configure-deep-scans).
-Use `--mode deep` to select deep scanning for rows without their own `mode`.
-Each CSV row can still choose its own scan mode and repository scope.
+not set the number of independent standard-scan workers within each deep scan;
+configure those limits through
+[`[deep_scan]`](/codex/security/cli/reference#configure-deep-scans). Use `--mode
+deep` to select deep scanning for rows without their own `mode`. Each CSV row
+can still choose its own scan mode and repository scope.
 
-Set `[deep_scan].max_time_hours` to limit discovery for each deep scan in the
-campaign. The `--max-time-hours` flag works with `scan`, not `bulk-scan`.
+Set `[deep_scan].max_time_hours` to limit worker execution for each deep scan in
+the campaign. The `--max-time-hours` flag works with `scan`, not `bulk-scan`.
 
 The CLI checks out each pinned revision, scans the selected target, records the
 result, and removes the temporary repository checkout. A repository counts as
@@ -24585,7 +24627,8 @@ host. Hosted plugin tools can have different capabilities.
   - Environment variables
 - **Streamable HTTP servers**: Servers that you access at an address.
   - Bearer token authentication
-  - OAuth authentication
+  - OAuth authentication, including Client ID Metadata Documents (CIMD) and
+    Dynamic Client Registration (DCR)
   - ChatGPT session authentication for trusted first-party servers
 - **Server instructions**: Codex reads the MCP `instructions` field returned during initialization and uses it as server-wide guidance alongside the server's tools.
 
@@ -24720,6 +24763,55 @@ If your MCP OAuth flow must use a specific callback URL (for example, a remote D
 If the MCP server advertises `scopes_supported`, Codex prefers those
 server-advertised scopes during OAuth login. Otherwise, Codex falls back to the
 scopes configured in `config.toml`.
+
+#### OAuth client registration
+
+Codex supports [OAuth Client ID Metadata Documents (CIMD)](https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/)
+and Dynamic Client Registration (DCR). By default, Codex automatically chooses
+CIMD when the authorization server advertises
+`client_id_metadata_document_supported: true`, includes `none` in
+`token_endpoint_auth_methods_supported`, and the callback uses a supported
+loopback URL. Otherwise, Codex uses DCR when available. A configured OAuth client
+ID always takes precedence and skips client registration.
+
+For CIMD, Codex uses a ChatGPT-hosted metadata document specific to the MCP
+server:
+
+```text
+https://chatgpt.com/oauth/codex/<callback_id>/client.json
+```
+
+Codex derives ``from the MCP server URL and includes it in the
+loopback redirect URI, such as`http://127.0.0.1:/callback/`. The metadata document registers
+the matching loopback URI without a port. Authorization servers must accept the
+port selected at login while matching the host and path exactly, as required by
+[RFC 8252](https://www.rfc-editor.org/rfc/rfc8252.html#section-7.3). Custom
+callback hosts, paths, or query parameters require DCR or a configured OAuth
+client ID.
+
+Support for a stable, shared CIMD document is in development and coming soon:
+
+```text
+https://chatgpt.com/oauth/codex/client.json
+```
+
+Codex will use the stable document with the shared `/callback` path when the
+authorization server advertises
+`authorization_response_iss_parameter_supported: true`, provides a valid
+`issuer` in its metadata, and includes a matching `iss` in authorization
+responses. Servers without issuer-bound responses will continue using the
+callback-specific document.
+
+To choose a registration method for one CLI login, use
+`--oauth-client-registration`:
+
+```bash
+codex mcp login <server-name> --oauth-client-registration cimd
+codex mcp login <server-name> --oauth-client-registration dcr
+```
+
+The default is `auto`. Registration choices apply only to the current login and
+aren't stored in `config.toml`.
 
 #### config.toml examples
 
