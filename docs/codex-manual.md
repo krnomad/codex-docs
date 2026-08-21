@@ -1672,14 +1672,14 @@ sales](https://chatgpt.com/contact-sales?utm_internal_source=openai_developers_c
           Output Tokens
 
         GPT-5.6 Sol
-        125 credits
-        12.5 credits
-        750 credits
+        100 credits
+        10 credits
+        500 credits
 
         Daybreak Blue
-        125 credits
-        12.5 credits
-        750 credits
+        100 credits
+        10 credits
+        500 credits
 
         Daybreak Red
         312.5 credits
@@ -1725,7 +1725,7 @@ sales](https://chatgpt.com/contact-sales?utm_internal_source=openai_developers_c
         31.25 credits
         250 credits
 
-          GPT-5.6 usage averages 5-40 credits per message.
+          GPT-5.6 usage averages 5-30 credits per message.
 
           Fast mode consumes credits at a higher rate for supported models. See
           Speed for rates.
@@ -1734,6 +1734,8 @@ sales](https://chatgpt.com/contact-sales?utm_internal_source=openai_developers_c
           Cyber](https://learn.chatgpt.com/docs/cyber-safety#trusted-access-for-cyber) approval.
           Daybreak Blue uses GPT-5.6 Sol credit rates. Daybreak Red requires
           separate approval and provisioning.
+
+_GPT-5.6 Sol’s promotional pricing is available at least through November 21, 2026._
 
 Speed configurations will increase credit consumption for all models that apply.
 Fast mode consumes credits at a higher rate for supported models. See
@@ -15003,7 +15005,7 @@ By default, Codex blocks internet access during the agent phase. Setup scripts s
 Enabling agent internet access increases security risk, including:
 
 - Prompt injection from untrusted web content
-- Exfiltration of code or secrets
+- Code or secret exfiltration
 - Downloading malware or vulnerable dependencies
 - Pulling in content with license restrictions
 
@@ -15054,7 +15056,7 @@ For extra protection, restrict network requests to `GET`, `HEAD`, and `OPTIONS`.
 
 #### Preset domain lists
 
-Finding the right domains can take some trial and error. Presets help you start with a known-good list, then narrow it down as needed.
+Finding the right domains can require iterative testing. Presets help you start with a known-good list, then narrow it down as needed.
 
 #### Common dependencies
 
