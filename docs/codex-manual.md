@@ -2639,9 +2639,10 @@ Keep active work visible and move finished work out of the way:
   project.
 - **Rename a chat** with a short title that describes its outcome, such as “Q3
   launch brief” or “Checkout accessibility review.”
-- **Search projects** from the Projects view. Press
-  Cmd/Ctrl+G to search past chats when you
-  remember a phrase or branch name but not the title.
+- **Search projects** from the Projects view. Open **Search chats** from the
+  sidebar to find a past chat when you remember a phrase or branch name but not
+  the title. Search chats doesn't have a default shortcut, but you can assign
+  one under **Settings > Keyboard Shortcuts**.
 - **Archive a chat** when you finish the work. From a project's menu, select
   **Archive chats** to archive its chats together.
 
@@ -2727,8 +2728,9 @@ Codex sidebar, which contains your Codex chats and projects.
 Point to **New chat**, then select the **Quick chat** icon on its right. You can
 also press
 
-Cmd+Option+N on macOS or Ctrl+Alt+N on Windows. From **New
-chat**, you can open an existing ChatGPT chat and add it to a Codex chat.
+Cmd+Option+N on macOS or Ctrl+Alt+N on Windows and Linux.
+From **New chat**, you can open an existing ChatGPT chat and add it to a Codex
+chat.
 
 #### Bring in other tools and context
 
@@ -3286,9 +3288,9 @@ asks for a final check without spelling out every step.
 
 #### Use voice dictation
 
-In the ChatGPT desktop app, hold Ctrl+M while the composer is
-visible, then start talking. ChatGPT transcribes your speech into the composer so
-you can review and edit it before sending the prompt.
+In the ChatGPT desktop app, press Ctrl+Shift+D while the composer is
+visible, then start talking. ChatGPT transcribes your speech into the composer
+so you can review and edit it before sending the prompt.
 
 #### Prompting examples for Chat
 
@@ -15377,46 +15379,26 @@ Source: [ChatGPT desktop app commands](https://learn.chatgpt.com/docs/reference/
 
 Use these commands and keyboard shortcuts to navigate the app.
 
-#### Keyboard shortcuts
+To find, customize, or reset app shortcuts, open **Settings > Keyboard
+Shortcuts**.
 
-|             | Action              | Shortcut                                             |
-| ----------- | ------------------- | ---------------------------------------------------- |
-| **General** |                     |                                                      |
-|             | Command menu        | Cmd/Ctrl + Shift + P or Cmd/Ctrl + K                 |
-|             | Settings            | Cmd/Ctrl + ,                                         |
-|             | Keyboard shortcuts  | Cmd/Ctrl + Shift + /                                 |
-|             | Open folder         | Cmd/Ctrl + O                                         |
-|             | Navigate back       | Cmd/Ctrl + [                                         |
-|             | Navigate forward    | Cmd/Ctrl + ]                                         |
-|             | Increase font size  | Cmd/Ctrl + +                                         |
-|             | Decrease font size  | Cmd/Ctrl + -                                         |
-|             | Toggle sidebar      | Cmd/Ctrl + B                                         |
-|             | Open review tab     | Ctrl + Shift + G                                     |
-|             | Toggle review panel | Cmd/Ctrl + Alt + B                                   |
-|             | Toggle bottom panel | Cmd/Ctrl + J                                         |
-|             | Toggle terminal     | Ctrl + `                                             |
-|             | Clear the terminal  | Ctrl + L                                             |
-| **Chat**    | Quick chat          | Cmd + Option + N (macOS) or Ctrl + Alt + N (Windows) |
-|             | New chat            | Cmd/Ctrl + N or Cmd/Ctrl + Shift + O                 |
-|             | Search chats        | Cmd/Ctrl + G                                         |
-|             | Find in chat        | Cmd/Ctrl + F                                         |
-|             | Previous chat       | Cmd/Ctrl + Shift + [                                 |
-|             | Next chat           | Cmd/Ctrl + Shift + ]                                 |
-| **Input**   | Dictation           | Ctrl + Shift + D                                     |
-
-To find, customize, or reset shortcuts, open **Settings > Keyboard Shortcuts**.
 You can search by command name or switch the search field into keystroke mode
-and press the shortcut you want to find.
+and press the shortcut you want to find. Appshots use a separate global shortcut
+under **Settings > Appshots**.
+
+On Linux, experimental native Wayland can affect shortcut support. See the
+[Linux desktop app guide](https://learn.chatgpt.com/docs/linux/linux-app#wayland-support).
 
 #### Search past chats and find in a chat
 
-Use chat search (Cmd/Ctrl + G) to reopen a past
-chat. When expanded matching is available, it can also match chat content and
-Git branch names, so you can search for a phrase from the chat or a
-branch such as `fix/login-redirect`.
+Use **Search chats** to reopen a past chat. Search chats doesn't have a default
+shortcut. You can assign one under **Settings > Keyboard Shortcuts**. When
+expanded matching is available, search can also match chat content and Git
+branch names, so you can search for a phrase from the chat or a branch such as
+`fix/login-redirect`.
 
-Use **Find in chat** (Cmd/Ctrl + F) after opening
-a chat to find text within it. It doesn't search across other chats.
+Use **Find in chat** after opening a chat to find text within it. It doesn't
+search across other chats.
 
 For actions that start with `/`, see [Slash commands](https://learn.chatgpt.com/docs/reference/slash-commands).
 
