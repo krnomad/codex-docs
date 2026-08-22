@@ -1312,257 +1312,78 @@ Choose the GPT-5.6 model that best fits your work:
   classification, extraction, support, background automation, and focused coding
   tasks.
 
-      Plus
+The estimates below show local messages per five-hour window. Cloud chats on
+ChatGPT plans use GPT-5.6 Sol and may use more of your allowance than local
+messages.
 
-              Local Messages[\*](#shared-limits-plus) / 5h
+      Model
 
-              Cloud chats[\*](#shared-limits-plus) / 5h
+        Plus
 
-              Code Reviews / 5h
+        Pro 5x
 
-            GPT-5.6 Sol
-            10-100
-            Not available
-            Not available
+        Pro 20x
 
-            GPT-5.6 Terra
-            25-200
-            Not available
-            Not available
+        Business
 
-            GPT-5.6 Luna
-            250-2,000
-            Not available
-            Not available
+        API Key
 
-            GPT-5.5
-            15-80
-            Not available
-            Not available
+      GPT-5.6 Sol
+      10-100
+      50-500
+      200-2,000
+      10-100
 
-            GPT-5.4
-            20-100
-            Not available
-            Not available
+        [Usage-based](https://platform.openai.com/docs/pricing)
 
-            GPT-5.4 mini
-            60-350
-            Not available
-            Not available
+      GPT-5.6 Terra
+      25-200
+      125-1,000
+      500-4,000
+      25-200
 
-                *The usage limits for local messages and cloud chats share a
-                **five-hour window**. Additional weekly limits may apply.
+        [Usage-based](https://platform.openai.com/docs/pricing)
 
-              For Enterprise/Edu users with flexible pricing, there are no
-              fixed rate limits - usage scales with
-              [credits](#credits-overview)
+      GPT-5.6 Luna
+      250-2,000
+      1,250-10,000
+      5,000-40,000
+      250-2,000
 
-              Enterprise and Edu plans without flexible pricing have the same
-              per-seat usage limits as Plus for most features
+        [Usage-based](https://platform.openai.com/docs/pricing)
 
-      Pro 5x
+      GPT-5.5
+      15-80
+      75-400
+      300-1,600
+      15-80
 
-              Local Messages[\*](#shared-limits-pro) / 5h
+        [Usage-based](https://platform.openai.com/docs/pricing)
 
-              Cloud chats[\*](#shared-limits-pro) / 5h
+      GPT-5.4
+      20-100
+      100-500
+      400-2,000
+      20-100
 
-              Code Reviews / 5h
+        [Usage-based](https://platform.openai.com/docs/pricing)
 
-            GPT-5.6 Sol
-            50-500
-            Not available
-            Not available
+      GPT-5.4 mini
+      60-350
+      300-1,750
+      1,200-7,000
+      60-350
 
-            GPT-5.6 Terra
-            125-1,000
-            Not available
-            Not available
+        [Usage-based](https://platform.openai.com/docs/pricing)
 
-            GPT-5.6 Luna
-            1,250-10,000
-            Not available
-            Not available
+        On ChatGPT plans, local messages and cloud chats share a **five-hour
+        window**. Additional weekly limits may apply.
 
-            GPT-5.5
-            75-400
-            Not available
-            Not available
+        For Enterprise/Edu users with flexible pricing, there are no fixed rate
+        limits—usage scales with [credits](#credits-overview).
 
-            GPT-5.4
-            100-500
-            Not available
-            Not available
-
-            GPT-5.4 mini
-            300-1750
-            Not available
-            Not available
-
-                *The usage limits for local messages and cloud chats share a
-                **five-hour window**. Additional weekly limits may apply.
-
-              For Enterprise/Edu users with flexible pricing, there are no
-              fixed rate limits - usage scales with
-              [credits](#credits-overview)
-
-              Enterprise and Edu plans without flexible pricing have the same
-              per-seat usage limits as Plus for most features
-
-      Pro 20x
-
-              Local Messages[\*](#shared-limits-pro-20x) / 5h
-
-              Cloud chats[\*](#shared-limits-pro-20x) / 5h
-
-              Code Reviews / 5h
-
-            GPT-5.6 Sol
-            200-2,000
-            Not available
-            Not available
-
-            GPT-5.6 Terra
-            500-4,000
-            Not available
-            Not available
-
-            GPT-5.6 Luna
-            5,000-40,000
-            Not available
-            Not available
-
-            GPT-5.5
-            300-1600
-            Not available
-            Not available
-
-            GPT-5.4
-            400-2000
-            Not available
-            Not available
-
-            GPT-5.4 mini
-            1200-7000
-            Not available
-            Not available
-
-                *The usage limits for local messages and cloud chats share a
-                **five-hour window**. Additional weekly limits may apply.
-
-              For Enterprise/Edu users with flexible pricing, there are no
-              fixed rate limits - usage scales with
-              [credits](#credits-overview)
-
-              Enterprise and Edu plans without flexible pricing have the same
-              per-seat usage limits as Plus for most features
-
-      Business
-
-              Local Messages[\*](#shared-limits-business) / 5h
-
-              Cloud chats[\*](#shared-limits-business) / 5h
-
-              Code Reviews / 5h
-
-            GPT-5.6 Sol
-            10-100
-            Not available
-            Not available
-
-            GPT-5.6 Terra
-            25-200
-            Not available
-            Not available
-
-            GPT-5.6 Luna
-            250-2,000
-            Not available
-            Not available
-
-            GPT-5.5
-            15-80
-            Not available
-            Not available
-
-            GPT-5.4
-            20-100
-            Not available
-            Not available
-
-            GPT-5.4 mini
-            60-350
-            Not available
-            Not available
-
-                *The usage limits for local messages and cloud chats share a
-                **five-hour window**. Additional weekly limits may apply.
-
-              For Enterprise/Edu users with flexible pricing, there are no
-              fixed rate limits - usage scales with
-              [credits](#credits-overview)
-
-              Enterprise and Edu plans without flexible pricing have the same
-              per-seat usage limits as Plus for most features
-
-      API Key
-
-              Local Messages[\*](#shared-limits-api-key) / 5h
-
-              Cloud chats[\*](#shared-limits-api-key) / 5h
-
-              Code Reviews / 5h
-
-            GPT-5.6 Sol
-
-              [Usage-based](https://platform.openai.com/docs/pricing)
-
-            Not available
-            Not available
-
-            GPT-5.6 Terra
-
-              [Usage-based](https://platform.openai.com/docs/pricing)
-
-            Not available
-            Not available
-
-            GPT-5.6 Luna
-
-              [Usage-based](https://platform.openai.com/docs/pricing)
-
-            Not available
-            Not available
-
-            GPT-5.5
-
-              [Usage-based](https://platform.openai.com/docs/pricing)
-
-            Not available
-            Not available
-
-            GPT-5.4
-
-              [Usage-based](https://platform.openai.com/docs/pricing)
-
-            Not available
-            Not available
-
-            GPT-5.4 mini
-
-              [Usage-based](https://platform.openai.com/docs/pricing)
-
-            Not available
-            Not available
-
-                *The usage limits for local messages and cloud chats share a
-                **five-hour window**. Additional weekly limits may apply.
-
-              For Enterprise/Edu users with flexible pricing, there are no
-              fixed rate limits - usage scales with
-              [credits](#credits-overview)
-
-              Enterprise and Edu plans without flexible pricing have the same
-              per-seat usage limits as Plus for most features
+        Enterprise and Edu plans without flexible pricing have the same per-seat
+        usage limits as Plus for most features.
 
 Usage limits are shared with other agentic features once pricing for those
 features is effective. This currently includes [ChatGPT for
