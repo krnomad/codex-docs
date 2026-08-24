@@ -11028,7 +11028,7 @@ For sandbox and approval keys (`approval_policy`, `sandbox_mode`, and `sandbox_w
 | `history.persistence`                                         | `save-all \| none`                                                                                                                                                         |         | Control whether Codex saves session transcripts to history.jsonl.                                                                                                                                                                                                                                                                                                                                                    |
 | `hooks`                                                       | `table`                                                                                                                                                                    |         | Lifecycle hooks configured inline in `config.toml`. Uses the same event schema as `hooks.json`; see the Hooks guide for examples and supported events.                                                                                                                                                                                                                                                               |
 | `hooks.`                                                      | `array`                                                                                                                                                                    |         | Matcher groups for hook events such as `PreToolUse`, `PermissionRequest`, `PostToolUse`, `PreCompact`, `PostCompact`, `SessionStart`, `SessionEnd`, `SubagentStart`, `SubagentStop`, `UserPromptSubmit`, or `Stop`.                                                                                                                                                                                                  |
-| `hooks.[].hooks`                                              | `array`                                                                                                                                                                    |         | Hook handlers for a matcher group. Command hooks are currently supported; prompt and agent hook handlers are parsed but skipped.                                                                                                                                                                                                                                                                                     |
+| `hooks.[].hooks`                                              | `array`                                                                                                                                                                    |         | Hook handlers for a matcher group. Command and MCP tool hooks are supported while prompt and agent hook handlers are parsed but skipped.                                                                                                                                                                                                                                                                             |
 | `hooks.[].hooks[].additionalContextLimit`                     | `integer`                                                                                                                                                                  |         | Approximate per-handler token threshold for saving oversized `additionalContext` to disk and showing the model a shorter preview. Defaults to `2500`; `0` passes the full context directly to the model. See [Large hook output](https://learn.chatgpt.com/docs/hooks#large-hook-output).                                                                                                                                                    |
 | `hooks.[].hooks[].async`                                      | `boolean`                                                                                                                                                                  |         | Run a command hook in the background without delaying the triggering operation. Defaults to `false`; `SessionEnd` always runs synchronously. See [Run hooks in the background](https://learn.chatgpt.com/docs/hooks#run-hooks-in-the-background).                                                                                                                                                                                            |
 | `hooks.[].hooks[].commandWindows`                             | `string`                                                                                                                                                                   |         | Windows-only command override for command hooks. The TOML alias `command_windows` is also accepted.                                                                                                                                                                                                                                                                                                                  |
@@ -11304,7 +11304,7 @@ model fields; `service_tier` is independent.
 | `guardian_policy_config`                                    | `string`                              |         | Managed Markdown policy instructions for automatic review. This takes precedence over local `[auto_review].policy`. Blank values are ignored.                                                                                                                                                                                                                                                                |
 | `hooks`                                                     | `table`                               |         | Admin-enforced managed lifecycle hooks. Requires a managed hook directory and uses the same event schema as inline `[hooks]` in `config.toml`.                                                                                                                                                                                                                                                               |
 | `hooks.`                                                    | `array`                               |         | Matcher groups for a hook event such as `PreToolUse`, `PermissionRequest`, `PostToolUse`, `PreCompact`, `PostCompact`, `SessionStart`, `SessionEnd`, `SubagentStart`, `SubagentStop`, `UserPromptSubmit`, or `Stop`.                                                                                                                                                                                         |
-| `hooks.[].hooks`                                            | `array`                               |         | Hook handlers for a matcher group. Command hooks are currently supported; prompt and agent hook handlers are parsed but skipped.                                                                                                                                                                                                                                                                             |
+| `hooks.[].hooks`                                            | `array`                               |         | Hook handlers for a matcher group. Command and MCP tool hooks are supported while prompt and agent hook handlers are parsed but skipped.                                                                                                                                                                                                                                                                     |
 | `hooks.[].hooks[].additionalContextLimit`                   | `integer`                             |         | Approximate per-handler token threshold for saving oversized `additionalContext` to disk and showing the model a shorter preview. Defaults to `2500`; `0` passes the full context directly to the model. See [Large hook output](https://learn.chatgpt.com/docs/hooks#large-hook-output).                                                                                                                                            |
 | `hooks.[].hooks[].async`                                    | `boolean`                             |         | Run a command hook in the background without delaying the triggering operation. Defaults to `false`; `SessionEnd` always runs synchronously. See [Run hooks in the background](https://learn.chatgpt.com/docs/hooks#run-hooks-in-the-background).                                                                                                                                                                                    |
 | `hooks.[].hooks[].commandWindows`                           | `string`                              |         | Windows-only command override for command hooks. The TOML alias `command_windows` is also accepted.                                                                                                                                                                                                                                                                                                          |
@@ -22593,8 +22593,8 @@ optional UI.
 
 Source: [Hooks](https://learn.chatgpt.com/docs/hooks.md)
 
-Hooks are an extensibility framework for Codex. They allow
-you to inject your own scripts into the agentic loop, enabling features such as:
+Hooks are an extensibility framework for Codex. They let you run scripts or MCP
+tools during the agentic loop, enabling features such as:
 
 - Send the chat to a custom logging/analytics engine
 - Scan your team's prompts to block accidentally pasting API keys
@@ -22607,7 +22607,7 @@ Runtime behavior to keep in mind:
 - Matching hooks from multiple files all run.
 - Multiple matching command hooks for the same event are launched concurrently,
   so one hook can't prevent another matching hook from starting.
-- Non-managed command hooks must be reviewed and trusted before they run.
+- Non-managed hooks must be reviewed and trusted before they run.
 
 Hooks run at different points in a conversation:
 
@@ -22652,9 +22652,9 @@ active config layers.
 #### Review and trust hooks
 
 Codex lists configured hooks before deciding which ones can run. Before a
-non-managed command hook can run, Codex requires you to review and trust the
-exact hook definition. Codex records trust against the hook's current hash, so
-new or changed hooks are marked for review and skipped until trusted.
+non-managed hook can run, Codex requires you to review and trust the exact hook
+definition. Codex records trust against the hook's current hash, so new or
+changed hooks are marked for review and skipped until trusted.
 
 Use `/hooks` in the CLI to inspect hook sources, review new or changed hooks,
 trust hooks, or disable individual non-managed hooks. If hooks need review at
@@ -22780,8 +22780,8 @@ Notes:
   `command_windows` or `commandWindows`.
 - Set `async` to `true` to [run a command hook in the
   background](#run-hooks-in-the-background).
-- Only `type: "command"` handlers run today. `prompt` and `agent` handlers are
-  parsed but skipped.
+- `command` and `mcp_tool` handlers are supported. `prompt` and `agent`
+  handlers are parsed but skipped.
 - Commands run with the session `cwd` as their working directory.
 - For repo-local hooks, prefer resolving from the git root instead of using a
   relative path such as `.codex/hooks/...`. Codex may be started from a
@@ -22816,6 +22816,88 @@ command = '/usr/bin/python3 "$(git rev-parse --show-toplevel)/.codex/hooks/post_
 timeout = 30
 statusMessage = "Reviewing Bash output"
 ```
+
+#### MCP tool hooks
+
+An MCP tool hook lets a lifecycle event call a tool on an already-connected MCP
+server. It sends structured arguments directly to the tool and uses the same
+trust review and output contract as a command hook.
+
+#### Configure an MCP tool hook
+
+This hook asks the `scanner` MCP server to scan each patch after Codex writes or
+edits files:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "mcp_tool",
+            "server": "scanner",
+            "tool": "scan_patch",
+            "input": { "patch": "${tool_input.command}" },
+            "timeout": 30,
+            "statusMessage": "Scanning edited files"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+| Field           | Meaning                                                          |
+| --------------- | ---------------------------------------------------------------- |
+| `type`          | Must be `mcp_tool`.                                              |
+| `server`        | Required name of an already-connected MCP server.                |
+| `tool`          | Required name of a tool exposed by that server.                  |
+| `input`         | Optional JSON object of argument templates. Defaults to `{}`.    |
+| `timeout`       | Optional active execution timeout in seconds. Defaults to `600`. |
+| `statusMessage` | Optional message shown while the hook runs.                      |
+
+#### Expand arguments from the hook event
+
+Use `${field.nested}` to read a dotted field from the hook event. A placeholder
+that fills an entire value keeps its JSON type. A placeholder inside a larger
+string is rendered as text. Codex expands objects and arrays recursively.
+
+For an event containing `{"tool_input":{"file_path":"src/main.rs","count":3}}`,
+this argument template:
+
+```json
+{
+  "path": "${tool_input.file_path}",
+  "count": "${tool_input.count}",
+  "message": "Scanning ${tool_input.file_path}"
+}
+```
+
+becomes:
+
+```json
+{
+  "path": "src/main.rs",
+  "count": 3,
+  "message": "Scanning src/main.rs"
+}
+```
+
+#### Execution and lifecycle
+
+- Hooks use an existing MCP connection. They don't start or reconnect servers.
+- A hook can block an operation when the tool returns a blocking decision.
+  Errors, missing servers, and unavailable tools don't block the operation.
+- MCP tool hooks run synchronously. They don't request tool approval or trigger
+  other hooks.
+- The shorter hook or server timeout applies. Time spent waiting for an MCP
+  elicitation response doesn't count against the timeout.
+- `SessionStart` hooks can run before an MCP server is ready. If that happens,
+  they don't block the session.
+- `SessionEnd` doesn't support MCP tool hooks.
 
 #### Turn hooks off
 
@@ -34134,10 +34216,8 @@ or the [Analytics API](https://learn.chatgpt.com/docs/enterprise/analytics-api) 
 2. Use the append-only compliance log stream for ongoing collection. Check the
    authenticated reference for the currently supported resources and retrieval
    patterns.
-3. Test ingestion into a non-production security information and event
-   management (SIEM) system or data lake. The
-   [Compliance Platform guide](https://help.openai.com/en/articles/9261474-compliance-api-for-chatgpt-enterprise-edu-and-chatgpt-for-teachers)
-   links to the current API documentation and quickstart notebook.
+3. [Download log files](#download-logs) and test ingestion into a non-production
+   security information and event management (SIEM) system or data lake.
 4. Schedule continuous collection and apply your organization's access,
    retention, and legal-hold controls to exported records. Don't assume the
    source retention window replaces your organization's retention policy.
@@ -34146,6 +34226,34 @@ For example, a security team can stream immutable compliance events into its
 SIEM for investigations, or route those events into an approved electronic
 discovery workflow. Use the authenticated reference for the current routes and
 schemas rather than copying an endpoint contract from this guide.
+
+#### Download logs
+
+Download the [Bash script](https://developers.openai.com/downloads/compliance-api/download_compliance_files.sh)
+or [PowerShell script](https://developers.openai.com/downloads/compliance-api/download_compliance_files.ps1).
+Both list and download every available log file after a given timestamp, follow
+pagination, and write JSONL to standard output. Errors go to standard error.
+
+Set `COMPLIANCE_API_KEY` to your Enterprise Compliance API key. Replace
+`with your ChatGPT workspace ID or API Platform
+organization ID, and` with an ISO 8601 timestamp that includes a time
+zone. This example retrieves `AUTH_LOG` files, 100 at a time.
+
+On macOS or Linux, install Bash, `curl`, and `jq`, then run:
+
+```bash
+bash ./download_compliance_files.sh "<workspace_or_org_id>" AUTH_LOG 100 "<after>" > output.jsonl
+```
+
+The Windows script supports PowerShell 5.1 or later. Review the downloaded file.
+If Windows blocks it and your organization's execution policy permits it, run
+`Unblock-File -Path .\download_compliance_files.ps1`. This example uses
+PowerShell 7 to save UTF-8 without a byte-order mark:
+
+```powershell
+.\download_compliance_files.ps1 "<workspace_or_org_id>" AUTH_LOG 100 "<after>" |
+  Set-Content -Encoding utf8NoBOM output.jsonl
+```
 
 #### Confirm the administration boundaries
 
