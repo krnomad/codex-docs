@@ -80,7 +80,7 @@ Tools ChatGPT can use to understand, create, and take action.
 
 - [Appshots](https://learn.chatgpt.com/docs/appshots): Capture app state for visual inspection and debugging.
 
-- [Chrome extension](https://learn.chatgpt.com/docs/chrome-extension): Share browser context with ChatGPT from Chrome.
+- [Browser extension](https://learn.chatgpt.com/docs/chrome-extension): Use Chrome, Edge, Brave, Opera, or Vivaldi with ChatGPT.
 
 - [Work with files](https://learn.chatgpt.com/docs/artifacts-viewer): Create, preview, and refine documents and other generated files.
 
@@ -174,7 +174,7 @@ Ask it to:
   with [Sites](https://learn.chatgpt.com/docs/sites).
 - **Work across websites and apps.** Use the [browser](https://learn.chatgpt.com/docs/browser) to
   research and interact with websites. In the desktop app, use the
-  [Chrome extension](https://learn.chatgpt.com/docs/chrome-extension),
+  [browser extension](https://learn.chatgpt.com/docs/chrome-extension),
   [Computer Use](https://learn.chatgpt.com/docs/computer-use), and [appshots](https://learn.chatgpt.com/docs/appshots) when
   those features are available.
 - **Run code and review technical work.** Run code and shell commands, analyze
@@ -384,6 +384,52 @@ Source: [What's new](https://learn.chatgpt.com/docs/whats-new.md)
 This weekly digest highlights ChatGPT and Codex features that can change how you
 work, with examples and links to learn more. For every versioned update, bug fix,
 and minor improvement, see the [Codex changelog](https://learn.chatgpt.com/docs/changelog).
+
+#### August 24–28, 2026
+
+#### Work with more websites
+
+- **Use your browser:** Work in [Edge, Brave, Opera, or Vivaldi](https://learn.chatgpt.com/docs/chrome-extension)
+  as well as Chrome from the ChatGPT desktop app. Bring an open tab into a
+  ChatGPT Work or Codex chat and work with the website where you're already
+  signed in. Opera supports browser control but doesn't have side chat.
+
+- **Use a website's tools:** With [Site tools (WebMCP)](https://learn.chatgpt.com/docs/webmcp), ChatGPT
+  Work and Codex can use actions offered by a website in the desktop app's
+  built-in browser. For example, a document editor can provide tools to find
+  a section or add a comment. Update the desktop app and use GPT-5.6 Sol or
+  GPT-5.6 Terra. Site tools aren't available with GPT-5.6 Luna or in Enterprise
+  or Edu workspaces.
+
+- **Sign in through the cloud browser:** On eligible plans, continue a task
+  that needs a website account in ChatGPT Work on the web, iOS, or Android.
+  Follow the [sign-in request](https://learn.chatgpt.com/docs/browser?surface=web#web-sign-in-to-a-website)
+  and enter your details in the sign-in flow, not in the chat. This doesn't
+  connect your local browser profile. Website sign-in isn't available for
+  Enterprise or Edu workspaces.
+
+Availability depends on rollout and workspace settings.
+
+[Read the August 25 browser release
+notes](https://learn.chatgpt.com/docs/changelog#codex-2026-08-25-browser).
+
+#### Run scheduled tasks from app events
+
+[Scheduled tasks](https://learn.chatgpt.com/docs/automations?surface=web#web-trigger-tasks-from-app-events) can now
+start when a supported event occurs in Gmail, Slack, or GitHub. Use an event
+trigger to triage new email, summarize channel activity, or act on pull request
+feedback without polling on a fixed cadence.
+
+Event-triggered tasks are available in ChatGPT on the web and mobile for
+eligible plans. Connect the relevant app and approve its requested access first. In managed
+workspaces, administrators can control access.
+
+<PromptComponent
+prompt={`When one of my pull requests in / receives new review feedback, summarize the feedback and prepare a revision plan.`}
+/>
+
+[Read the August 25 release
+notes](https://learn.chatgpt.com/docs/changelog#codex-2026-08-25-event-triggers).
 
 #### August 17–21, 2026
 
@@ -2659,6 +2705,8 @@ Package development workflows and run deterministic automation.
 - [Build skills](https://learn.chatgpt.com/docs/build-skills): Package instructions and resources for repeatable tasks in ChatGPT and Codex.
 
 - [Build plugins](https://learn.chatgpt.com/docs/build-plugins): Package skills and MCP servers for ChatGPT and Codex.
+
+- [Site tools (WebMCP)](https://learn.chatgpt.com/docs/webmcp): Use WebMCP to give AI agents a direct way to work with your website.
 
 - [Hooks](https://learn.chatgpt.com/docs/hooks): Run custom commands when Codex emits lifecycle events.
 
@@ -14993,8 +15041,9 @@ Browser downloads go to your system Downloads folder by default. In **Settings >
 Browser**, you can choose another download location, reset it to the system
 default, or turn on **Ask where to save downloads**.
 
-Use the [Chrome extension](https://learn.chatgpt.com/docs/chrome-extension) instead when ChatGPT needs
-to work in an existing Chrome tab or use your regular Chrome profile.
+Use the [browser extension](https://learn.chatgpt.com/docs/chrome-extension) instead when ChatGPT needs
+to work in an existing Chrome, Edge, Brave, Opera, or Vivaldi tab or use your
+regular browser profile.
 
 Open the built-in browser from the toolbar, by clicking a URL, by navigating
 manually, or by pressing Cmd+Shift+B
@@ -15137,71 +15186,297 @@ This app is slow. Use @Browser to capture a performance trace and inspect
 network traffic, then identify the bottleneck.
 ```
 
-With ChatGPT Work on the web, ChatGPT can use a cloud-operated browser to
-research and interact with public websites. It runs separately from the
-browser on your device, so you can delegate web tasks without giving ChatGPT
-access to your open tabs or personal browser history.
+#### Use ChatGPT Work to get things done across the web
 
-#### Start browser work
+ChatGPT Work can complete tasks across websites, including sites where you need to sign in.
 
-1. Select **ChatGPT**, switch to **Work** in the switcher, and describe the result you want. Include relevant
-   websites or constraints when they matter.
-2. If ChatGPT needs a website, review the site-access request before allowing
-   it.
-3. Follow the browser's progress in the chat. Open **Cloud browser** to inspect
-   the page screenshots and replay.
-4. Review the result and any sources before using the information.
+Work uses its own browser, running on a separate computer in the cloud, not the browser on your phone or laptop.
 
-For example:
+Start a task from ChatGPT Work on web or mobile, and ChatGPT can continue working even if you step away and close your computer. Using its computer, Work can accomplish a wide variety of tasks on the internet by reading, clicking, and typing into web pages. Depending on your request, it may use a plugin, its browser, or both.
 
-```text
-Compare the publicly listed prices and cancellation terms for these three
-venues. Return a table with links to each source and flag anything that needs a
-phone call to confirm.
-```
+For example, ChatGPT can help you:
 
-Other useful browser tasks include checking public inventory or appointment
-times, gathering details from an interactive site, and comparing options whose
-information is spread across several pages.
+- Find and book a DMV appointment.
+- Sign in to your utility account and compare plans.
+- Find and save apartments that match your criteria.
+- Research competitors on social media.
+- Close the books in your accounting software.
 
-#### Website permissions and confirmations
+You control which websites ChatGPT can access, and it is trained to ask for confirmation before consequential actions, such as completing a booking or payment. If ChatGPT is ever blocked for any reason, you can take over its computer and use it yourself on mobile and desktop.
 
-ChatGPT asks before accessing a new website by default. The permission applies
-to the site shown in the request, so check the hostname before allowing it.
+The ability for ChatGPT Work to navigate to websites that need authentication is available on web and mobile on Plus and Pro plans.
 
-In ChatGPT settings, open **Cloud browser** to manage website permissions. You
-can choose **Always ask**, **Auto approve**, or **Always allow**, and you can
-allow or block individual sites. **Auto approve** lets ChatGPT approve requests
-after its risk checks; **Always allow** removes that review step for website
-access. Use the least-permissive setting that works for your task.
+Availability depends on rollout. Website sign-in isn't available for Enterprise or Edu workspaces.
 
-A website permission doesn't approve every action. ChatGPT may ask separately
-for permission before performing consequential actions.
+#### How ChatGPT Work's computer works
 
-#### Browser data
+When your task requires a website, ChatGPT uses its own browser to navigate pages, gather information, and complete steps online.
 
-The cloud-operated browser keeps its cookies and browser data separate from the
-browser on your device. Clearing cloud browser data doesn't clear cookies from
-your device. To remove its cookies, open **Cloud browser** in ChatGPT settings,
-select **Browser data**, and choose **Clear all**.
+By default, ChatGPT asks before accessing a new website. You can choose to approve requests individually or adjust your settings to let ChatGPT automatically approve websites relevant to your task. ChatGPT Work will always ask for confirmation before consequential actions, such as submitting your information to book an appointment or completing a payment.
 
-Don't rely on open pages or browser history being available in a later chat.
-Include the important sites and context when you start new work.
+#### Sign in to a website
+
+If a website requires you to sign in, ChatGPT Work will ask you to sign in. After you authenticate, it will continue working on the signed-in website. Your session will remain active for future tasks, so you do not need to sign in every time.
+
+#### Use the secure sign-in form
+
+ChatGPT cannot see your username or password, and they are never seen by the model or used in model training. ChatGPT does not store your username or passwords. You can delete your browsing history from all sites or one site individually at any time from **Settings** > **Cloud browser** > **Browser data**, which will log you out from that site.
+
+When ChatGPT encounters a login screen, it pauses and asks you to enter your credentials and two-factor authentication codes as needed. On iOS, you can use a supported password manager to sign in seamlessly.
+
+Use the sign-in form provided by ChatGPT. Don't send passwords in the chat.
+
+#### Sign in on the web page
+
+If offered, select **Sign in on web page instead** to sign in directly in the cloud browser. The task pauses while you sign in. Select **I'm done** to return control to ChatGPT, or skip or cancel the request.
+
+#### How to get started with a task in ChatGPT Work
+
+1. Open ChatGPT on web or mobile and start a task in Work.
+2. Describe what you want ChatGPT to do.
+3. Approve website access if prompted.
+4. Sign in directly if a website requires it.
+5. Follow the task's progress in the conversation.
+6. Review the result and approve any consequential actions.
+
+You don't need to select the browser separately. ChatGPT decides when to use it based on your request.
+
+Some websites block access. If that happens, ChatGPT will let you know and, when possible, try another way to complete the task.
+
+#### Security and user controls
+
+In ChatGPT settings, open **Cloud browser** to manage website permissions. Available options include:
+
+- **Always ask**: Review every website access request manually.
+- **Auto approve**: Let ChatGPT automatically approve access after it checks for the relevancy of the website to your task.
+- **Always allow**: Allow website access without that additional review step. We offer this option for minimal friction, but do not recommend this option.
+
+You can also allow or block individual websites to override your default permissions.
+
+Before ChatGPT asks you to sign in to any website, an additional review model checks the sign-in request and where your information will be entered for signs of phishing or deception. We test the agent against risks including prompt injection, phishing, and unintended actions.
+
+For full transparency, you'll see the website's address and a preview of its sign-in form, and you can inspect the live website before continuing. Credentials entered through the secure sign-in form go directly to the browser and are not visible to the model.
+
+#### Privacy and browser data
+
+ChatGPT Work's computer runs separately from the browser on your device. It maintains its own cookies, browser data, and signed-in sessions. Information ChatGPT uses while completing a task follows the ChatGPT data-control settings you choose. You can review these in ChatGPT web and mobile under **Settings** > **Data controls**.
+
+It doesn't use your personal browser's open tabs, browsing history, saved passwords, cookies, extensions, or existing signed-in sessions.
+
+To clear browser data, go to **Settings** > **Cloud browser** > **Browser data** > **Clear all**. This signs you out of websites in ChatGPT Work's browser, so you'll need to sign in again for future tasks.
 
 #### Limitations
 
-- The browser supports public, signed-out websites. It can't sign in to an
-  account, ask for credentials, or use the signed-in session from your browser.
-- Some sites block automated browsers or require a CAPTCHA. ChatGPT may not be
-  able to complete a task on those sites.
-- The browser is separate from the browser on your device. It can't use your
-  open tabs, extensions, saved passwords, or local browser history.
-- Availability can depend on your plan, workspace settings, and rollout. It is
-  available in all regions on paid plans other than Free and Go. Enterprise
-  admins must enable it for their workspace.
+- Website sign-in isn't available in every workspace or rollout. If a task requires a sign-in method that isn't supported, complete that step yourself or use another available tool.
+- Some sites block automated browsers or require a CAPTCHA. ChatGPT may not be able to complete a task on those sites.
+- Availability of cloud browsing can depend on your plan, workspace settings, and rollout. Cloud browsing is available in all regions on paid plans other than Free and Go. Enterprise admins must enable cloud browsing for their workspace.
 
-During rollout, the browser might not appear immediately even when your plan
-supports it.
+During rollout, the browser might not appear immediately even when your plan supports it.
+
+### Browser extension
+
+Source: [Browser extension](https://learn.chatgpt.com/docs/chrome-extension.md)
+
+Use the ChatGPT browser extension to work in Google Chrome, Microsoft Edge,
+Brave, Opera, or Vivaldi from the ChatGPT desktop app. ChatGPT can read or act
+on sites where you're already signed in, such as LinkedIn, Salesforce, Gmail,
+or internal tools.
+
+All five browsers support tab mentions and browser control from the desktop
+app. Chrome, Edge, Brave, and Vivaldi also support side chat. **Opera doesn't
+support side chat**; start its tasks in the desktop app instead.
+
+Update the ChatGPT desktop app before setting up another browser. Browser
+availability can depend on rollout and your workspace settings.
+
+To let ChatGPT control its built-in browser instead, use `@Browser`. The
+[built-in browser](https://help.openai.com/en/articles/20001277-using-the-built-in-browser-in-the-chatgpt-desktop-app)
+supports sign-in and keeps browsing work inside ChatGPT without using your
+regular browser profile.
+
+ChatGPT can also switch between tools as a task requires, using plugins when a
+dedicated integration is available, your browser when it needs signed-in browser
+context, and the built-in browser for localhost.
+
+#### Use side chat in your browser
+
+Side chat is available in Chrome, Edge, Brave, and Vivaldi.
+
+Open ChatGPT beside the page you're viewing to ask about the page or continue
+into tasks that can use its context alongside local files and connected apps.
+ChatGPT can use context from your open tabs when a task needs it.
+
+1. Open the page you want to work with.
+2. Select ChatGPT from the browser toolbar or **Extensions** menu. On macOS, you
+   can also press Cmd+Shift+..
+3. Ask a question about the page or give ChatGPT a task.
+
+The panel stays with the tab where you opened it. Chats you start in side chat
+are available in the ChatGPT app, and you can open recent ChatGPT chats in
+the side chat, so you can continue work in either place.
+
+#### Bring tabs and selected text into a chat
+
+Mention an open browser tab in the desktop app when you want ChatGPT to use
+that page as context. In browsers with side chat, you can also mention tabs
+there, or highlight text on a page and bring the selection into your chat to
+ask about a specific passage without copying the whole page.
+
+In browsers with side chat, you can also right-click the page and select
+**Ask ChatGPT**. The side chat opens with the relevant page context so you can
+continue the request in your browser.
+
+#### Ask about a YouTube video
+
+Open a YouTube video, then ask a question about it in a supported side chat.
+When captions are available, ChatGPT can use the video's timestamped transcript
+to explain, summarize, or answer questions about the content.
+
+Treat webpage content, selected text, and video transcripts as untrusted
+context. Review the page and any requested permissions before asking ChatGPT to
+use or act on that information.
+
+#### Set up your browser
+
+Install the browser on your computer, then open **Settings > Computer Use** in
+the ChatGPT desktop app. Expand **More browsers** if your browser isn't shown
+in the main list.
+
+1. Select your browser and follow any prompt to install the required plugin.
+2. Select **Install** beside the browser to open its extension store page.
+   Install the ChatGPT extension and review the browser's permission prompts.
+3. Return to **Computer Use** and confirm that the browser shows **Manage**.
+4. Start a ChatGPT Work or Codex chat and select your browser with an
+   `@`-mention. Use the browser profile where you installed the extension.
+
+The browser's toggle in **Computer Use** controls whether it appears in the
+`@`-mention menu. Select **Manage** to change website permissions instead.
+
+#### Start a browser task from ChatGPT
+
+After setup, start a new ChatGPT Work or Codex chat. Select **Chrome**, **Edge**,
+**Brave Browser**, **Opera**, or **Vivaldi** from the `@`-mention menu to choose
+which browser ChatGPT uses. For example:
+
+```text
+@Edge open Salesforce and update the account from these call notes.
+```
+
+You can also mention an open tab to give ChatGPT context from that page.
+Opera supports these desktop workflows even though it doesn't have side chat.
+
+#### Control website access
+
+By default, ChatGPT asks before it interacts with each new website. ChatGPT bases
+the prompt on the website host, such as `example.com`.
+
+When ChatGPT asks to use a website, you can choose the option that matches the
+task and your risk tolerance:
+
+- **Allow once** to let ChatGPT use the website one time.
+- **Allow for this site** so ChatGPT can use the website again without asking.
+- **Allow for all sites** so ChatGPT can use websites without asking.
+- **Decline** to prevent ChatGPT from using the website.
+
+#### Manage allowed and blocked websites
+
+In the ChatGPT desktop app, go to **Settings** > **Computer Use**, then select
+**Manage** next to your browser to manage an allowlist and blocklist for
+domains. The allowlist contains domains ChatGPT can use without asking again.
+The blocklist contains domains ChatGPT shouldn't use. The supported browsers
+share these website permissions.
+
+Removing a domain from the allowlist means ChatGPT asks again before using it.
+Removing a domain from the blocklist means ChatGPT can ask again instead of
+treating the domain as blocked.
+
+#### Allow for all sites If you select **Allow for all sites**, ChatGPT no longer asks for confirmation
+
+before using websites. Only choose this option if you trust ChatGPT to use any
+website open in the browser.
+
+#### Browser history Browser history can include sensitive telemetry, internal URLs, search terms,
+
+and activity from browser sessions on signed-in devices. If you allow ChatGPT to
+access browser history, relevant history entries can become part of the context
+ChatGPT uses for the task. Malicious or misleading page content can increase the
+risk that ChatGPT copies this data somewhere unintended.
+
+ChatGPT asks when it wants to use browser history. ChatGPT scopes history access to
+the request, and history doesn't have an always-allow option.
+
+#### Data and security
+
+#### Browser extension permissions
+
+Your browser asks you to accept permissions when you install the extension.
+For example, Chrome's permission prompt may include:
+
+- Access the page debugger
+- Read and change all your data on all websites
+- Read and change your browsing history on all your signed-in devices
+- Display notifications
+- Read and change your bookmarks
+- Manage your downloads
+- Communicate with cooperating native applications
+- View and manage your tab groups
+
+These extension permissions make it capable of operating browser
+workflows. ChatGPT still uses its own confirmations, settings, allowlists, and
+blocklists before using websites or browser history during a task.
+
+#### Memories
+
+Computer Use follows your Memories setting. If Memories is on, ChatGPT can
+use relevant saved memories while working in your browser. If Memories is off,
+browser control doesn't use memories.
+
+#### What OpenAI stores from browsing
+
+OpenAI doesn't store a separate complete record of your browser actions from the
+extension. OpenAI stores browser activity only when it becomes part of the ChatGPT
+context, such as text ChatGPT reads from a page, screenshots, tool calls,
+summaries, messages, or other content included in the chat.
+
+Your ChatGPT data controls apply to content processed in context.
+Avoid sending secrets or highly sensitive data through browser tasks unless
+they're required and you are present to review each prompt.
+
+#### Troubleshooting
+
+If ChatGPT can't connect to your browser, first confirm the website ChatGPT is trying to
+access isn't in the blocklist in Settings. If the website isn't blocked, work
+through these checks:
+
+1. Update the ChatGPT desktop app. If you have more than one ChatGPT or Codex
+   desktop app installed, update each one or remove copies you no longer use.
+2. Restart your browser. In Chrome, Edge, Brave, or Vivaldi, reopen ChatGPT from
+   the toolbar or **Extensions** menu and confirm the side chat loads. Opera
+   doesn't have side chat; check its connection from the desktop app.
+3. In **Settings > Computer Use**, confirm that your browser appears and shows
+   **Manage**. If it still shows **Install**, follow the setup flow again.
+   Turn on its toggle if the browser is missing from the `@`-mention menu.
+4. Make sure you are using the browser profile where the extension is
+   installed. If you use more than one profile, install and enable the
+   extension in the active profile.
+5. Start a new ChatGPT Work or Codex chat and try the browser task again. This can
+   clear chat-specific connection state.
+6. Restart the ChatGPT desktop app, then try again. If the extension still
+   doesn't connect, reinstall it through **Settings > Computer Use**.
+7. If ChatGPT still can't use the browser, run `/feedback`
+   in the app and include the chat ID when you contact support.
+
+#### Upload files
+
+If a Chrome task needs to upload a file from your computer, allow the Chrome
+extension to access file URLs in Chrome:
+
+1. In Chrome, open the extensions icon in the toolbar, then click **Manage
+   Extensions**.
+2. On the extension card, click **Details**.
+3. Turn on **Allow access to file URLs**.
+
+After you change the setting, start the Chrome task again.
 
 ### ChatGPT desktop app commands
 
@@ -15472,7 +15747,7 @@ choose a built-in or custom pet, then use `/pet`, **Wake Pet**, or
 #### Browser
 
 Use these settings to install or enable the bundled Browser plugin, set up the
-[Chrome extension](https://learn.chatgpt.com/docs/chrome-extension), and manage allowed and blocked
+[browser extension](https://learn.chatgpt.com/docs/chrome-extension), and manage allowed and blocked
 websites. ChatGPT asks before using a website unless you've allowed it. Removing
 a blocked site lets ChatGPT ask again before using it in the browser.
 
@@ -15597,196 +15872,6 @@ plan, rollout, and workspace. Then check microphone permissions and whether a
 voice chat is already active in another app window. If screen context isn't
 available, check **Settings > Voice**, Appshots permissions, and your
 organization's restrictions.
-
-### Chrome extension
-
-Source: [Chrome extension](https://learn.chatgpt.com/docs/chrome-extension.md)
-
-Use the Chrome extension to let ChatGPT control your Chrome browser. ChatGPT can
-read or act on sites where you're already signed in, such as LinkedIn,
-Salesforce, Gmail, or internal tools.
-
-To let ChatGPT control its built-in browser instead, use `@Browser`. The
-[built-in browser](https://help.openai.com/en/articles/20001277-using-the-built-in-browser-in-the-chatgpt-desktop-app)
-supports sign-in and keeps browsing work inside ChatGPT without using your
-Chrome profile.
-
-ChatGPT can also switch between tools as a task requires, using plugins when a
-dedicated integration is available, Chrome when it needs logged-in browser
-context, and the built-in browser for localhost.
-
-#### Use ChatGPT from Chrome
-
-Open ChatGPT beside the page you're viewing to ask about the page or continue
-into tasks that can use its context alongside local files and connected apps.
-ChatGPT can use context from your open tabs when a task needs it.
-
-1. Open the page you want to work with.
-2. Select ChatGPT from the Chrome toolbar or **Extensions** menu. On macOS, you
-   can also press Cmd+Shift+..
-3. Ask a question about the page or give ChatGPT a task.
-
-The panel stays with the tab where you opened it. Chats you start in Chrome
-are available in the ChatGPT app, and you can open recent ChatGPT chats in
-Chrome, so you can continue work in either place.
-
-#### Bring tabs and selected text into a chat
-
-Mention an open Chrome tab in the side chat when you want ChatGPT to use that
-page as context. You can also highlight text on a page and bring the selection
-into your chat to ask about a specific passage without copying the whole page.
-
-To start from the page instead, right-click it and select **Ask ChatGPT**. The
-side chat opens with the relevant page context so you can continue the request
-in Chrome.
-
-#### Ask about a YouTube video
-
-Open a YouTube video, then ask a question about it in the Chrome side chat.
-When captions are available, ChatGPT can use the video's timestamped transcript
-to explain, summarize, or answer questions about the content.
-
-Treat webpage content, selected text, and video transcripts as untrusted
-context. Review the page and any requested permissions before asking ChatGPT to
-use or act on that information.
-
-#### Set up the Chrome extension
-
-Open the **Plugins** tab and install **Chrome**. Other Chromium-based browsers
-aren't currently supported. Follow the setup flow to:
-
-1. Install the [Chrome
-   extension](https://chromewebstore.google.com/detail/chatgpt/hehggadaopoacecdllhhajmbjkdcmajg).
-2. Approve Chrome's permission prompts.
-3. Open Chrome and confirm the ChatGPT side chat loads.
-
-#### Start a Chrome task from ChatGPT
-
-After the plugin setup is complete, start a new ChatGPT Work or Codex chat.
-ChatGPT can use Chrome automatically when a task needs a website and you're
-already signed in to Chrome. You can also invoke it directly in a prompt:
-
-```text
-@Chrome open Salesforce and update the account from these call notes.
-```
-
-If Chrome isn't already open, ChatGPT can open it. Chrome browser tasks run in
-Chrome tab groups so the work for a task stays grouped together.
-
-#### Control website access
-
-By default, ChatGPT asks before it interacts with each new website. ChatGPT bases
-the prompt on the website host, such as `example.com`.
-
-When ChatGPT asks to use a website, you can choose the option that matches the
-task and your risk tolerance:
-
-- **Allow once** to let ChatGPT use the website one time.
-- **Allow for this site** so ChatGPT can use the website again without asking.
-- **Allow for all sites** so ChatGPT can use websites without asking.
-- **Decline** to prevent ChatGPT from using the website.
-
-#### Manage allowed and blocked websites
-
-In the ChatGPT desktop app, go to **Settings** > **Computer Use**, then select
-**Manage** next to **Google Chrome** to manage an allowlist and blocklist for
-domains. The allowlist contains domains ChatGPT can use without asking again.
-The blocklist contains domains ChatGPT shouldn't use.
-
-Removing a domain from the allowlist means ChatGPT asks again before using it.
-Removing a domain from the blocklist means ChatGPT can ask again instead of
-treating the domain as blocked.
-
-#### Allow for all sites If you select **Allow for all sites**, ChatGPT no longer asks for confirmation
-
-before using websites. Only choose this option if you trust ChatGPT to use any
-website open in Chrome.
-
-#### Browser history Browser history can include sensitive telemetry, internal URLs, search terms,
-
-and activity from Chrome sessions on signed-in devices. If you allow ChatGPT to
-access browser history, relevant history entries can become part of the context
-ChatGPT uses for the task. Malicious or misleading page content can increase the
-risk that ChatGPT copies this data somewhere unintended.
-
-ChatGPT asks when it wants to use browser history. ChatGPT scopes history access to
-the request, and history doesn't have an always-allow option.
-
-#### Data and security
-
-#### Chrome extension permissions
-
-Chrome asks you to accept extension permissions when you install the extension.
-The permission prompt may include:
-
-- Access the page debugger
-- Read and change all your data on all websites
-- Read and change your browsing history on all your signed-in devices
-- Display notifications
-- Read and change your bookmarks
-- Manage your downloads
-- Communicate with cooperating native applications
-- View and manage your tab groups
-
-These Chrome permissions make the extension capable of operating browser
-workflows. ChatGPT still uses its own confirmations, settings, allowlists, and
-blocklists before using websites or browser history during a task.
-
-#### Memories
-
-Computer Use follows your Memories setting. If Memories is on, ChatGPT can
-use relevant saved memories while working in Chrome. If Memories is off, browser
-control doesn't use memories.
-
-#### What OpenAI stores from browsing
-
-OpenAI doesn't store a separate complete record of your Chrome actions from the
-extension. OpenAI stores browser activity only when it becomes part of the ChatGPT
-context, such as text ChatGPT reads from a page, screenshots, tool calls,
-summaries, messages, or other content included in the chat.
-
-Your ChatGPT data controls apply to content processed in context.
-Avoid sending secrets or highly sensitive data through browser tasks unless
-they're required and you are present to review each prompt.
-
-#### Troubleshooting
-
-If ChatGPT can't connect to Chrome, first confirm the website ChatGPT is trying to
-access isn't in the blocklist in Settings. If the website isn't blocked, work
-through these checks:
-
-1. Update the ChatGPT desktop app. If you have more than one ChatGPT or Codex
-   desktop app installed, update each one or remove copies you no longer use.
-2. Close the ChatGPT side panel, restart Chrome, then reopen the extension from
-   the Chrome toolbar or **Extensions** menu. Confirm the side chat loads. If
-   it doesn't load or mentions a missing native host, remove and re-add the
-   Chrome plugin from **Plugins** in the ChatGPT desktop app, then follow the
-   setup flow again.
-3. In the app, select ChatGPT and turn on Work in the switcher, or select Codex. Open
-   **Plugins** and confirm that the Chrome plugin is on. If the plugin is off,
-   turn it on and try the task again.
-4. Make sure you are using the same Chrome profile where the extension is
-   installed. If you use more than one Chrome profile, install and enable the
-   extension in the active profile.
-5. Start a new ChatGPT Work or Codex chat and try the Chrome task again. This can
-   clear chat-specific connection state.
-6. Restart the ChatGPT desktop app, then try again. If the extension still
-   doesn't connect, uninstall the Chrome extension, remove and re-add the Chrome
-   plugin from **Plugins**, and follow the setup flow again.
-7. If the side chat loads but ChatGPT still can't use Chrome, run `/feedback`
-   in the app and include the chat ID when you contact support.
-
-#### Upload files
-
-If a Chrome task needs to upload a file from your computer, allow the Chrome
-extension to access file URLs in Chrome:
-
-1. In Chrome, open the extensions icon in the toolbar, then click **Manage
-   Extensions**.
-2. On the extension card, click **Details**.
-3. Turn on **Allow access to file URLs**.
-
-After you change the setting, start the Chrome task again.
 
 ### CLI customization
 
@@ -28164,6 +28249,153 @@ The command emits JSON showing the strictest decision and any matching rules, in
 
 The `.rules` file format uses `Starlark` (see the [language spec](https://github.com/bazelbuild/starlark/blob/master/spec.md)). Its syntax is like Python, but it's designed to be safe to run: the rules engine can run it without side effects (for example, touching the filesystem).
 
+### Site tools
+
+Source: [Site tools](https://learn.chatgpt.com/docs/webmcp.md)
+
+Site tools are ChatGPT's implementation of the proposed
+[WebMCP standard](https://webmachinelearning.github.io/webmcp/). With WebMCP,
+a website can offer useful actions directly to an AI agent alongside the
+interface people already use. You and the agent can work with the same live
+page and signed-in session.
+
+In the [built-in browser](https://learn.chatgpt.com/docs/browser) in the ChatGPT desktop app, ChatGPT
+Work and Codex can discover and use these tools when they are available.
+
+Use GPT-5.6 Sol or GPT-5.6 Terra for site tools. GPT-5.6 Luna currently has
+WebMCP disabled. Update the ChatGPT desktop app to the latest version. Site
+tools aren't available in Enterprise or Edu workspaces. Availability also
+depends on rollout and the tools provided by the current page.
+
+#### WebMCP vs. MCP
+
+[Model Context Protocol (MCP)](https://modelcontextprotocol.io/docs/learn/architecture)
+connects an AI application to a local or remote server. Its tools can work
+independently of an open webpage, such as searching a service or managing
+records through an API.
+
+[WebMCP](https://github.com/webmachinelearning/webmcp) lets a website make its
+capabilities available to an agent as a set of predefined tools. The agent can
+discover them when it visits, so people don't need to install a separate MCP
+server or set up another connection to use those capabilities.
+
+This approach is useful when you and the agent need to see the same thing, such as
+when editing a canvas or exploring a dashboard. A
+[plugin with an MCP server](https://learn.chatgpt.com/docs/build-plugins) can provide an integration
+that works independently of an open page. A website can support both.
+
+#### How it works in the browser
+
+Open a website in the built-in browser and ask ChatGPT Work or Codex to help
+with a task. If the page offers site tools, the agent can discover and use the
+relevant actions in the website you're viewing. For example, a document
+editor might let the agent find a section or leave a comment for you to review.
+
+Select **Site tools** in the browser's address bar to see what the website
+provides. Choose **Available site tools** to inspect the individual tools. The
+browser checks each request before the website carries it out, and the agent
+can inspect the page to see what changed. When recent activity is available,
+choose **Recently used** to open **Sources** and review those calls.
+
+In this example, expand **Available site tools** to inspect the tools provided
+by [Margin](https://margin-local-docs.openai.chatgpt.site).
+
+Tools belong to the page that provides them. Closing or navigating away from a
+page can make its tools unavailable. If no suitable tool is available, the
+agent may still be able to use its regular browser capabilities.
+
+#### Example: Explore OpenAI documentation
+
+ChatGPT Learn and OpenAI Developers offer site tools for finding and reading
+documentation. Select **Open in ChatGPT** in the composer to open Learn in the
+desktop app's browser beside a new chat with this prompt ready to send.
+
+The agent can use these tools to search, read, and open the relevant page:
+
+| Tool                    | What it does                                                             |
+| ----------------------- | ------------------------------------------------------------------------ |
+| `search_openai_docs`    | Searches OpenAI documentation.                                           |
+| `lookup_page`           | Reads a documentation page by path or URL.                               |
+| `lookup_context`        | Reads the current docs route and selected text.                          |
+| `navigate_to_page`      | Opens a matching page on the current documentation site.                 |
+| `generate_custom_guide` | Starts a custom build or learning guide and returns its status and link. |
+
+Docs Agent generates a custom guide asynchronously. Receiving its link doesn't
+mean generation has finished.
+
+#### Security and user controls
+
+Website-provided tool definitions and results are untrusted content. A tool's
+name or claim that it only reads data isn't proof of what it does. Website
+instructions don't give the agent permission to share unrelated information or
+take sensitive actions.
+
+In the built-in browser, each tool invocation receives a safety review before
+it runs. Normal website-access and confirmation policies still apply, including
+for consequential actions such as sending messages, making purchases, deleting
+data, or changing permissions. The browser ties each invocation to its
+originating page and tool registration. These checks reduce risk; they don't
+make a website or its output trustworthy.
+
+You can turn off **Enable site tools** in **Settings > Browser > Permissions**.
+Review the site, requested action, and result before sharing sensitive
+information or relying on a change.
+
+Report security vulnerabilities through OpenAI's
+[Security Bug Bounty program](https://bugcrowd.com/engagements/openai). For AI
+safety risks, see the
+[Safety Bug Bounty program](https://openai.com/index/safety-bug-bounty/). Follow
+each program's scope and submission instructions.
+
+#### Add WebMCP to your website
+
+You can ask Codex to add WebMCP support to the web app or
+[Site](https://learn.chatgpt.com/docs/sites) you're working on. Describe what an agent should be able
+to do, and ask Codex to reuse the application's existing logic and permissions.
+
+Start with an operation your application already supports. For example:
+
+- A dashboard that lets the agent set a date range and inspect the data behind
+  a chart.
+- A document editor that lets the agent find a section, suggest an edit, or
+  leave a comment for you to review.
+- A travel planner that lets the agent compare options and update an itinerary
+  while you inspect the map.
+
+You can also write the code yourself. In your page's JavaScript module, check
+for browser support and register a tool. This read-only example returns the
+current page's title:
+
+```javascript
+if (typeof document.modelContext?.registerTool === "function") {
+  await document.modelContext.registerTool({
+    name: "get_page_title",
+    description: "Read the title of the current page.",
+    inputSchema: {
+      type: "object",
+      properties: {},
+      additionalProperties: false,
+    },
+    annotations: { readOnlyHint: true },
+    execute: async () => ({ title: document.title }),
+  });
+}
+```
+
+A compatible agent can discover `get_page_title` and receive the page's
+current title. For a tool that accepts arguments, describe them in the input
+schema and use them in the `execute` handler to call your application's
+existing logic.
+
+Keep inputs narrow, describe side effects, and return enough information to
+verify the result. Use your application's existing authentication,
+authorization, and input validation. Preserve the normal interface for people
+and browsers that don't support WebMCP.
+
+For API details and examples, see the
+[WebMCP specification](https://webmachinelearning.github.io/webmcp/) and
+[Chrome's developer guide](https://developer.chrome.com/docs/ai/webmcp).
+
 ### Skills
 
 Source: [Skills](https://developers.openai.com/plugins/concepts/skills.md)
@@ -32457,9 +32689,10 @@ generate_prompt.sh | codex exec - --json > result.jsonl
 
 Source: [Scheduled tasks](https://learn.chatgpt.com/docs/automations.md)
 
-Schedule recurring tasks to run in the background. Review active, paused, and
-completed tasks and recent runs in **Scheduled**. You can combine scheduled
-tasks with [skills](https://learn.chatgpt.com/docs/build-skills) for more complex work.
+Schedule recurring tasks to run in the background. On ChatGPT web and mobile,
+eligible plans can also run tasks from supported app events. Review active,
+paused, and completed tasks and recent runs in **Scheduled**. You can combine
+scheduled tasks with [skills](https://learn.chatgpt.com/docs/build-skills) for more complex work.
 
 In the ChatGPT desktop app, scheduled tasks can work with local projects and
 run in the project directory or an isolated worktree. Keep the computer on and
@@ -32495,6 +32728,40 @@ project, upload, or connected service.
 Before you schedule a task, test its prompt in a regular web chat.
 Review the first few runs, then adjust the prompt, tools, or cadence if the
 results are too broad or need additional context.
+
+#### Trigger tasks from app events
+
+On eligible plans, scheduled tasks can run when a supported Gmail, Slack, or
+GitHub event occurs. Event-triggered tasks are available in ChatGPT on the web
+and mobile. They aren't available in the ChatGPT desktop app, Codex CLI, or the
+IDE extension.
+
+Ask ChatGPT to create the task, then describe the event to watch for and what
+to do when it happens. The trigger determines when the task runs; the saved
+prompt determines what each run does. One task can use multiple event triggers,
+but it can't combine event triggers with a time-based schedule.
+
+Supported event triggers include:
+
+- **Gmail:** New incoming messages, optionally filtered by sender or subject.
+- **Slack:** New messages in selected channels, optionally filtered by author
+  and whether thread replies are included. Reactions, edits, deletes, and
+  direct messages aren't supported.
+- **GitHub:** Pull request activity in a repository. Filter by pull request,
+  author, title, or label, and choose whether reviews, comments, commit updates,
+  or only merges should trigger the task.
+
+Connect and authorize the app before creating the task. For Slack, add
+`@ChatGPT` to every channel the task watches. For GitHub, the connected app
+must have access to the repository.
+
+When several matching events arrive close together, ChatGPT may combine them
+in one run. Open **Scheduled** to review pending events or choose **Run now**
+to process them.
+
+Availability depends on your plan and workspace settings. In managed
+workspaces, administrators can control access with the **Allow event-triggered
+scheduled tasks** permission.
 
 For example, schedule a task to evaluate telemetry errors and submit fixes,
 or to create reports about recent codebase changes. For ongoing work that
@@ -32555,9 +32822,9 @@ rely on automatic tool selection.
 #### Ask ChatGPT to create or update scheduled tasks
 
 You can create and update scheduled tasks from a ChatGPT or Codex chat.
-Describe the work, the schedule, and whether each scheduled run should return to
-the current chat or start a new chat. ChatGPT can draft the prompt, choose the
-right destination, and update the scheduled task when its scope or cadence
+Describe the work, when it should run, and whether each run should return to the
+current chat or start a new chat. ChatGPT can draft the prompt, choose the
+right destination, and update the task when its scope or cadence
 changes.
 
 For example, ask ChatGPT to schedule a follow-up from the current chat while a
@@ -32581,8 +32848,8 @@ time.
 Schedule a task inside a chat for:
 
 - checking a long-running operation until it finishes
-- polling Slack, GitHub, or another connected source when the results should
-  stay in the same chat
+- checking a connected source on a fixed cadence when you need a periodic
+  snapshot rather than a response to one supported app event
 - reminding ChatGPT to continue a review loop at a fixed cadence
 - running a skill-driven workflow that uses plugins, such as checking PR status
   and addressing new feedback
@@ -34369,11 +34636,9 @@ passwords, or authenticated local sessions.
 
 The cloud browser can navigate public websites, enter information into supported
 public forms, and combine relevant information from an approved app with a
-website task. Depending on workspace configuration and available browser
-capabilities, supported workflows can request a separate, user-authorized
-sign-in or passkey action. This doesn't grant access to the user's existing
-local browser sessions, saved passwords, or password manager. Browser
-availability depends on your plan, region, rollout, and workspace permissions.
+website task. Website sign-in through the cloud browser isn't available in
+Enterprise or Edu workspaces. Browser availability depends on your plan,
+region, rollout, and workspace permissions.
 For Enterprise workspaces, an administrator must enable cloud browser access in
 addition to Work access.
 
@@ -34444,21 +34709,21 @@ and the [ChatGPT Work Admin FAQ](https://learn.chatgpt.com/docs/enterprise/work-
 
 #### Retention depends on the data type
 
-- **Work conversations**—Follow the applicable ChatGPT workspace conversation
+- **Work conversations:** Follow the applicable ChatGPT workspace conversation
   retention and deletion settings.
-- **Files saved to Library**—Follow the applicable file and workspace
+- **Files saved to Library:** Follow the applicable file and workspace
   retention rules. Deleting a conversation doesn't delete files stored in
   Library.
-- **Project files**—Remain with the project until its deletion, subject to the
+- **Project files:** Remain with the project until its deletion, subject to the
   applicable deletion rules and exceptions.
-- **Transient uploads outside Library**—For Enterprise, transient uploads can
+- **Transient uploads outside Library:** For Enterprise, transient uploads can
   expire after 48 hours unless a different retention setting applies.
-- **Saved memories, when enabled**—Follow separate memory controls.
-- **Cloud browser cookies**—Remain separate from local browser data. Users can
+- **Saved memories, when enabled:** Follow separate memory controls.
+- **Cloud browser cookies:** Remain separate from local browser data. Users can
   clear them from the Cloud browser settings.
-- **Compliance Logs Platform records**—Remain available in the platform for 30
+- **Compliance Logs Platform records:** Remain available in the platform for 30
   days. Exported copies follow the receiving system's retention policy.
-- **Connected application data**—Source records follow the connected
+- **Connected application data:** Source records follow the connected
   application's policies. Copies saved in a chat, file, or synced index also
   follow the applicable OpenAI storage and retention rules.
 
