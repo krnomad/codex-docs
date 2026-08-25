@@ -1313,50 +1313,78 @@ Choose the GPT-5.6 model that best fits your work:
   classification, extraction, support, background automation, and focused coding
   tasks.
 
-The estimates below show local messages per five-hour window for Plus and
-Business Standard seats. Cloud chats on ChatGPT plans use GPT-5.6 Sol and may use
-more of your allowance than local messages.
+The estimates below show local messages per five-hour window. Cloud chats on
+ChatGPT plans use GPT-5.6 Sol and may use more of your allowance than local
+messages.
 
       Model
 
         Plus
 
-        Business Standard
+        Pro 5x
+
+        Pro 20x
+
+        Business
 
         API Key
 
       GPT-5.6 Sol
       10-100
+      50-500
+      200-2,000
       10-100
 
         [Usage-based](https://platform.openai.com/docs/pricing)
 
       GPT-5.6 Terra
-      20-170
-      20-150
+      25-200
+      125-1,000
+      500-4,000
+      25-200
 
         [Usage-based](https://platform.openai.com/docs/pricing)
 
       GPT-5.6 Luna
-      215-1,720
-      200-1,550
+      250-2,000
+      1,250-10,000
+      5,000-40,000
+      250-2,000
 
         [Usage-based](https://platform.openai.com/docs/pricing)
 
-        On Plus and Business Standard seats, local messages and cloud chats
-        share a **five-hour window**. Additional weekly limits may apply.
+      GPT-5.5
+      15-80
+      75-400
+      300-1,600
+      15-80
+
+        [Usage-based](https://platform.openai.com/docs/pricing)
+
+      GPT-5.4
+      20-100
+      100-500
+      400-2,000
+      20-100
+
+        [Usage-based](https://platform.openai.com/docs/pricing)
+
+      GPT-5.4 mini
+      60-350
+      300-1,750
+      1,200-7,000
+      60-350
+
+        [Usage-based](https://platform.openai.com/docs/pricing)
+
+        On ChatGPT plans, local messages and cloud chats share a **five-hour
+        window**. Additional weekly limits may apply.
 
         For Enterprise/Edu users with flexible pricing, there are no fixed rate
         limits—usage scales with [credits](#credits-overview).
 
         Enterprise and Edu plans without flexible pricing have the same per-seat
         usage limits as Plus for most features.
-
-Pro 5x and Pro 20x include 5x and 20x the usage of Plus, respectively.
-
-Business Premium seats include 5x the usage of Standard seats, with no five-hour
-limit, so you can work through longer uninterrupted sessions. Weekly limits
-still apply to Pro and Business Premium seats.
 
 Usage limits are shared with other agentic features once pricing for those
 features is effective. This currently includes [ChatGPT for
