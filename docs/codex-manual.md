@@ -10055,13 +10055,13 @@ For the research rationale and published evaluation results, see the
 
 Source: [Models and Trusted Access](https://learn.chatgpt.com/docs/cyber-safety.md)
 
-OpenAI Daybreak helps approved users perform authorized defensive cybersecurity work. Daybreak Blue provides access to frontier models with reduced refusals for authorized defensive workflows. Daybreak Red provides separately approved access to specialist cyber models for more advanced security research.
+OpenAI Daybreak helps approved users perform authorized defensive cybersecurity work. Daybreak Blue provides access to flagship models with reduced refusals for authorized defensive workflows. Daybreak Red provides separately approved access to specialist cyber models for more advanced security research.
 
 Combine your approved model with a controlled environment, clear limits on approved systems and actions, least-privilege permissions, and automatic review before sensitive actions run. Use the model only with the approved identity, workspace or API organization and project, and product surface.
 
 #### Choose the right model
 
-Start with **GPT-Daybreak-Blue** for most authorized defensive work. This model provides access to frontier capabilities with reduced refusals for defensive security workflows, including:
+Start with **GPT-Daybreak-Blue** for most authorized defensive work. This model provides access to advanced capabilities with reduced refusals for defensive security workflows, including:
 
 - Vulnerability discovery and triage.
 - Secure code review and threat modeling.
