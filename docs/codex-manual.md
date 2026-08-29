@@ -21550,6 +21550,9 @@ once to make the same listing discoverable from supported surfaces in both
 products. During development, use a local marketplace to test the package
 before submitting it to the universal directory.
 
+For workspace distribution through GitHub, see
+[Plugin management](https://learn.chatgpt.com/docs/enterprise/plugin-management).
+
 Start with a skill when you are still iterating on one personal workflow.
 Build a plugin when you want to share that workflow, package related skills,
 connect to an external service, or distribute a stable capability to a team.
@@ -26999,6 +27002,8 @@ Plugins may not:
 - Link directly to a checkout or other transactional page.
 - Link to a page that explicitly initiates the process to upgrade, subscribe, or complete a purchase.
 
+Plugins should provide a high quality experience in ChatGPT. If the same feature in your plugin is also available through your external website or application, you must not provide a worse version through your plugin. Plugins must not apply ChatGPT-specific fees, surcharges, or other pricing that penalizes users for accessing a service through ChatGPT. Temporary discounts and promotional offers on other platforms are permitted.
+
 In addition, plugins may not be used to sell, promote, facilitate, or meaningfully enable the following goods or services:
 
 #### **Prohibited goods**
@@ -30014,6 +30019,10 @@ The Plugins Directory organizes plugins into tabs:
   **Shared with me** sections when those plugins are available.
 
 Use the separate **Installed** row to review plugins you already installed.
+
+Workspace admins can import and sync a GitHub marketplace for their team. See
+[Plugin management](https://learn.chatgpt.com/docs/enterprise/plugin-management) for setup and access
+requirements.
 
 #### Install and use a plugin
 
@@ -34358,6 +34367,7 @@ source-system permissions or govern Platform API usage or billing.
 
 #### Related docs
 
+- [ChatGPT Work: usage and cost](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-usage-and-cost)
 - [Admin rollout guide](https://learn.chatgpt.com/docs/enterprise/admin-setup)
 - [Governance](https://learn.chatgpt.com/docs/enterprise/governance)
 - [Workspace analytics](https://learn.chatgpt.com/docs/enterprise/workspace-analytics)
@@ -34697,8 +34707,16 @@ servers, hooks, command rules, and other supported runtime behavior.
 #### How does ChatGPT Work usage translate into spend over time?
 
 [ChatGPT Work and Codex share pricing, credits, and usage limits](https://learn.chatgpt.com/docs/pricing).
-Consumption varies with the model and capability, context size, task duration,
-tool use, and output size. Standard Chat usage is separate.
+For eligible credit-based agreements, review employees' combined Chat and Work
+usage against the shared workspace credit allocation. Consumption varies with
+the model, applicable reasoning or speed settings, processed input and output,
+and eligible tools or features.
+
+Using committed credits doesn't automatically increase your invoice. Actual
+charges depend on the remaining credit balance, contracted rates, account
+overage eligibility, and configured workspace overage limit. For planning
+examples, effective user limits, reporting boundaries, and billing details,
+see [ChatGPT Work: usage and cost](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-usage-and-cost).
 
 The highest-variance patterns are often workflows that run frequently,
 retrieve or process large amounts of information, call multiple tools or apps,
@@ -34824,10 +34842,16 @@ Revocation paths include:
 
 Source: [ChatGPT Work cloud security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security.md)
 
-ChatGPT Work runs cloud tasks in an isolated environment on OpenAI-managed
-infrastructure. This guide explains what those tasks can access, which controls
-administrators can apply, and how retention and auditing apply to different
-categories of information.
+ChatGPT Work is part of your existing ChatGPT workspace and follows its
+applicable privacy, security, and data-handling policies. For Business,
+Enterprise, and Edu workspaces, existing protections include encryption in
+transit and at rest, and OpenAI doesn't use business data to train its models by
+default.
+
+Work Cloud also introduces hosted task execution and optional tools that can
+access connected systems or take authorized actions. Review the permissions,
+retention settings, and available audit records for the capabilities your
+organization enables.
 
 Capabilities and controls depend on the workspace plan, rollout, configuration,
 and connected integration. For the broader execution model, see the
@@ -34903,11 +34927,12 @@ plugin can use an app as one of its underlying tools. Making a plugin available
 doesn't automatically enable the underlying app, authorize an account, or
 approve every action the integration can perform.
 
-A task that uses an app or connector can proceed only when:
+A task that uses a connected app, directly or through a plugin, can proceed
+only when:
 
 - The workspace enables the app and any plugin that requires it.
 - The person has the necessary workspace or role access.
-- The connection is authorized for an individual, shared, or agent-owned
+- The connection uses an authorized individual, shared, or agent-owned
   account.
 - The connected account, approved scopes, and available app action settings
   permit the requested information or operation.
@@ -34919,10 +34944,10 @@ workspace, options can include **Always ask**, **Any changes**, **Important
 actions**, and **Never ask**. With **Any changes**, supported reads can proceed
 without a prompt while changes require confirmation.
 
-When the approval policy allows it, an authorized action, including a write,
-can run without a prompt. This doesn't expand the app's allowed actions,
-workspace access, or the connected account's permissions. ChatGPT can still
-block some high-risk actions.
+An authorized write can run without a prompt when the configured policy allows
+it. This doesn't expand the app's allowed actions, workspace access, or the
+connected account's permissions. ChatGPT can still block some high-risk
+actions.
 
 Confirm the plugin and each underlying app are available in the workspace.
 Review role access, connected-account authorization, and action permissions as
@@ -34947,8 +34972,8 @@ synced index, that copy follows the rules for its saved location.
 #### Cloud browser and network access
 
 The cloud browser, web search, connected apps, and code or shell networking are
-separate capabilities, and can each be configured. Restricting one doesn't
-automatically disable the others.
+separate capabilities. Restricting one doesn't automatically disable the
+others.
 
 #### Cloud browser
 
@@ -34958,6 +34983,8 @@ browsing; a cloud task can run without it.
 
 The hosted browser doesn't inherit the user's local browser profile, open tabs,
 existing sign-ins, saved passwords, password manager, or browsing history.
+Where supported, users can sign in separately through a secure hosted sign-in
+flow. This doesn't grant access to their local browser session.
 
 Supported website interactions can include public forms and can combine
 information from an authorized app with a website task. Where available,
@@ -34987,9 +35014,8 @@ See [Code and shell sandboxing](https://learn.chatgpt.com/docs/sandboxing?surfac
 
 #### Data handling and retention
 
-Business, Enterprise, and Edu workspace data is encrypted in transit and at
-rest. OpenAI doesn't use an organization's business inputs or outputs to train
-or improve its models by default. See
+Work Cloud follows the applicable ChatGPT workspace privacy and security
+protections described above. See
 [Enterprise privacy](https://openai.com/enterprise-privacy/).
 
 Information associated with a cloud task doesn't follow one universal
@@ -35051,18 +35077,18 @@ Review the controls that apply to each part of a cloud task:
 - **Browser and networking:** Assess cloud browser access and code or shell
   public-network access independently.
 
-Where separate **Work Cloud** and **Work Local** controls are available, enable
-**Work Cloud** and disable **Work Local** for the intended role to permit cloud
-Work without local execution. Where local Work and Codex share a control,
-review the effect on both before disabling local execution. These controls
-don't prevent an authorized person from intentionally uploading a file to a
-cloud task.
+Enable **Work Cloud** only for approved users or groups. Where separate
+**Work Cloud** and **Work Local** controls are available, enable **Work Cloud**
+and disable **Work Local** for the intended role to permit cloud Work without
+local execution. Where local Work and Codex share a control, review the effect
+on both before disabling local execution. These controls don't prevent an
+authorized person from intentionally uploading a file to a cloud task.
 
 For supported role permissions with **Default**, **On**, and **Off** states,
-**Default** inherits the workspace setting, **On** grants access, and an
-explicit **Off** in any applicable ordinary role denies access. Some Work and
-plugin settings use different, two-state controls. Verify each person's
-effective access, especially when more than one role applies. See
+**Default** inherits the workspace setting, **On** grants access, and **Off**
+removes access through that role. If a user has multiple custom roles, another
+role can still grant access. Some Work and plugin settings use different,
+two-state controls. Verify effective access across all assigned roles. See
 [Role-based access control](https://help.openai.com/en/articles/11750701-rbac).
 
 Where available, the **Work Cloud** permission applies across supported web,
@@ -35090,17 +35116,159 @@ connected-system audit logs, and the retention policies of systems receiving
 exported records. See the
 [OpenAI Compliance Platform](https://help.openai.com/en/articles/9261474-compliance-api-for-chatgpt-enterprise-edu-and-chatgpt-for-teachers).
 
-#### Start with a restricted, useful workflow
+#### Start with a small pilot
 
-A security team can upload a current vendor advisory, compare it with an
-authorized asset inventory, and review a draft exposure assessment before
-taking action. If cloud browsing or an app connection isn't enabled, the team
-can provide the advisory and an approved inventory extract directly.
+Choose one practical task for a small group. For example, a security team could
+compare an approved vendor advisory with an authorized inventory and review a
+draft exposure assessment before deciding what to do. If cloud browsing or
+connected apps are unavailable, provide the advisory and an approved inventory
+extract directly.
 
-Start with a small group and enable only the access needed for the task. Verify
-connected-account permissions, data retention, human review points, and
-available logs before expanding the rollout. For rollout planning, see the
+Enable only the access the task requires. Confirm connected-account
+permissions, retention settings, available audit records, and where a person
+should review the result before expanding access. For rollout planning, see the
 [Admin rollout guide](https://learn.chatgpt.com/docs/enterprise/admin-setup).
+
+### ChatGPT Work local security
+
+Source: [ChatGPT Work local security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-local-security.md)
+
+ChatGPT Work can use approved files, applications, and browser sessions on a user's computer to complete local tasks. Access depends on workspace permissions, the user's existing account access, operating-system permissions, application approvals, and supported device policies.
+
+Local capabilities depend on the supported desktop app, operating system, workspace entitlement, role permissions, device policy, and product rollout.
+
+#### Security at a glance
+
+- Local tasks run through the ChatGPT desktop app. Opening a hosted cloud task in the same app does not make that task local.
+
+- Available local and hosted Work controls depend on workspace configuration and rollout.
+
+- File access, Computer Use, browsers, and connected apps use different permissions and approvals.
+
+- A browser or application already signed in to a company system can expose the permissions of that existing account.
+
+- Supported managed-device policies can restrict local features without replacing workspace access controls.
+
+- Business, Enterprise, and Edu workspace data processed by covered OpenAI services is encrypted in transit and at rest and is not used to train OpenAI models by default.
+
+- Local files, task context, browser data, connected-system records, and audit events can follow different storage and retention rules.
+
+#### Where local tasks run
+
+Work Local accesses approved resources through the desktop app on the user's computer. Work Cloud runs on OpenAI-managed infrastructure, even when opened from the same desktop app.
+
+Local files can remain on the device, but relevant file excerpts, prompts, screenshots, browser content, or tool results may be sent to OpenAI services to complete a task. Local execution does not mean offline or device-only model inference.
+
+#### Files and device access
+
+A local task can work with information the user provides or makes available, including supported files, application content, browser sessions, and authorized connected systems. Access depends on the user's existing privileges and the controls governing that specific capability.
+
+Granting local Work access does not automatically approve every application, grant administrator rights, or bypass the permissions of the account used to reach another system. An approved shared connection can have different privileges from the user's personal account.
+
+#### Computer Use and application approvals
+
+[Computer Use](https://learn.chatgpt.com/docs/computer-use) can interact with supported desktop applications only when the capability is available, the required operating-system permissions are granted, and the user authorizes the application. Depending on the available options, approval can apply to the current session or future tasks.
+
+On macOS, Screen Recording allows Computer Use to see application content, and Accessibility allows it to click, type, and navigate. Supported macOS tasks can run in the background. On Windows, Computer Use operates on the active, visible desktop and cannot run in the background while the user continues using that same session.
+
+Users can stop a task at any time. Computer Use cannot approve operating-system security prompts, authenticate as an administrator, or automate terminal applications or ChatGPT itself.
+
+#### Locked devices
+
+Supported macOS configurations can optionally allow an approved Computer Use task to continue while the Mac is locked. Availability depends on the app version, feature rollout, applicable requirements, and remote-control eligibility.
+
+Administrators can disable locked-device operation through supported managed configuration. Windows Computer Use requires an active, unlocked desktop; macOS locked-use behavior does not establish equivalent Windows support.
+
+#### Browser sessions and existing sign-ins
+
+Work Local does not automatically gain access to every browser or company account. Access depends on the browser used, the signed-in account, and the approvals required for that browser experience.
+
+| Browser path                                | Session and security boundary                                                                                                                                                                                                 |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Desktop in-app browser](https://learn.chatgpt.com/docs/browser)    | Uses a browser profile separate from the user's regular browser. The user can sign in within that profile, and supported website access may require approval. The built-in browser cannot automate file uploads.              |
+| [Chrome extension](https://learn.chatgpt.com/docs/chrome-extension) | Can interact with existing browser tabs and accounts when the extension and website access are approved. Users can approve a site once or allow future access; browser-history and local-file access require separate review. |
+| Computer Use operating a browser            | Uses a browser approved as a desktop application, including accounts already signed in to that browser. Operating-system permissions, application approval, and the existing account's permissions still apply.               |
+
+Website approval options and sensitive-action confirmations vary by browser experience. Allowing all sites reduces future approval prompts, so users should review that choice before enabling it.
+
+A hosted cloud browser is separate from the user's local browsers and does not automatically inherit their existing sign-ins. Supported cloud workflows can request a separate, user-authorized sign-in.
+
+#### Apps, plugins, and connected accounts
+
+A connected app can provide access to information or actions in another system. A plugin can use an app as an underlying tool. Making a plugin available does not automatically enable the required app, authorize an account, or permit every action.
+
+Plugin and app availability depend on the workspace plan and configuration. The [ChatGPT Work overview](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-overview) describes plugins and their underlying apps as off by default for Enterprise and Edu workspaces and on by default for Business workspaces. Verify the actual settings for the relevant workspace and product experience.
+
+Before a task uses a connected system, confirm that the workspace allows the app and any required plugin, the connection is authorized, and the connected account can access the requested information or action. Read-only settings, allowed actions, and confirmation requirements vary by integration.
+
+Desktop-only plugins, local tools, and other locally provided capabilities can follow different installation or approval paths. Do not assume that every local tool uses the same administrative approval process.
+
+#### Personal and shared connections
+
+A personal connection uses the connected user's permissions in the source system. A shared or agent-owned connection uses the connected account's permissions, which can be broader than the user's own access.
+
+Limit shared accounts to the necessary data and actions, restrict who can use them, and apply supported action or confirmation controls. Records in the connected system remain subject to that system's permissions and retention policies.
+
+#### Administrator access and managed-device policies
+
+Review the Work controls available in **Workspace settings** > **Permissions & roles**. Whether local and hosted Work appear as distinct permissions depends on the workspace configuration and rollout. For additional guidance, see the [Work administrator FAQ](https://learn.chatgpt.com/docs/enterprise/work-admin-faq).
+
+Enable only the execution environments approved for each user or group, and verify effective access after making changes.
+
+Workspace permissions determine who can use Work. Administrators can also restrict supported desktop capabilities through enforced requirements defined in `requirements.toml`. Depending on the deployment, these requirements can be delivered through workspace-managed configuration, a system-level configuration file, or supported macOS mobile device management tools.
+
+Enforced requirements cannot be overridden by individual users. Managed defaults, by contrast, establish initial settings that users may be able to change. Neither replaces workspace roles or operating-system permissions.
+
+| Managed setting                                       | Security purpose                                                             |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `features.computer_use = false`                       | Disable supported Computer Use capabilities.                                 |
+| `allow_appshots = false`                              | Prevent supported Appshot capture.                                           |
+| `features.in_app_browser = false`                     | Disable the desktop app's built-in browser.                                  |
+| `features.browser_use = false`                        | Disable supported browser automation; review other browser paths separately. |
+| `features.apps = false` or `features.plugins = false` | Restrict supported connected applications or plugins.                        |
+| `computer_use.allow_locked_computer_use = false`      | Prevent supported Computer Use while a Mac is locked.                        |
+
+Available settings and delivery methods depend on the client, operating system, workspace, and deployment configuration. Validate restrictions on a representative managed device. For supported policy settings, configuration examples, and MDM setup instructions, see [Managed configuration](https://learn.chatgpt.com/docs/enterprise/managed-configuration).
+
+#### Local networking and private resources
+
+A task can reach company information through paths such as a device browser, an approved desktop application, or a connected app. Existing device, proxy, VPN, source-system, and endpoint controls may apply differently to each path.
+
+Access to a corporate VPN does not automatically authorize every tool to use every internal resource. Likewise, a cloud Work browser or cloud-network control is not a universal restriction on local device networking. Review the actual connection, identity, destination, and action required by the workflow.
+
+#### Data handling and retention
+
+Apply your organization's endpoint, file-access, proxy, and data-loss-prevention controls to the specific device and workflow. Confirm whether those controls can prevent sensitive information from entering the task before processing. Audit logs and compliance exports help with monitoring and investigation but do not block processing on their own.
+
+Storage and retention depend on the information category and where it is saved.
+
+| Information category                            | What to review                                                                                                                                                     |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Local conversation records                      | How the desktop experience stores, deletes, backs up, or shares local records. Do not assume hosted-conversation retention settings apply to every local artifact. |
+| Local files and generated outputs               | Device storage, endpoint policy, user-authorized uploads, external sharing, and any separately saved copies.                                                       |
+| Prompts, file excerpts, and application context | Content supplied to a model or service, applicable workspace terms, and the workflow's actual data flow.                                                           |
+| Voice and Appshots                              | Microphone input, frontmost-window screenshots, accessible application text, local session storage, and any content sent as task context.                          |
+| Browser data                                    | The browser profile involved, existing sign-ins, browsing history, downloads, website approvals, and any separately stored task content.                           |
+| Connected-system records                        | Source-system permissions and retention, connected-account identity, and any information separately saved to the conversation or another destination.              |
+| Compliance and activity records                 | Which Work Local events are available for the workspace, the supported integration, and the receiving system's retention policy.                                   |
+
+For supported Business, Enterprise, and Edu workspaces, business data processed by covered OpenAI services is encrypted in transit and at rest and is not used to train or improve OpenAI models by default. These protections do not mean OpenAI governs every device file, third-party application, browser profile, or source-system record.
+
+Do not apply a hosted-conversation, temporary-upload, or compliance-log retention period to local records without confirming that it applies to the specific data category.
+
+#### Audit and compliance visibility
+
+Available reporting depends on the workspace plan, product experience, event, connected application, and deployed configuration. Verify Work Local coverage before relying on a workspace export for incident response or regulatory review.
+
+Determine whether the relevant systems record the task identity, supported prompts and responses, connected-app calls, browser approvals, application actions, local file activity, or endpoint events. Source-system and device records can provide different visibility from ChatGPT workspace records.
+
+OpenAI does not store a separate complete record of Chrome actions performed through the extension. Do not assume that every local file operation, screenshot, browser action, approval, or external update appears in the Compliance API.
+
+#### Start with one approved task
+
+Start with a small group on managed devices and choose one approved task, such as comparing selected finance workbooks. Confirm each user's Work access and provide only the files, applications, browser sessions, or connected accounts the task requires.
+
+Check that approved actions work, restricted actions are blocked, and available records meet your monitoring needs. Have a user review the results and any external changes before expanding access.
 
 ### ChatGPT Work Overview
 
@@ -35124,6 +35292,10 @@ configuration.
 For a focused review of hosted execution, connected-account permissions,
 browser and network settings, retention, and audit visibility, see
 [ChatGPT Work cloud security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security).
+
+For device access, local browser sessions, managed policies, and local data
+handling, see
+[ChatGPT Work local security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-local-security).
 
 #### Execution isolation, files, and device access
 
@@ -35306,6 +35478,221 @@ See
 [Memory in ChatGPT](https://help.openai.com/en/articles/8590148-memory-in-chatgpt-faq),
 and the
 [OpenAI Compliance Platform](https://help.openai.com/en/articles/9261474-compliance-api-for-chatgpt-enterprise-edu-and-chatgpt-for-teachers).
+
+### ChatGPT Work: usage and cost
+
+Source: [ChatGPT Work: usage and cost](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-usage-and-cost.md)
+
+ChatGPT Work helps employees complete multi-step tasks, such as researching a
+topic, analyzing information, or creating a finished document or presentation.
+Completing these tasks can require additional reasoning, tools, and processing,
+which may consume credits. Whether that usage affects your invoice depends on
+your remaining credits, contracted rates, and workspace overage settings.
+
+Use this guide to understand how Work affects usage, plan employee adoption,
+and apply the spending controls available to your organization.
+
+#### Usage and cost at a glance
+
+- For eligible credit-based agreements, Work activity draws from a shared pool
+  of workspace credits.
+- Consuming committed credits differs from incurring new invoiced
+  charges.
+- Employees can use both Chat and Work; evaluate their combined eligible usage
+  when estimating adoption.
+- Role-based estimates support planning but aren't fixed per-user prices or
+  guaranteed billing amounts.
+- User usage limits and workspace overage limits are separate controls. Alerts
+  provide notice but don't stop spending.
+- Assess a rollout using your organization's observed usage and measurable
+  workflow outcomes.
+
+#### Why Work uses credits
+
+For organizations with credit-based agreements, eligible Work activity consumes
+credits from the shared workspace allocation. Other eligible ChatGPT features
+can draw from the same allocation, so Work doesn't necessarily have a separate
+balance.
+
+Consumption varies with:
+
+- The model, execution environment, and applicable reasoning or speed settings.
+- The task's complexity and any eligible tools or features used—for example,
+  preparing a quarterly business review using CRM records, documents, or messages
+  from approved apps and systems the employee is authorized to access.
+- How frequently employees run tasks.
+
+Employees don't need to stop using Chat when they start using Work. To
+understand the change in total consumption, compare the same employees'
+earlier Chat usage with their combined Chat and Work usage over a comparable
+period.
+
+Your agreement and applicable rate card determine the credits each eligible
+activity consumes. Existing subscription or seat fees are separate from an
+estimate of credits consumed.
+
+#### When usage affects your bill
+
+Whether eligible Work usage results in an additional charge depends on your
+agreement, remaining credits, and applicable billing settings. Using committed
+credits reduces your available balance but doesn't, by itself, create a new
+invoice charge:
+
+- **Committed credits remain:** Eligible activity draws down the available
+  credit allocation. Using those credits doesn't, by itself, create a new charge
+  beyond your existing agreement.
+- **No credits remain and your account permits overage:** Eligible usage can
+  continue within the configured workspace overage limit and may incur charges
+  at your contracted overage rate.
+- **No credits remain and your account doesn't permit overage:** Eligible
+  features can pause until credits become available or the applicable limit
+  changes.
+
+Overage behavior depends on both account eligibility and the configured
+workspace limit. If your agreement doesn't permit overages, eligible usage
+stops when no available credits remain. If your account permits overages, an
+unset limit can allow eligible usage beyond the credit balance. Where supported,
+an overage limit of zero prevents the workspace from continuing into overage,
+while **No limit** isn't a zero-spend cap.
+
+Usage reports and dollar estimates are planning or monitoring tools, not issued
+invoices. Some displayed estimates use the contracted overage rate, which can
+differ from the rate for committed credits. Confirm actual charges against the
+invoice, billing period, and terms in your organization's agreement.
+
+#### Estimate usage for a role or team
+
+A role-based estimate can help plan adoption for employees with similar
+responsibilities, such as Finance, Marketing, or Sales. Start with the
+employees and workflows your organization expects to support.
+
+To develop an estimate:
+
+1. Identify the proposed user group and a comparable period of existing Chat
+   activity.
+2. Estimate combined Chat and Work consumption using observed pilot usage or an
+   approved, relevant role-based benchmark.
+3. Review the remaining committed credit balance. Apply the appropriate
+   contracted rates for committed credits and, separately, any overage.
+4. Determine whether projected usage stays within available credits or could
+   reach your contracted overage terms.
+5. Update the estimate using actual adoption, task mix, and observed
+   consumption.
+
+An approved benchmark may reflect observed enterprise-customer usage and the
+actual mix of models used. Its usefulness depends on the comparison period,
+role classification, workflow, and account assumptions. A broad role-based
+estimate doesn't establish an industry-specific or task-specific benchmark.
+
+An **annualized consumed-credit estimate** projects observed usage value across
+a year. It isn't a separate Work license price, a standard per-user charge,
+OpenAI's infrastructure cost, or a prediction that your invoice will increase
+by the same amount. Actual incremental charges depend on remaining committed
+credits, contracted pricing, permitted overages, and the billing period.
+
+#### Illustrative Marketing planning example
+
+An observed analysis of first-time enterprise Work adopters in Marketing showed
+the following changes in annualized consumed-credit value:
+
+- **Median:** Approximately **$53 per employee per year**.
+- **90th percentile:** Approximately **$1,154 per employee per year**.
+- **Average:** Approximately **$309 per employee per year**.
+
+The median represents the midpoint of observed individual usage. The average is
+higher because a smaller number of employees consume more credits. The 90th
+percentile describes an observed higher-usage threshold, not a spending cap or
+maximum.
+
+For **100 employees** with a similar mix of usage, applying the **$309
+per-employee average** represents approximately **$30,900 annually**, or
+**$2,575 per month as a planning equivalent**.
+
+These directional estimates reflect observed enterprise-customer usage and its
+actual model mix, annualized from one week of adoption-period usage. They
+aren't guaranteed savings, fixed per-user prices, automatic bills, or
+guaranteed increases to your invoice. Actual charges depend on remaining
+committed credits, contracted rates, and permitted overages.
+
+Your account team can help interpret approved estimates against your
+organization's agreement.
+
+#### Administrator controls and reporting
+
+Workspace owners and administrators can use supported settings to manage access
+and eligible credit-based usage:
+
+- **Work access:** Choose which people or groups can access Work through the
+  permissions available to your workspace.
+- **Model and speed settings:** Where available, configure the starting Work &
+  Codex model, reasoning level, speed, and Fast Mode availability in Workspace
+  settings > Models. Fast Mode can consume more credits for supported models.
+- **User usage limits:** Set supported monthly workspace defaults, group
+  limits, or individual overrides to manage each user's eligible usage.
+- **Workspace overage limit:** Control how much eligible usage can continue
+  after the shared credit allocation runs out.
+- **Usage alerts:** In Billing, configure available usage thresholds and
+  recipients where supported. Alerts notify; they don't stop spending.
+- **Credit balance and reporting:** In Billing, review remaining credits and
+  download usage reports available to your role. Where your agreement includes
+  committed credits, compare observed usage with your contracted allocation and
+  billing period to assess pacing.
+- **Invoices:** Review issued invoices and the corresponding billing period
+  when your workspace role includes invoice access.
+
+An individual user override takes precedence over group and workspace defaults.
+When a person belongs to more than one group, the highest applicable group limit
+applies. A group without a configured limit doesn't impose a zero-credit cap.
+Check the effective limit for each pilot participant.
+
+Usage limits don't add credits or determine who can access Work. A model
+default or employee guidance can influence consumption, but neither replaces an
+enforced usage limit or workspace overage setting.
+
+Control availability, reporting detail, invoice access, and billing behavior
+depend on your plan, workspace configuration, and agreement. Reports might not
+reflect activity immediately; compare the report timestamp and billing period
+before reconciling usage with an invoice. For cross-product applicability and
+current setup procedures, see
+[ChatGPT usage limits and spend controls](https://learn.chatgpt.com/docs/enterprise/usage-limits).
+
+#### Measure usage alongside outcomes
+
+Choose a recurring workflow with a clear existing baseline, such as account
+research, meeting preparation, or finance reporting. Use the access, tools,
+and model capabilities appropriate to the work rather than assuming every task
+requires the most advanced option.
+
+During a pilot, compare the same workflow before and after you introduce Work.
+Depending on the task, your organization might measure:
+
+- Time required to complete the work.
+- Output quality, completeness, or consistency.
+- Rework, manual coordination, or error rates.
+- Whether the team completed the intended deliverable.
+
+Review these customer-measured outcomes alongside observed credit consumption
+and any actual billing impact. Usage alone doesn't establish savings, and
+projected time improvements aren't guaranteed financial returns.
+
+#### Start with a controlled rollout
+
+Before expanding access:
+
+1. Confirm your agreement, remaining credits, applicable rates, and overage
+   settings.
+2. Select a limited group and a workflow your organization can evaluate.
+3. Configure supported access permissions, user limits, alerts, and the
+   workspace overage limit.
+4. Compare combined Chat and Work consumption against the group's existing
+   baseline.
+5. Review observed outcomes and any actual billing impact before expanding the
+   rollout.
+
+For broader access, data, governance, and rollout guidance, see the
+[ChatGPT Work admin FAQ](https://learn.chatgpt.com/docs/enterprise/work-admin-faq). For
+contract-specific pricing, credit availability, and invoicing questions,
+contact your account team.
 
 ### Compliance API and audit events
 
@@ -36599,6 +36986,9 @@ browser for installation. See
 [Build plugins](https://developers.openai.com/plugins/build/plugins) for
 packaging and distribution.
 
+To import workspace plugins from GitHub and keep them up to date, see
+[Plugin management](https://learn.chatgpt.com/docs/enterprise/plugin-management).
+
 #### Export the public catalog for review
 
 Eligible ChatGPT Enterprise workspace owners and admins can download a CSV of
@@ -36713,6 +37103,193 @@ app, Codex CLI, or IDE extension, see
 - [Skills and plugins](https://learn.chatgpt.com/docs/skills-and-plugins)
 - [Build plugins](https://developers.openai.com/plugins/build/plugins)
 - [Admin rollout guide](https://learn.chatgpt.com/docs/enterprise/admin-setup)
+
+### Plugin management
+
+Source: [Plugin management](https://learn.chatgpt.com/docs/enterprise/plugin-management.md)
+
+#### Before you begin
+
+Workspace admins can import a plugin marketplace from GitHub and keep its plugins up to date from the repository. A marketplace is a JSON catalog that lists the plugins to import.
+
+Use a GitHub account that can read the marketplace repository and any other repositories it references. Public and private GitHub repositories are supported. Complete any GitHub organization approval required for your repository access before importing.
+
+Review the repository content before importing. New plugins start with **Available** installation and authentication on install. New marketplaces have automatic daily sync enabled. Import processes all valid entries, and future syncs automatically add any new plugins in the repository.
+
+#### Configure a marketplace sync
+
+1. Open **Admin** > **Plugins** and select **Add** > **Import marketplace**.
+2. In **Source**, enter the repository URL, such as `https://github.com/example/team-plugins`. Use the repository URL only, without a branch or folder URL.
+3. If the marketplace is in a subdirectory, enter that directory in **Path**. For example, use `team-tools` for `team-tools/.agents/plugins/marketplace.json`. Leave **Path** empty for the repository root. Do not enter the manifest filename.
+4. Optionally enter a **Branch, tag, or commit**. Leave this empty to use the repository's default branch. Use a branch to receive future commits; a fixed commit stays at that revision.
+5. Select **Import marketplace** and authorize GitHub access when prompted. The initial import can take up to an hour for very large marketplaces. Subsequent daily syncs typically take a few minutes.
+6. Review **Import results**, then open each imported plugin to configure its installation policy and any required apps.
+
+To request an update without waiting for the daily sync, open the marketplace under **Admin** > **Plugins** > **Marketplaces** and select **Sync now**.
+
+#### Supported formats
+
+The selected directory must contain one of these files:
+
+| File                               | Format                                                               |
+| ---------------------------------- | -------------------------------------------------------------------- |
+| `.agents/plugins/marketplace.json` | A Codex marketplace with a `plugins` array.                          |
+| `.claude-plugin/marketplace.json`  | A Claude-compatible marketplace with a `plugins` array.              |
+| `.claude-plugin/plugin.json`       | A standalone Claude plugin, when no marketplace manifest is present. |
+
+In a marketplace, entries can reference native plugins with `.codex-plugin/plugin.json`, Claude-compatible plugins, Agent Plugins 1.0 packages, or supported skill packages.
+
+For a Codex marketplace, use local paths for plugins in the same repository:
+
+```json
+{
+  "name": "team-plugins",
+  "interface": {
+    "displayName": "Team plugins"
+  },
+  "plugins": [
+    {
+      "name": "team-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/team-tools"
+      }
+    }
+  ]
+}
+```
+
+The path is relative to the selected marketplace root, not to `.agents/plugins/`.
+
+A Claude-compatible marketplace can use a path string for each local plugin:
+
+```json
+{
+  "name": "team-plugins",
+  "plugins": [
+    {
+      "name": "team-tools",
+      "source": "./plugins/team-tools"
+    }
+  ]
+}
+```
+
+Codex marketplace entries also support `source: "url"` for a plugin at a GitHub repository root and `source: "git-subdir"` for a plugin in a GitHub subdirectory. For example:
+
+```json
+{
+  "name": "team-tools",
+  "source": {
+    "source": "git-subdir",
+    "url": "https://github.com/example/team-tools.git",
+    "path": "./plugins/team-tools",
+    "ref": "main"
+  }
+}
+```
+
+Git sources can select a `ref` or a full 40-character commit `sha`. The authorizing GitHub account must be able to read every referenced repository. Workspace import currently only supports GitHub repositories.
+
+#### Configure workspace access
+
+GitHub import and sync do not apply repository installation or authentication policies, including `AVAILABLE`, `INSTALLED_BY_DEFAULT`, `NOT_AVAILABLE`, `ON_INSTALL`, and `ON_USE`. Workspace admins configure these settings for each plugin. Syncing an update or moving an existing plugin to GitHub management preserves its workspace policies.
+
+Use **Installation policy** to choose **Available** or **Installed** for each eligible role. Required apps must also be enabled, and members must have access to the connected service. Importing a plugin does not grant app access or connect members' accounts. See [Plugin controls](https://learn.chatgpt.com/docs/enterprise/apps-and-connectors) for role, app, and action controls.
+
+#### Move an existing plugin to GitHub management
+
+Add `pluginId` to the existing plugin's marketplace entry:
+
+```json
+{
+  "name": "team-tools",
+  "pluginId": "plugin_0123456789abcdef0123456789abcdef",
+  "source": {
+    "source": "local",
+    "path": "./plugins/team-tools"
+  }
+}
+```
+
+Open the plugin from **Admin** > **Plugins** and copy the ID after `/admin/plugins/` in its URL. Put `pluginId` beside `name` and `source` in the marketplace entry. The existing plugin must be in the same workspace.
+
+This moves an uploaded or otherwise unmanaged workspace plugin to GitHub management. The plugin keeps its ID, sharing, and workspace policies. Future updates come from GitHub; archive uploads can no longer replace the managed plugin. A plugin already managed by another GitHub source cannot be taken over this way.
+
+#### Desktop-only plugins
+
+Any imported plugin that declares MCP servers in `mcp.json` or `.mcp.json` is marked **Desktop only** and works only in the ChatGPT desktop app. This includes servers that use a remote HTTPS URL. The same restriction applies to other supported MCP configuration forms, such as inline server declarations.
+
+#### Reference an existing app with `.app.json`
+
+Add `.app.json` at the plugin root. The filename includes a leading dot; `app.json` without the dot is not supported.
+
+```json
+{
+  "apps": {
+    "team-tools": {
+      "id": "asdk_app_example",
+      "required": true
+    }
+  }
+}
+```
+
+Replace `asdk_app_example` with the existing app's ID. Supported app IDs start with `asdk_app_`, `connector_`, or `templated_apps_`. Use the app ID, not a `plugin_...` ID. For example, a plugin URL containing `plugin_asdk_app_example` represents the app `asdk_app_example`.
+
+The key `team-tools` names the reference within this file. Set `required` to `true` when the plugin depends on the app. You can add more entries to reference other existing apps.
+
+For a native plugin, set `apps` to `./.app.json` in `.codex-plugin/plugin.json`. Here is a complete manifest for this example:
+
+```json
+{
+  "name": "team-tools",
+  "version": "1.0.0",
+  "description": "Use the team's approved tools.",
+  "author": {
+    "name": "Example team"
+  },
+  "apps": "./.app.json",
+  "interface": {
+    "displayName": "Team tools",
+    "shortDescription": "Use approved team tools",
+    "longDescription": "Connect to the team's existing app.",
+    "developerName": "Example team",
+    "category": "Productivity",
+    "capabilities": ["Read"]
+  }
+}
+```
+
+Keep the files in this layout:
+
+```text
+team-plugins/
+├── .agents/plugins/marketplace.json
+└── plugins/team-tools/
+    ├── .codex-plugin/plugin.json
+    └── .app.json
+```
+
+The reference does not create an app or grant permissions. Admins must make the app available to the intended roles, and members must complete any required authentication. Existing app permissions, action controls, and service access still apply.
+
+#### Keep plugins up to date
+
+New marketplaces check for updates daily. Open **Admin** > **Plugins** > **Marketplaces**, select the marketplace, and choose **Sync now** to request an update without waiting for automatic sync.
+
+Sync can add new marketplace entries and update existing plugins. Review changes to the repository before merging them, because automatic sync will import any new plugins.
+
+After a sync, review the status and saved report. **Completed — N errors** means the pass finished but some plugins could not be processed. If an update to an existing plugin is invalid, its last working version is retained. Fix the reported problem in GitHub, then select **Sync now** to retry.
+
+Removing an entry from the repository does not delete its imported workspace copy. It is marked **No longer in source**. Deleting the marketplace in ChatGPT deletes all plugins imported from it.
+
+#### Reconnect or change GitHub access
+
+To **reconnect GitHub access**, first confirm that the GitHub account used for the import still has access to the repository and any referenced repositories. The admin who originally imported the marketplace should then open the GitHub plugin in ChatGPT and reconnect their account, since marketplace sync uses that admin’s GitHub connection.
+
+To **transfer to a new owner**, the new workspace admin should open **Admin** > **Plugins** > **Add** > **Import marketplace** and import the same marketplace using the same **Source**, **Path**, and **Branch, tag, or commit** values. Future syncs will use their GitHub connection.
+
+Do not delete the marketplace just to reconnect it or change ownership: deletion also removes its imported plugins.
 
 ### Prisma AIRS
 
@@ -37161,6 +37738,222 @@ owns it.
 - [Build plugins](https://developers.openai.com/plugins/build/plugins)
 - [Admin rollout guide](https://learn.chatgpt.com/docs/enterprise/admin-setup)
 - [Plugin controls](https://learn.chatgpt.com/docs/enterprise/apps-and-connectors)
+
+### Using the Admin plugin in ChatGPT Work
+
+Source: [Using the Admin plugin in ChatGPT Work](https://learn.chatgpt.com/docs/enterprise/admin-plugin.md)
+
+Use this guide to understand how the Admin plugin supports common administration work, prepare for a task, and try prompts for key use cases with the right approvals and context.
+
+#### 1. Understand what the Admin plugin is for
+
+The Admin plugin is designed to help manage settings, permissions, and controls directly inside ChatGPT Work. You describe the goal in everyday language, and the plugin gathers the right inputs, reads the current state, explains what it finds, and guides the next supported step.
+
+#### What the Admin plugin is designed to solve
+
+- Turn an admin request into a clear workflow without requiring you to write an API request.
+- Review the current workspace state before making a decision or approving a change.
+- Show which authorized sources and fields support the answer, along with anything it could not verify.
+- Pause for review before a supported change, then read the record again to confirm the result.
+
+The plugin uses selected admin APIs and approved connected data sources behind the scenes. It does not combine every admin system, expand your permissions, or make every API action available in ChatGPT. The system that owns the data still controls what the plugin can read or change.
+
+#### What admin APIs are designed to solve
+
+An admin API gives software a structured way to request data or a supported action. Organizations can use the admin APIs to build internal processes or external tools. Common examples include scheduled reports, repeated work across many records, and connections to approved systems. These workflows usually require engineering, security, and governance review.
+
+You do not need to build an API workflow to use this guide. The rest of the guide is centered on the Admin plugin. ChatGPT workspace administration and OpenAI API Platform administration also remain separate, with their own permissions and authentication requirements.
+
+#### Keep credentials private
+
+Use only your organization’s approved connections and secret-storage systems. Never paste a real admin API key into ChatGPT, Codex, a document, or a source file.
+
+#### 2. Prepare to use the Admin plugin
+
+Use the Admin plugin for a supported, one-time task when you want to work through the request in everyday language. Describe the goal and provide the stable IDs or approved reporting context. The plugin shows what it found or what it plans to change before you decide whether to continue.
+
+The plugin uses only the sources, credentials, and actions authorized for that task. It does not combine every admin system or give you broader permissions. The original system remains the source of truth.
+
+#### Before you begin
+
+1. Find the admin area where the records live.
+2. Gather the required inputs and approval.
+3. Start with a read-only request.
+4. Ask the plugin which sources and fields it used, and what it could not verify.
+5. For a supported change, review the plan before you approve it. Then ask the plugin to read the record again and confirm the result.
+
+Confirm that the plugin is available in your workspace and that you have the required permissions. The role and access use cases below reflect the plugin’s current documented scope. The plugin can review roles, feature permissions, and user or group assignments. After you confirm, it can also assign an existing role to an existing group.
+
+The plugin cannot create roles, change a role’s permissions, or confirm access to a specific connector.
+
+The analytics use cases need access to connected, approved data sources. ROI analysis also needs approved business or engineering results; usage records alone are not enough.
+
+#### 3. Explore key Admin plugin use cases
+
+Pick a use case, replace each placeholder with a value from your approved request, and follow the steps in order. Start with a read-only request unless the task is a supported change that already has approval.
+
+#### List workspace roles
+
+**Prompt to try**
+
+```text
+List the roles in workspace {workspace_id}. Separate built-in and custom roles. For each role, explain which features it can use and show the users or groups assigned to it. Don’t make changes.
+```
+
+**Steps**
+
+1. **Gather:** Confirm the workspace ID and that you are allowed to view this information.
+2. **Run:** Ask for the read-only role list.
+3. **Review:** Check the role types, feature access, and assignments.
+4. **Verify:** Look into anything unexpected without making changes.
+
+#### Review one role
+
+**Prompt to try**
+
+```text
+Review role {role_id}. Explain its permissions in plain language, show who has it, and flag anything that looks broader than expected. Don’t edit the role.
+```
+
+**Steps**
+
+1. **Gather:** Confirm the role ID and workspace.
+2. **Run:** Request the read-only role review.
+3. **Review:** Check that the permissions and assignments match what the role is supposed to do.
+4. **Verify:** Write down any questions for the role owner. Remember, the plugin cannot create the role or edit its permissions.
+
+#### Understand a user’s or group’s access
+
+**Prompt to try**
+
+```text
+Help me understand the access for user {user_id} or group {group_id}. Show their assigned roles, explain what access those roles provide, and point out overlaps or gaps. Clearly say what you can’t verify.
+```
+
+**Steps**
+
+1. **Gather:** Use the stable ID for the user or group.
+2. **Run:** Ask the plugin to explain the access.
+3. **Review:** Check which roles are assigned and what access they provide. Note any overlaps or gaps.
+4. **Verify:** If the plugin cannot see something, mark it as unknown instead of guessing.
+
+#### Assign an existing role to a group
+
+**Prompt to try**
+
+```text
+Before making a change, show the current roles for group {group_id} and explain what role {role_id} would add. Confirm the recorded approver and wait for my explicit approval. After the assignment, verify the group’s updated roles.
+```
+
+**Steps**
+
+1. **Gather:** Confirm the group and role IDs. Check the approved request and recorded approver.
+2. **Run:** Ask the plugin to show the current roles and what would change.
+3. **Review:** Approve only if the plan matches the approved request.
+4. **Verify:** After the assignment, check the group again to confirm that the existing role was added as approved.
+
+#### Check general connector permission
+
+**Prompt to try**
+
+```text
+Check whether user {user_id} has general connector access through their assigned roles. Ask the plugin to show which permissions support its answer. If it can’t verify access to a specific connector, have it say so clearly.
+```
+
+**Steps**
+
+1. **Gather:** Confirm the user ID and your permission to review the user’s access.
+2. **Run:** Request the general permission check.
+3. **Review:** Check the assigned role and the permission used for the answer.
+4. **Verify:** Use this only as a general check. It does not prove access to a specific connector or connected item.
+
+#### Troubleshoot an approved change
+
+**Prompt to try**
+
+```text
+Review approved change {change_record_id}. Compare the requested result with the current workspace. If it failed, check the workspace and role first. Then confirm who owns the record, explain the issue, and suggest the safest next step.
+```
+
+**Steps**
+
+1. **Gather:** Confirm the approved change record and intended result.
+2. **Run:** Ask the plugin to compare the request with the current workspace.
+3. **Review:** Check the workspace and role. Next, verify the record owner.
+4. **Verify:** Use the current workspace state as the source of truth before choosing the next step.
+
+#### Optimize cost and model mix
+
+**Prompt to try**
+
+```text
+For {date_range} in workspace {workspace_id}, group verified token use and cost by use case. Compare models and reasoning modes using the speed and quality information available. Flag costly workflows when the data shows little evidence of value. Recommend where spending could be reduced or redirected toward work with stronger productivity or cost results. Include any approved revenue or quality signals. Estimate possible savings, explain tradeoffs, and separate verified observations from assumptions or missing inputs. Keep this read-only.
+```
+
+**Steps**
+
+1. **Gather:** Confirm the workspace, date range, and that cost data covers the full period. Check which approved performance or outcome fields are available.
+2. **Run:** Ask for the cost and model comparison.
+3. **Review:** Separate what the data shows from assumptions, missing inputs, and tradeoffs.
+4. **Verify:** Check possible savings with Finance and the workflow owners before acting.
+
+#### Discover usage and adoption
+
+**Prompt to try**
+
+```text
+Analyze workspace {workspace_id} during {date_range}. Show tasks and token use by team and business function. Group cost by use case. Summarize what teams use ChatGPT and Codex to accomplish. Include examples from Legal, Marketing, and Sales. Compare available use of skills and plugins. Only report tool calls, connected apps, and multi-tool workflows if those fields are available. Show where teams use more advanced workflows and where there may be room to expand. Rank the top {5_or_10} use cases and show whether a small group of highly active users accounts for most usage. Don’t guess about activity that is not in the data.
+```
+
+**Steps**
+
+1. **Gather:** Check the workspace, date range, and team mappings. Make sure user-level reporting is approved.
+2. **Run:** Ask for the usage and adoption analysis.
+3. **Review:** Check which requested fields are available. Leave missing activity out rather than guessing.
+4. **Verify:** High usage does not prove advanced use, business value, or individual performance.
+
+#### Measure business value and ROI
+
+**Prompt to try**
+
+```text
+For workspace {workspace_id} in {date_range}, combine verified usage and cost with approved outcomes. Estimate value by team and use case. Include approved Sales measures for productivity, revenue, and quality. Compare teams and models, as well as workflows and user segments. Rank returns against cost. Show the sources and formula. Clearly state assumptions, limits, and missing inputs. Don’t claim ChatGPT caused the outcomes. Keep this read-only.
+```
+
+**Steps**
+
+1. **Gather:** Check the workspace and date range, then confirm the approved outcomes. Review the formula and privacy rules.
+2. **Run:** Ask for the ROI analysis.
+3. **Review:** Check every source and assumption. Note each limit or missing input.
+4. **Verify:** Usage alone cannot prove ROI or causation. Review the result with Finance and business owners.
+
+#### Assess Codex ROI
+
+**Prompt to try**
+
+```text
+For workspace {workspace_id}, combine verified Codex usage and cost from {date_range} with approved engineering outcomes. Estimate ROI by team, repository, and workflow. Compare productivity and delivery speed with code quality and engineering cost. Identify workflows that show high value or use many resources. Recommend changes to the model, reasoning mode, or workflow. Explain the tradeoffs and uncertainty. Present the findings as patterns in the available data, not proof that Codex caused the outcome. Return findings only; do not make changes.
+```
+
+**Steps**
+
+1. **Gather:** Confirm the workspace and reporting period. Review the team and repository mappings and the approved baseline data.
+2. **Run:** Ask for the Codex ROI analysis.
+3. **Review:** Distinguish observed patterns from assumptions. Protect user and repository data.
+4. **Verify:** Review recommendations and outcome baselines with Engineering.
+
+#### 4. When an API workflow may make sense
+
+Some organizations build their own admin processes or external tools with the APIs. This approach can support scheduled or continuous work. It can also help when a process spans many records or needs to connect to an approved internal system. This is separate from the guided Admin plugin experience.
+
+Start with a defined admin task: identify the required inputs and permissions, review points, expected result, and how the outcome will be recorded. If your organization automates it, involve the appropriate engineering, security, and governance teams; keep credentials in approved secret storage; and test the workflow before deployment.
+
+#### Related resources
+
+- [ChatGPT workspace Admin API reference](https://chatgpt.com/public/admin/api-reference)
+- [Administration boundaries](https://learn.chatgpt.com/docs/enterprise/roles-and-workspace-permissions#understand-the-control-boundaries)
+- [ChatGPT workspace Analytics API](https://learn.chatgpt.com/docs/enterprise/analytics-api)
+- [ChatGPT workspace Compliance API](https://learn.chatgpt.com/docs/enterprise/compliance-api)
 
 ### Workload identity federation
 
@@ -37678,7 +38471,11 @@ Start with the rollout guide, then use the reference pages for each control boun
 
 - [ChatGPT Work cloud security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security): Review hosted execution, connected accounts, access controls, retention, and audit visibility.
 
+- [ChatGPT Work local security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-local-security): Review local execution, device and browser access, managed policies, data handling, and audit limitations.
+
 - [ChatGPT Work admin FAQ](https://learn.chatgpt.com/docs/enterprise/work-admin-faq): Review access, data, governance, usage, and incident controls for ChatGPT Work.
+
+- [ChatGPT Work: usage and cost](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-usage-and-cost): Understand shared credits, billing impact, spending controls, and adoption planning.
 
 #### Identity and authentication
 
@@ -37716,6 +38513,8 @@ Control plugin installation, bundled skills, connector-backed capabilities, and 
 
 - [Plugin controls](https://learn.chatgpt.com/docs/enterprise/apps-and-connectors): Manage plugin availability, connector access and actions, and source-system permissions.
 
+- [Plugin management](https://learn.chatgpt.com/docs/enterprise/plugin-management): Import and sync workspace plugins from GitHub.
+
 - [Skill controls](https://learn.chatgpt.com/docs/enterprise/skills): Compare ChatGPT workspace, local filesystem, and plugin skill controls.
 
 #### Usage, governance, and compliance
@@ -37723,6 +38522,8 @@ Control plugin installation, bundled skills, connector-backed capabilities, and 
 Measure adoption and route reporting or audit data to the system that owns it.
 
 - [Governance](https://learn.chatgpt.com/docs/enterprise/governance): Choose the right analytics, spend, and audit surface for each question.
+
+- [Admin plugin](https://learn.chatgpt.com/docs/enterprise/admin-plugin): Use the Admin plugin for permissions, approvals, and supported administrative workflows.
 
 - [Workspace analytics](https://learn.chatgpt.com/docs/enterprise/workspace-analytics): Review workspace-level ChatGPT adoption and Codex usage.
 
