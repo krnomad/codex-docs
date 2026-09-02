@@ -38914,6 +38914,10 @@ Start with the rollout guide, then use the reference pages for each control boun
 
 - [Admin rollout guide](https://learn.chatgpt.com/docs/enterprise/admin-setup): Plan access, assign owners, configure controls, and verify the rollout.
 
+#### ChatGPT Work
+
+Review the ChatGPT Work overview and administration reference.
+
 - [ChatGPT Work Overview](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-overview): Understand hosted execution, network controls, data boundaries, and audit visibility.
 
 - [ChatGPT Work cloud security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security): Review hosted execution, connected accounts, access controls, retention, and audit visibility.
