@@ -11478,7 +11478,7 @@ For sandbox and approval keys (`approval_policy`, `sandbox_mode`, and `sandbox_w
 | `history.max_bytes`                                           | `number`                                                                                                                                                                   |         | If set, caps the history file size in bytes by dropping oldest entries.                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `history.persistence`                                         | `save-all \| none`                                                                                                                                                         |         | Control whether Codex saves session transcripts to history.jsonl.                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `hooks`                                                       | `table`                                                                                                                                                                    |         | Lifecycle hooks configured inline in `config.toml`. Uses the same event schema as `hooks.json`; see the Hooks guide for examples and supported events.                                                                                                                                                                                                                                                                                                                                      |
-| `hooks.`                                                      | `array`                                                                                                                                                                    |         | Matcher groups for hook events such as `PreToolUse`, `PermissionRequest`, `PostToolUse`, `PreCompact`, `PostCompact`, `SessionStart`, `SessionEnd`, `SubagentStart`, `SubagentStop`, `UserPromptSubmit`, or `Stop`.                                                                                                                                                                                                                                                                         |
+| `hooks.`                                                      | `array`                                                                                                                                                                    |         | Matcher groups for hook events such as `PreToolUse`, `PermissionRequest`, `PostToolUse`, `PreCompact`, `PostCompact`, `SessionStart`, `SessionEnd`, `SubagentStart`, `SubagentStop`, `UserPromptSubmit`, `Stop`, or `Interrupt`.                                                                                                                                                                                                                                                            |
 | `hooks.[].hooks`                                              | `array`                                                                                                                                                                    |         | Hook handlers for a matcher group. Command and MCP tool hooks are supported while prompt and agent hook handlers are parsed but skipped.                                                                                                                                                                                                                                                                                                                                                    |
 | `hooks.[].hooks[].additionalContextLimit`                     | `integer`                                                                                                                                                                  |         | Approximate per-handler token threshold for saving oversized `additionalContext` to disk and showing the model a shorter preview. Defaults to `2500`; `0` passes the full context directly to the model. See [Large hook output](https://learn.chatgpt.com/docs/hooks#large-hook-output).                                                                                                                                                                                                                           |
 | `hooks.[].hooks[].async`                                      | `boolean`                                                                                                                                                                  |         | Run a command hook in the background without delaying the triggering operation. Defaults to `false`; `SessionEnd` always runs synchronously. See [Run hooks in the background](https://learn.chatgpt.com/docs/hooks#run-hooks-in-the-background).                                                                                                                                                                                                                                                                   |
@@ -11488,6 +11488,7 @@ For sandbox and approval keys (`approval_policy`, `sandbox_mode`, and `sandbox_w
 | `mcp_oauth_callback_port`                                     | `integer`                                                                                                                                                                  |         | Optional global fixed port for the local HTTP callback server used during MCP OAuth login. A server-specific `oauth.callback_port` takes precedence. When neither is set, Codex binds to an ephemeral port chosen by the OS.                                                                                                                                                                                                                                                                |
 | `mcp_oauth_callback_url`                                      | `string`                                                                                                                                                                   |         | Optional base callback URL for MCP OAuth login, such as a devbox ingress URL. Newly added pre-registered clients use this URL unchanged when the authorization server supports issuer identification; existing clients without a saved callback append a server-specific callback ID. Without issuer support, any pre-registered MCP server whose configured callback lacks the required ID falls back to this URL with the ID appended. Callback URL ports don't select the listener port. |
 | `mcp_oauth_credentials_store`                                 | `auto \| file \| keyring`                                                                                                                                                  |         | Preferred store for MCP OAuth credentials.                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `mcp_optional_startup_grace_ms`                               | `integer (milliseconds)`                                                                                                                                                   |         | Shared wait for optional MCP servers when building the initial tool catalog. Defaults to `1000`. Set to `0` to wait for each server's `startup_timeout_sec` instead.                                                                                                                                                                                                                                                                                                                        |
 | `mcp_servers..args`                                           | `array`                                                                                                                                                                    |         | Arguments passed to the MCP stdio server command.                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `mcp_servers..auth`                                           | `oauth \| chatgpt`                                                                                                                                                         |         | Authentication fallback for an MCP HTTP server after configured bearer tokens and authorization headers. `oauth` (default) uses stored MCP OAuth credentials when available. `chatgpt` uses the current ChatGPT session for the trusted first-party ChatGPT origin, then falls back to stored OAuth. Both modes can connect without authentication if no credential source resolves.                                                                                                        |
 | `mcp_servers..bearer_token_env_var`                           | `string`                                                                                                                                                                   |         | Environment variable sourcing the bearer token for an MCP HTTP server.                                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -11502,6 +11503,7 @@ For sandbox and approval keys (`approval_policy`, `sandbox_mode`, and `sandbox_w
 | `mcp_servers..env_vars`                                       | `array`                                                                                                                                                                    |         | Additional environment variables to whitelist for an MCP stdio server. String entries default to `source = "local"`; use `source = "remote"` only with executor-backed remote stdio.                                                                                                                                                                                                                                                                                                        |
 | `mcp_servers..experimental_environment`                       | `local \| remote`                                                                                                                                                          |         | Experimental placement for an MCP server. `remote` starts stdio servers through a remote executor environment; streamable HTTP remote placement is not implemented.                                                                                                                                                                                                                                                                                                                         |
 | `mcp_servers..http_headers`                                   | `map`                                                                                                                                                                      |         | Static HTTP headers included with each MCP HTTP request.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `mcp_servers..http_headers_helper`                            | `string (command)`                                                                                                                                                         |         | Local command that prints a JSON object of HTTP header names and values. Supported only for locally connected HTTP MCP servers. Explicit bearer tokens and OAuth credentials take precedence over helper-provided Authorization headers.                                                                                                                                                                                                                                                    |
 | `mcp_servers..oauth_resource`                                 | `string`                                                                                                                                                                   |         | Optional RFC 8707 OAuth resource parameter to include during MCP login.                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `mcp_servers..oauth.callback_port`                            | `integer`                                                                                                                                                                  |         | Fixed OAuth callback listener port for this MCP server. Overrides `mcp_oauth_callback_port`. For a direct loopback callback with an explicit URL port, configure the same listener port.                                                                                                                                                                                                                                                                                                    |
 | `mcp_servers..oauth.callback_url`                             | `string`                                                                                                                                                                   |         | Server-specific OAuth callback. Pre-registered clients reuse it when issuer identification is supported or the URL already ends in the server-specific callback ID. Otherwise, Codex uses the global or default callback with that ID appended. Clients without a pre-registered ID use this callback during client registration.                                                                                                                                                           |
@@ -11512,6 +11514,7 @@ For sandbox and approval keys (`approval_policy`, `sandbox_mode`, and `sandbox_w
 | `mcp_servers..startup_timeout_sec`                            | `number`                                                                                                                                                                   |         | Override the default 10s startup timeout for an MCP server.                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `mcp_servers..tool_timeout_sec`                               | `number`                                                                                                                                                                   |         | Override the default 60s per-tool timeout for an MCP server.                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | `mcp_servers..tools..approval_mode`                           | `auto \| prompt \| writes \| approve`                                                                                                                                      |         | Per-tool approval behavior override for one MCP tool on this server.                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `mcp_servers..tools..output_token_limit`                      | `integer (positive)`                                                                                                                                                       |         | Token budget for one MCP tool's output, before the standard 20% serialization allowance. Overrides the model's default output truncation budget for that tool.                                                                                                                                                                                                                                                                                                                              |
 | `mcp_servers..url`                                            | `string`                                                                                                                                                                   |         | Endpoint for an MCP streamable HTTP server.                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `memories.consolidation_model`                                | `string`                                                                                                                                                                   |         | Optional model override for global memory consolidation.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `memories.disable_on_external_context`                        | `boolean`                                                                                                                                                                  |         | When `true`, threads that use external context such as MCP tool calls, web search, or tool search are kept out of memory generation. Defaults to `false`. Legacy alias: `memories.no_memories_if_mcp_or_web_search`.                                                                                                                                                                                                                                                                        |
@@ -11636,6 +11639,7 @@ For sandbox and approval keys (`approval_policy`, `sandbox_mode`, and `sandbox_w
 | `skills.config`                                               | `array`                                                                                                                                                                    |         | Per-skill enablement overrides stored in config.toml.                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `skills.config..enabled`                                      | `boolean`                                                                                                                                                                  |         | Enable or disable the referenced skill.                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `skills.config..path`                                         | `string (path)`                                                                                                                                                            |         | Path to a skill folder containing `SKILL.md`.                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `skills.max_context_tokens`                                   | `integer (positive)`                                                                                                                                                       |         | Token budget for the available-skills catalog. Defaults to 2% of the model's context window. Explicit values are capped at `10000` tokens.                                                                                                                                                                                                                                                                                                                                                  |
 | `sqlite_home`                                                 | `string (path)`                                                                                                                                                            |         | Directory where Codex stores the SQLite-backed state DB used by agent jobs and other resumable runtime state.                                                                                                                                                                                                                                                                                                                                                                               |
 | `suppress_unstable_features_warning`                          | `boolean`                                                                                                                                                                  |         | Suppress the warning that appears when under-development feature flags are enabled.                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `tool_output_token_limit`                                     | `number`                                                                                                                                                                   |         | Token budget for storing individual tool/function outputs in history.                                                                                                                                                                                                                                                                                                                                                                                                                       |
@@ -13673,6 +13677,12 @@ chatgpt_base_url = "https://chatgpt.com/backend-api/"
 
 mcp_oauth_credentials_store = "auto"
 
+# Shared wait for optional MCP servers before building the initial tool catalog.
+
+# Default: 1000 ms. Set to 0 to wait for each server's startup_timeout_sec instead.
+
+# mcp_optional_startup_grace_ms = 1000
+
 # Optional global fixed port for MCP OAuth callback: 1-65535. Default: unset.
 
 # A server-specific oauth.callback_port overrides this global listener port.
@@ -13824,6 +13834,14 @@ web_search = "cached"
 # Skills (per-skill overrides)
 
 ################################################################################
+
+# Token budget for the available-skills catalog. Default: 2% of the model context
+
+# window. Explicit values must be positive and are capped at 10000 tokens.
+
+# [skills]
+
+# max_context_tokens = 2000
 
 # Disable or re-enable a specific skill without deleting it.
 
@@ -14285,6 +14303,10 @@ enabled = true
 
 # oauth_resource = "https://docs.example.com/" # optional OAuth resource
 
+# [mcp_servers.docs.tools.search]
+
+# output_token_limit = 30000 # positive token budget, before the 20% serialization allowance
+
 # --- Example: Streamable HTTP transport ---
 
 # [mcp_servers.github]
@@ -14300,6 +14322,8 @@ enabled = true
 # http_headers = { "X-Example" = "value" } # optional static headers
 
 # env_http_headers = { "X-Auth" = "AUTH_ENV" } # optional headers populated from env vars
+
+# http_headers_helper = "company-auth mcp-headers" # local command that prints a JSON header map
 
 # startup_timeout_sec = 10.0 # optional
 
@@ -23140,6 +23164,7 @@ Hooks run at different points in a conversation:
 | When                              | Hooks                                                                                                                     |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | During a turn                     | `PreToolUse`, `PermissionRequest`, `PostToolUse`, `PreCompact`, `PostCompact`, `UserPromptSubmit`, `SubagentStop`, `Stop` |
+| When you interrupt an active turn | `Interrupt` (doesn't run for subagents)                                                                                   |
 | When a session or subagent starts | `SessionStart`, `SubagentStart`                                                                                           |
 | When the main thread ends         | `SessionEnd` (doesn't run for subagents)                                                                                  |
 
@@ -23297,7 +23322,7 @@ Notes:
   doesn't change which hooks run.
 - `timeout` is in seconds.
 - If `timeout` is omitted, Codex uses `600` seconds for most hooks.
-  - `SessionEnd` uses `1` second by default and supports up to `3` seconds.
+  - `SessionEnd` and `Interrupt` use `1` second by default and support up to `3` seconds.
 - `statusMessage` is optional.
 - `additionalContextLimit` sets how much `additionalContext` a command hook can
   send to the model before Codex saves the full text to disk and sends a shorter
@@ -23537,6 +23562,7 @@ Only some current Codex events honor `matcher`:
 | `SubagentStop`      | subagent type          | Values depend on the subagent that stops                     |
 | `UserPromptSubmit`  | not supported          | Any configured `matcher` is ignored for this event           |
 | `Stop`              | not supported          | Any configured `matcher` is ignored for this event           |
+| `Interrupt`         | not supported          | Any configured `matcher` is ignored for this event           |
 
 \*For `apply_patch`, `matcher` values can also use `Edit` or `Write`.
 
@@ -23590,7 +23616,7 @@ Turn-scoped hooks list `turn_id` as a Codex-specific extension in their
 event-specific tables.
 
 `SessionStart`, `PreToolUse`, `PermissionRequest`, `PostToolUse`,
-`UserPromptSubmit`, `SubagentStart`, `SubagentStop`, and `Stop` also include
+`UserPromptSubmit`, `SubagentStart`, `SubagentStop`, `Stop`, and `Interrupt` also include
 `permission_mode`, which describes the current permission mode as `default`,
 `acceptEdits`, `plan`, `dontAsk`, or `bypassPermissions`.
 
@@ -23719,7 +23745,8 @@ timeout = 120
 Background hooks use the same input, matcher, trust review, timeout, and
 [large-output handling](#large-hook-output) as synchronous command hooks. As
 with other command hooks, `timeout` is measured in seconds and defaults to
-`600`.
+`600`. `Interrupt` hooks use a one-second default and a three-second maximum,
+including when they run in the background.
 
 #### How background hooks run
 
@@ -24200,6 +24227,25 @@ as a new user prompt, using your `reason` as that prompt text.
 
 If any matching `Stop` hook returns `continue: false`, that takes precedence
 over continuation decisions from other matching `Stop` hooks.
+
+#### Interrupt
+
+`Interrupt` runs when you interrupt an active turn on the main thread. Use it
+to record the interruption or clean up work started by a hook. It doesn't run
+for idle threads or subagents, and any configured `matcher` is ignored.
+
+In addition to [Common input fields](#common-input-fields), the event includes
+`turn_id`, the interrupted turn's id, and `permission_mode`.
+
+Command hooks default to a one-second timeout. Configured timeouts are
+limited to one through three seconds. Hook output can't prevent the
+interruption or restart the turn. Exit `0` with no output, or return JSON with
+an optional `systemMessage` to surface a warning. Plain text output is invalid
+for this event.
+
+```json
+{ "systemMessage": "Saved the interrupted turn to the local audit log." }
+```
 
 #### Schemas
 
@@ -25442,6 +25488,17 @@ remote MCP stdio.
 - `bearer_token_env_var` (optional): Environment variable name for a bearer token to send in `Authorization`.
 - `http_headers` (optional): Map of header names to static values.
 - `env_http_headers` (optional): Map of header names to environment variable names (values pulled from the environment).
+- `http_headers_helper` (optional): Local command that prints a JSON object of
+  header names and string values, such as `{"X-Auth": "temporary-token"}`.
+  Supported for HTTP MCP connections made from the local environment; not for
+  stdio servers or connections made through a remote execution environment.
+
+Codex caches helper headers for the connection. After a same-origin POST
+returns `401` or `403`, it refreshes the headers once and retries only if the
+helper returns changed values. Explicit bearer tokens and OAuth credentials
+take precedence over a helper-provided `Authorization` header.
+An OAuth `403` response that reports insufficient scope doesn't trigger a
+helper refresh.
 
 If no credential source resolves, Codex can connect to the server without
 authentication. Run `codex mcp login ` separately to start an MCP
@@ -25459,6 +25516,15 @@ OAuth login.
   tools from this server. Supported values are `auto`, `prompt`, `writes`, and
   `approve`. The `writes` mode prompts for tools that aren't marked read-only.
 - `tools..approval_mode` (optional): Per-tool approval behavior override.
+- `tools..output_token_limit` (optional): Positive token budget for one
+  tool's output, before the standard 20% serialization allowance. Overrides the
+  model's default output truncation budget for that tool.
+
+The top-level `mcp_optional_startup_grace_ms` setting controls how long Codex
+waits for optional MCP servers when building the initial tool catalog. It
+defaults to `1000` milliseconds. Set it to `0` to wait for each server's
+`startup_timeout_sec` instead. Required servers still use their startup
+timeouts.
 
 #### OAuth client registration and callbacks
 
@@ -25629,6 +25695,7 @@ enabled = true
 
 [mcp_servers.chrome_devtools.tools.open]
 approval_mode = "approve"
+output_token_limit = 30000
 ```
 
 #### Plugin-provided MCP servers
@@ -30611,7 +30678,7 @@ If a client sends an experimental method or field without opting in, app-server 
 - `thread/backgroundTerminals/list` - list running background terminals for a loaded thread (experimental; requires `capabilities.experimentalApi`).
 - `thread/backgroundTerminals/terminate` - terminate one running background terminal by app-server `processId` (experimental; requires `capabilities.experimentalApi`).
 - `thread/rollback` - deprecated; drop the last N turns from the in-memory context and persist a rollback marker; returns the updated `thread`.
-- `turn/start` - add user input to a thread and begin Codex generation; responds with the initial `turn` and streams events. For `collaborationMode`, `settings.developer_instructions: null` means "use built-in instructions for the selected mode."
+- `turn/start` - add user input or standalone tool output to a thread and begin Codex generation; responds with the initial `turn` and streams events. For `collaborationMode`, `settings.developer_instructions: null` means "use built-in instructions for the selected mode."
 - `thread/inject_items` - append raw Responses API items to a loaded thread's model-visible history without starting a user turn.
 - `turn/steer` - append user input to the active in-flight turn for a thread; returns the accepted `turnId`.
 - `turn/interrupt` - request cancellation of an in-flight turn; success is `{}` and the turn ends with `status: "interrupted"`.
@@ -31146,8 +31213,12 @@ This API runs outside the sandbox with full access and doesn't inherit the threa
 
 If the thread already has an active turn, the command runs as an auxiliary action on that turn and its formatted output is injected into the turn's message stream. If the thread is idle, app-server starts a standalone turn for the shell command.
 
+Set `timeoutMs` to limit execution time in milliseconds. Omitting it or passing
+`null` uses the one-hour default. `0` requests an immediate timeout; negative
+values are rejected. The timeout doesn't delay the immediate RPC acknowledgement.
+
 ```json
-{ "method": "thread/shellCommand", "id": 26, "params": { "threadId": "thr_b", "command": "git status --short" } }
+{ "method": "thread/shellCommand", "id": 26, "params": { "threadId": "thr_b", "command": "git status --short", "timeoutMs": 10000 } }
 { "id": 26, "result": {} }
 ```
 
@@ -31277,6 +31348,31 @@ Examples:
 } }
 { "id": 30, "result": { "turn": { "id": "turn_456", "status": "inProgress", "items": [], "error": null } } }
 ```
+
+To start a turn with output from a tool your client ran, pass `toolOutput`
+with a nonempty `name`, an optional `namespace`, and an `output` string or
+array of content items. Set `input` to an empty array; you can't combine
+`toolOutput` with nonempty user input.
+
+```json
+{
+  "method": "turn/start",
+  "id": 31,
+  "params": {
+    "threadId": "thr_123",
+    "input": [],
+    "toolOutput": {
+      "name": "run_tests",
+      "namespace": null,
+      "output": "All 42 tests passed."
+    }
+  }
+}
+```
+
+The output remains tool output in the conversation and appears as a
+`functionCallOutput` item in notifications and persisted history. If a regular
+turn is already active, Codex queues the output for that turn.
 
 #### Inject items into a thread
 
@@ -31583,6 +31679,7 @@ The fuzzy file search session API emits per-query notifications:
 `ThreadItem` is the tagged union carried in turn responses and `item/*` notifications. Common item types include:
 
 - `userMessage` - `{id, content}` where `content` is a list of user inputs (`text`, `image`, or `localImage`).
+- `functionCallOutput` - `{id, name, namespace, output}` for standalone tool output supplied through `turn/start.toolOutput`. `namespace` can be `null`.
 - `agentMessage` - `{id, text, phase?}` containing the accumulated agent reply. When present, `phase` uses Responses API wire values (`commentary`, `final_answer`).
 - `plan` - `{id, text}` containing proposed plan text in plan mode. Treat the final `plan` item from `item/completed` as authoritative.
 - `reasoning` - `{id, summary, content}` where `summary` holds streamed reasoning summaries and `content` holds raw reasoning blocks.
