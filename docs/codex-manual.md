@@ -1359,16 +1359,9 @@ below applies to ChatGPT Work and Codex, not Chat.
 
         Eligible usage is billed in USD under your rate card and agreement.
 
-Astra's modeled usage relative to Sol depends on the billing arrangement:
-
-- **Consumer subscription limits:** 3.27 times Sol's usage per task, or roughly
-  one-third as many tasks for the same allowance.
-- **Business subscription limits:** 2.95 times Sol's usage per task.
-- **Enterprise and purchased credits:** 2.08 times Sol's usage per task.
-
-These comparisons are estimates, not fixed billing multipliers. Actual usage
-varies by task, context, and model settings; it is calculated from token rates
-and the applicable usage multiplier.
+Astra usage varies by task, context, and model settings. Check your
+[usage dashboard](#where-can-i-see-my-current-usage-limits) for current limits
+and reset times.
 
 See [token rates](#token-rates) for credit pricing.
 Signing in to Codex with ChatGPT uses your ChatGPT plan's rates and
@@ -1601,8 +1594,7 @@ The token rates below are quoted in credits per million input tokens, cached
 input tokens, and output tokens. [Learn more about
 tokens](https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them).
 
-Astra usage within subscription limits applies a 1.10x multiplier to its token
-rates. Fast mode applies a separate 2.5x multiplier to Astra's Standard rate.
+Fast mode applies a 2.5x multiplier to Astra's Standard rate.
 
 A small subset of Enterprise customers should continue using the legacy rate
 card until we migrate you to the new token-based pricing. For more information,
