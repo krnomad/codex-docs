@@ -398,11 +398,9 @@ produce a document, spreadsheet, or presentation that fits your templates and
 task.
 
 Once Astra is available to your account, choose it from the model selector.
-Plus and standard Business
-include limited usage, and larger Pro and Business plans use their existing
-allowance. See [Astra usage and pricing](https://learn.chatgpt.com/docs/pricing#gpt-6-astra-usage) before
-starting a large task. Enterprise access requires both rollout eligibility and
-an administrator to enable it.
+See [usage and pricing](https://learn.chatgpt.com/docs/pricing) before starting a large task.
+Enterprise access requires both rollout eligibility and an administrator to
+enable it.
 
 #### August 24–28, 2026
 
@@ -1328,45 +1326,6 @@ Everything in Business and:
 
 [Contact sales](https://chatgpt.com/contact-sales?utm_internal_source=openai_developers_codex)
 
-#### GPT-6 Astra usage
-
-GPT‑6 Astra is rolling out today for enterprises in our Trusted Access Program⁠, with access through API and our Plus, Pro, Business and Enterprise plans coming in the coming days.
-
-Once Astra is available to your account, it uses your existing Work and Codex
-allowance or the billing arrangement for your workspace. The plan guidance
-below applies to ChatGPT Work and Codex, not Chat.
-
-      Plan
-      How Astra usage is covered
-
-      Plus and standard Business
-
-        Limited Astra usage is included in your subscription. You don't need to
-        purchase credits to start using it. Eligible users can purchase credits
-        for additional usage after reaching included limits.
-
-      Pro ($100 and $200) and Business ($100)
-
-        Astra draws from your existing allowance. You can use that allowance for
-        Astra; it doesn't have a separate balance.
-
-      Enterprise with credit-based billing
-
-        Eligible usage draws from workspace credits under your rate card and
-        agreement.
-
-      Enterprise with usage-based USD billing
-
-        Eligible usage is billed in USD under your rate card and agreement.
-
-Astra usage varies by task, context, and model settings. Check your
-[usage dashboard](#where-can-i-see-my-current-usage-limits) for current limits
-and reset times.
-
-See [token rates](#token-rates) for credit pricing.
-Signing in to Codex with ChatGPT uses your ChatGPT plan's rates and
-allowances; using your own API key follows [API pricing](https://developers.openai.com/api/docs/pricing).
-
 #### Invite friends and coworkers
 
 Eligible users can send Codex invitations from the profile menu in the
@@ -1433,13 +1392,6 @@ and reset times.
         Standard Business
 
         API Key
-
-      GPT-6 Astra
-      3-30
-      15-150
-      60-600
-      3-30
-      [Usage-based](https://developers.openai.com/api/docs/pricing)
 
       GPT-5.6 Sol
       10-100
@@ -2934,7 +2886,7 @@ Learn more about [plugins](https://learn.chatgpt.com/docs/plugins).
 Choose [GPT-6 Astra](https://learn.chatgpt.com/docs/models#gpt-6-astra) for demanding work that needs
 careful reasoning, visual judgment, or a polished final file. For simpler tasks,
 consider Sol, Terra, or Luna. Select from the models
-available in your model selector and check [plan usage](https://learn.chatgpt.com/docs/pricing#gpt-6-astra-usage)
+available in your model selector and check [plan usage](https://learn.chatgpt.com/docs/pricing)
 before starting a large task.
 
 ChatGPT Work is best for substantial tasks that involve multiple steps, sources, or
@@ -13527,7 +13479,7 @@ making it useful for larger tasks that can be split across subagents.
 #### Recommended models
 
 Availability depends on the rollout, your sign-in method, and your client.
-See [pricing](https://learn.chatgpt.com/docs/pricing#gpt-6-astra-usage) for plan access and usage, and
+See [pricing](https://learn.chatgpt.com/docs/pricing) for plan access and usage, and
 [workspace model availability](https://learn.chatgpt.com/docs/enterprise/workspace-model-availability#gpt-6-astra-in-enterprise)
 for Enterprise access.
 
@@ -39309,7 +39261,7 @@ confirm availability on each client used by your pilot group.
 
 Enabling access and choosing a starting model are separate decisions. Check the
 applicable seat, role, and billing arrangement before setting Astra as a default.
-See [Astra usage](https://learn.chatgpt.com/docs/pricing#gpt-6-astra-usage) for allowance and billing
+See [pricing](https://learn.chatgpt.com/docs/pricing) for allowance and billing
 guidance and [safety monitoring](https://learn.chatgpt.com/docs/agent-approvals-security#safety-monitoring-and-paused-tasks)
 for tasks that pause for review.
 
