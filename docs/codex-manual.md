@@ -389,8 +389,6 @@ and minor improvement, see the [Codex changelog](https://learn.chatgpt.com/docs/
 
 #### Take on demanding work with GPT-6 Astra
 
-GPT‑6 Astra is rolling out today for enterprises in our Trusted Access Program⁠, with access through API and our Plus, Pro, Business and Enterprise plans coming in the coming days.
-
 [GPT-6 Astra](https://learn.chatgpt.com/docs/models#gpt-6-astra) combines advanced reasoning, computer
 use, and stronger judgment for complex work across code, apps, and research in
 Codex and ChatGPT Work. Use it to carry out a workflow, check the result, and
@@ -1392,6 +1390,14 @@ and reset times.
         Standard Business
 
         API Key
+
+      GPT-6 Astra
+      5-45
+      25-225
+      100-900
+      5-45
+
+        [Usage-based](https://platform.openai.com/docs/pricing)
 
       GPT-5.6 Sol
       10-100
@@ -13405,8 +13411,6 @@ For lifecycle hook configuration, see [Hooks](https://learn.chatgpt.com/docs/hoo
 ### Model selection
 
 Source: [Models](https://learn.chatgpt.com/docs/models.md)
-
-GPT‑6 Astra is rolling out today for enterprises in our Trusted Access Program⁠, with access through API and our Plus, Pro, Business and Enterprise plans coming in the coming days.
 
 #### Choose a model
 
@@ -39248,8 +39252,6 @@ This setting can pin Fast mode on or off for managed local Codex clients; it
 isn't a starting default and can't override workspace or product availability.
 
 #### GPT-6 Astra in Enterprise
-
-GPT‑6 Astra is rolling out today for enterprises in our Trusted Access Program⁠, with access through API and our Plus, Pro, Business and Enterprise plans coming in the coming days.
 
 During the initial rollout, your organization must have Daybreak access before
 an administrator can enable Astra. Astra is off by default for ChatGPT
