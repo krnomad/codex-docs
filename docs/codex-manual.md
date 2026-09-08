@@ -20927,7 +20927,7 @@ That single header lets ChatGPT discover the metadata URL even if it has not see
   - `authorization_endpoint`, `token_endpoint`: the URLs ChatGPT needs to run the OAuth authorization-code + PKCE flow end to end.
   - `client_id_metadata_document_supported`: set to `true` when you want ChatGPT to use CIMD for client registration. ChatGPT prioritizes CIMD when it is available, but the plugin builder can choose DCR when both CIMD and DCR are available.
   - `token_endpoint_auth_methods_supported`: include the token endpoint authentication methods your authorization server accepts. This applies to CIMD, DCR, and predefined OAuth clients. For CIMD, ChatGPT supports `none` for public-client token exchange and `private_key_jwt` for signed client assertion token exchange. Other OAuth clients commonly use `none`, `client_secret_post`, or `client_secret_basic`.
-  - `registration_endpoint`: include this when you support dynamic client registration (DCR), which lets ChatGPT create and reuse a dedicated `client_id` for the connector instance.
+  - `registration_endpoint`: include this when you support dynamic client registration (DCR), which lets ChatGPT create and reuse a dedicated `client_id` for the MCP server connection.
   - `code_challenge_methods_supported`: must include `S256`. MCP servers are
     unsupported when their authorization server metadata omits this field or
     does not advertise `S256`, as required by the
@@ -20992,7 +20992,7 @@ rules](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorizat
 
 #### Redirect URL
 
-Copy the exact production redirect URI shown in the app management page into
+Copy the exact production redirect URI shown in the MCP server's management page into
 your authorization server's allowlist.
 
 - If your authorization server does not meet the issuer identification
@@ -21002,7 +21002,7 @@ your authorization server's allowlist.
   stable redirect URI
   `https://chatgpt.com/connector_platform_oauth_redirect`.
 
-Apps published before ChatGPT introduced callback-ID-specific redirects also
+MCP servers published before ChatGPT introduced callback-ID-specific redirects also
 continue to use the stable redirect URI.
 
 #### Echo the `resource` parameter throughout the OAuth flow
@@ -21022,7 +21022,7 @@ Provided that you have implemented the MCP authorization spec delineated above, 
 
 1. ChatGPT queries your MCP server for protected resource metadata.
 
-2. ChatGPT identifies itself as the OAuth client. When the connector uses CIMD, ChatGPT skips dynamic client registration and sends a CIMD document URL as the `client_id`. For authorization servers that meet the issuer identification requirements above, ChatGPT uses the stable `https://chatgpt.com/oauth/client.json`; for other servers, it uses the callback-ID-specific `https://chatgpt.com/oauth/{callback_id}/client.json`. The app management page shows the exact client metadata document and redirect URI for the connector's callback mode. When the connector uses DCR, ChatGPT calls your authorization server's `registration_endpoint` once for the connector instance, receives a generated `client_id`, and reuses that client for the instance.
+2. ChatGPT identifies itself as the OAuth client. When the MCP server uses CIMD, ChatGPT skips dynamic client registration and sends a CIMD document URL as the `client_id`. For authorization servers that meet the issuer identification requirements above, ChatGPT uses the stable `https://chatgpt.com/oauth/client.json`; for other servers, it uses the callback-ID-specific `https://chatgpt.com/oauth/{callback_id}/client.json`. The MCP server's management page shows the exact client metadata document and redirect URI for the connection's callback mode. When the MCP server uses DCR, ChatGPT calls your authorization server's `registration_endpoint` once for the MCP server connection, receives a generated `client_id`, and reuses that client for the connection.
 
 When using CIMD, there is no client registration step. The following screen shows the DCR path:
 
@@ -21036,7 +21036,7 @@ When using CIMD, there is no client registration step. The following screen show
 
 Use [Client ID Metadata Documents (CIMD)](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization#client-id-metadata-documents) as the preferred client registration method when your authorization server supports it and the plugin builder chooses it. With CIMD, ChatGPT uses an HTTPS metadata document URL as its `client_id`. Your authorization server fetches that document, validates the published client metadata and redirect resource identifiers, and treats the URL as ChatGPT's stable client identity.
 
-If you support CIMD, set `client_id_metadata_document_supported: true` in your authorization server metadata. This lets ChatGPT use one stable client identity for connectors that choose CIMD, which your authorization server can use for redirect URI allowlists, rate limits, and other policies.
+If you support CIMD, set `client_id_metadata_document_supported: true` in your authorization server metadata. This lets ChatGPT use one stable client identity for MCP servers that choose CIMD, which your authorization server can use for redirect URI allowlists, rate limits, and other policies.
 
 ChatGPT is adopting the CIMD transition proposed in
 [MCP SEP-3149](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/3149).
@@ -21073,7 +21073,7 @@ The supported methods are:
 
 DCR is still supported. If you include `registration_endpoint`, ChatGPT can register dynamically when the plugin builder chooses DCR or CIMD is not available. ChatGPT runs DCR once per MCP server connection, then keeps and reuses the registered OAuth client for that connection. DCR can still create many registered clients across many separate connections, so CIMD is usually easier to administer at scale.
 
-Keep the registered OAuth client and any client secret valid while the connector is in use. If your authorization server expires, deletes, or replaces either credential, users and reviewers may receive an `invalid_client` error when they connect. Access and refresh tokens can still expire or rotate normally.
+Keep the registered OAuth client and any client secret valid while the MCP server connection is in use. If your authorization server expires, deletes, or replaces either credential, users and reviewers may receive an `invalid_client` error when they connect. Access and refresh tokens can still expire or rotate normally.
 
 #### Client identification
 
@@ -21129,7 +21129,7 @@ In practice you should:
 - Fetch the signing keys published by your authorization server (usually via JWKS) and verify the token’s signature and `iss`.
 - Deny tokens that have expired or have not yet become valid (`exp`/`nbf`).
 - Confirm the token was minted for your server (`aud` or the `resource` claim) and contains the scopes you marked as required.
-- Run any app-specific policy checks, then either attach the resolved identity to the request context or return a `401` with a `WWW-Authenticate` challenge.
+- Run any server-specific policy checks, then either attach the resolved identity to the request context or return a `401` with a `WWW-Authenticate` challenge.
 
 If verification fails, respond with `401 Unauthorized` and a `WWW-Authenticate` header that points back to your protected-resource metadata. This tells the client to run the OAuth flow again.
 
@@ -21143,7 +21143,7 @@ Both Python and TypeScript MCP software development kits include helpers so you 
 #### Testing and rollout
 
 - **Local testing:** Start with a development tenant that issues short-lived tokens so you can iterate quickly.
-- **Dogfood:** Once authentication works, gate access to trusted testers before rolling out broadly. You can require linking for specific tools or the entire connector.
+- **Dogfood:** Once authentication works, gate access to trusted testers before rolling out broadly. You can require linking for specific tools or the entire MCP server.
 - **Rotation:** Plan for token revocation, refresh, and scope changes. Your server should treat missing or stale tokens as unauthenticated and return a helpful error message.
 - **OAuth debugging:** Use the [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) Auth settings to walk through each OAuth step and pinpoint where the flow breaks before you ship.
 
@@ -21642,7 +21642,10 @@ Set annotations according to actual behavior:
 - `readOnlyHint`: `true` only when the tool cannot change state.
 - `destructiveHint`: `true` when a tool can cause irreversible or difficult to
   reverse outcomes.
-- `openWorldHint`: `true` when a tool can affect public or external systems.
+- `openWorldHint`: `true` when a tool accesses the public internet or open-ended
+  external entities, including through read-only actions such as web search.
+  A tool limited to a bounded private account or workspace can set this to
+  `false`, even when that service is externally hosted.
 
 Annotations help ChatGPT and Codex choose appropriate confirmation and safety
 behavior. They do not replace authorization, validation, or confirmation in
@@ -21819,8 +21822,11 @@ Include a skill that turns meeting notes into decisions, owners, and next steps.
 Add it to a personal marketplace so I can test it locally.
 ```
 
-The skill creates the required `.codex-plugin/plugin.json` manifest, organizes
-the plugin folder, and can add the plugin to a local marketplace.
+The skill creates a supported `.codex-plugin/plugin.json` compatibility
+manifest, organizes the plugin folder, and can add the plugin to a local
+marketplace. This scaffold differs from the portable root `plugin.json` format
+used in the manual example. See the [scaffold layout](https://developers.openai.com/plugins/build/plugins#plugin-creator-output)
+for optional files and directories.
 
 After it finishes:
 
@@ -21837,29 +21843,30 @@ for tools, authentication, deployment, and testing.
 
 #### Create a skills-only plugin manually
 
-A minimal plugin contains a manifest and at least one skill:
+A minimal portable Agent Plugins package contains a root manifest and at least
+one skill:
 
 ```text
 meeting-follow-up/
-├── .codex-plugin/
-│   └── plugin.json
+├── plugin.json
 └── skills/
     └── meeting-follow-up/
         └── SKILL.md
 ```
 
-Create `.codex-plugin/plugin.json`:
+Create `plugin.json` at the plugin root:
 
 ```json
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "meeting-follow-up",
   "version": "1.0.0",
-  "description": "Turn meeting notes into decisions and next steps",
-  "skills": "./skills/"
+  "description": "Turn meeting notes into decisions and next steps"
 }
 ```
 
-Then add `skills/meeting-follow-up/SKILL.md`:
+Portable packages discover skills in `skills/` automatically. Add
+`skills/meeting-follow-up/SKILL.md`:
 
 ```md
 ---
@@ -23184,8 +23191,10 @@ for the canonical definitions, defaults, and interactions between these hints:
 - `readOnlyHint` is `true` only when the tool cannot change state.
 - `destructiveHint` is `true` when the tool can cause irreversible or difficult
   to reverse outcomes.
-- `openWorldHint` is `true` when the tool can affect public or external
-  systems.
+- `openWorldHint` is `true` when the tool accesses the public internet or
+  open-ended external entities, including through read-only actions such as
+  web search. A bounded private account or workspace isn't open-world solely
+  because it is externally hosted.
 
 Annotations do not replace server-side authorization, input validation, or
 confirmation for consequential actions.
@@ -25168,306 +25177,6 @@ Once you understand the basics, you can
 users](https://developers.openai.com/plugins/build/auth) when needed, and
 [manage state](https://developers.openai.com/plugins/build/chatgpt-ui#manage-state).
 
-### MCP server review requirements
-
-Source: [MCP server review requirements](https://developers.openai.com/plugins/deploy/app-review.md)
-
-Prepare an MCP server and its optional UI for public review as part of a
-plugin.
-
-Submit and publish the complete plugin, including its skills, MCP server, and
-optional UI, through the plugin submission portal. See
-Submit plugins for the
-source-of-truth submission flow and
-Build an MCP server for how
-server-backed capabilities fit into plugins.
-
-#### Prepare MCP capabilities for plugin submission
-
-Use this page for requirements that apply when a plugin includes an MCP server:
-organization verification, management permissions, server requirements,
-review snapshots, and version maintenance.
-
-When the plugin works in
-[developer mode](https://developers.openai.com/plugins/deploy/connect-chatgpt#test-an-mcp-server-optional),
-submit it
-for review in the
-[plugin submission portal](https://platform.openai.com/plugins). This page
-covers the MCP server and optional UI requirements for that submission.
-
-Only submit the plugin if you intend for it to be publicly available in the
-countries you define during submission. For private or workspace-only use, use
-[developer mode](https://platform.openai.com/docs/guides/developer-mode)
-instead.
-
-Before submitting the plugin, review the
-[plugin guidelines](https://developers.openai.com/plugins/app-guidelines) for MCP server and optional UI
-expectations, and see
-[Submit plugins](https://developers.openai.com/plugins/deploy/submission) for the full plugin submission,
-approval, and publishing flow.
-
-For the complete flow, including skills-only and MCP-backed plugins, review,
-approval, and publishing, see
-[Submit plugins](https://developers.openai.com/plugins/deploy/submission).
-
-#### Before you submit the plugin
-
-#### Organization verification
-
-Before submitting a plugin with MCP, complete identity verification
-in the [OpenAI Platform Dashboard](https://platform.openai.com/settings/organization/general)
-for the name you plan to publish under in the directory.
-
-- **If you want to publish under your own name**, complete **individual verification**.
-- **If you want to publish under a business name**, complete **business verification**.
-
-This is enforced during review. Publishing under an unverified individual or
-business name will result in rejection.
-
-#### Plugin submission permissions
-
-To create plugin drafts with MCP and submit them for review, you need
-the `api.apps.write` permission. To view drafts and review status in the
-Dashboard, you need the `api.apps.read` permission. Organization owners
-automatically have both permissions, and can grant them to non-owners through
-roles in the [OpenAI Platform Dashboard](https://platform.openai.com/settings/organization/roles).
-
-#### MCP server requirements
-
-- Your MCP server is hosted on a publicly accessible domain
-- You are not using a local or testing endpoint
-- If the server returns UI, you defined a [content security policy (CSP)](https://developers.openai.com/plugins/build/chatgpt-ui#content-security-policy-csp) that allows the exact domains the component fetches from.
-
-#### Template MCP server URLs
-
-Most plugins should submit a universal MCP server URL: a single hosted MCP endpoint that works for all users and organizations. Choose **Template** only if the plugin uses workspace-specific MCP server URLs, such as when each customer has a separate tenant, workspace, or managed MCP endpoint. We only support template-based URLs for trusted developers with whom we have an established relationship.
-
-Template submissions require two URL values:
-
-- **Example MCP Server URL:** A concrete, working MCP endpoint for review and automated checks.
-- **Template MCP Server URL:** The URL pattern that describes which part of the MCP endpoint changes across customer workspaces.
-
-The example MCP server URL must be a real endpoint that OpenAI can connect to during submission review. Don't enter a placeholder URL in the **Example MCP Server URL** field.
-
-Use placeholders in the **Template MCP Server URL** for the parts that a workspace admin will configure later. Placeholders must use `{name}` syntax, start with a letter, and contain only letters, numbers, or underscores. Each placeholder name must be unique.
-
-Make sure the concrete **Example MCP Server URL** matches the template pattern after replacing each placeholder with a real value.
-
-For example:
-
-```text
-Example MCP Server URL: https://acme.example.com/mcp
-Template MCP Server URL: https://{workspace}.example.com/mcp
-```
-
-#### Submit for review
-
-If the prerequisites are met, you can submit the plugin
-for review from the [plugin submission portal](https://platform.openai.com/plugins).
-
-#### Start the review process
-
-In the plugin submission portal:
-
-1. Add your MCP server details (as well as OAuth credentials if OAuth is selected), and then select **Scan Tools**.
-2. Complete the required fields in the submission form and check all confirmation boxes. You will need to provide the plugin name, logo, description, company and privacy policy URLs, MCP and tool information, test prompts and responses, and localization information. If the plugin has UI, you may also provide optional screenshots. Don't provide screenshots when the plugin has no UI.
-3. Select **Submit for review**.
-
-#### Metadata stored during tool scanning
-
-When you select **Scan Tools**, the dashboard imports metadata advertised by your MCP endpoint into the draft. This includes tool names, titles, and descriptions; input and output schemas; security schemes; `_meta` fields; [tool annotations](https://developers.openai.com/plugins/reference#annotations); linked UI resource metadata, including CSP settings; and MCP server `instructions`. The dashboard displays the annotation values provided by your server.
-
-Your submission justifications should explain why those server-provided annotation values match each tool's behavior. They don't override the annotations. For example, if your server advertises `readOnlyHint: false`, describing the tool as “functionally read-only” in the justification doesn't make the tool read-only. If the tool is truly read-only, update its server annotation to `readOnlyHint: true`, deploy the change, select **Scan Tools** again, verify the updated value, and then submit.
-
-Each organization can publish multiple unique plugins with MCP. For each MCP
-server integration, only one version may be published at a time and only one
-version may be in review at a time. If you need to make changes after
-submitting, withdraw that submission by selecting **Cancel Review** and
-resubmit the same version draft.
-
-_For now, projects with EU data residency cannot submit plugins with MCP
-servers for review. Use a project with global data residency. If you don't have
-one, create a new project in your current organization from the OpenAI
-Dashboard._
-
-#### Review and approval
-
-Once submitted, the plugin will enter the review queue. You can review the
-status within the Dashboard and will receive an email notification informing
-you of any status changes.
-
-#### Reviews and checks
-
-We may perform automated scans or manual reviews to understand how your plugin
-works and whether it may conflict with our policies.
-
-#### Approval, rejection, and appeals
-
-If your plugin is approved, we will notify you by email. Once approved, you can publish it from the plugin submission portal.
-
-If your plugin is rejected or removed because of its MCP server, tools, or UI,
-you will receive feedback on which checks were unsuccessful. After making the
-necessary changes, you may resubmit the plugin for review. To appeal the
-decision, respond to the email you received with a clear rationale and any new
-information that can assist the review.
-
-#### Getting help
-
-If you have questions before, during, or after submission and the documentation
-does not answer them, contact OpenAI support. Include the ID shown in the plugin
-submission portal so the support team can identify your plugin.
-
-#### Review and approval FAQs
-
-**How long does review take?**
-
-Review timelines may vary as we continue to build and scale our processes. Please do not contact support to request expedited review, as these requests cannot be accommodated.
-
-**What are common rejection reasons and how can I resolve them?**
-
-- **We're unable to connect to your MCP server using the MCP URL and/or test credentials we were given.**
-  - For servers requiring authentication, our review team must be able to log into a demo account with no further configuration required.
-  - Ensure that the provided URL and credentials are correct, do not feature MFA (including requiring SMS codes, login through systems that require SMS, email or other verification schemes).
-  - Ensure that the provided credentials can be used to log in successfully (test them outside any company networks, local area networks, or other internal networks).
-  - Confirm that the credentials have not expired.
-- **One or more of your test cases did not produce correct results.**
-  - Review all test cases carefully and rerun each one. Ensure that outputs match the expected results. Verify that there are no errors in the UI (if applicable) - for example, issues with loading content, images, or other UI issues.
-  - Ensure that the returned textual output closely adheres to the user's request, and does not offer extraneous information that is irrelevant to the request, including personal identifiers.
-  - Ensure that all test cases pass on the supported ChatGPT and Codex surfaces
-    where the plugin will be available.
-  - Compare actual outputs to precise expected behavior for each tool and fix any mismatch so results are relevant to the user's input and the plugin reliably does what it promises.
-  - If required, in your resubmission, modify your test cases and expected responses to be clear and unambiguous.
-- **Your plugin returns user-related data types that are not disclosed in your privacy policy.**
-  - Audit your MCP tool responses in developer mode by running a few realistic example requests and listing every user-related field the server returns (including nested fields and “debug” payloads). Ensure tools return only what's strictly necessary for the user's request and remove any unnecessary PII, telemetry/internal identifiers (for example, session, trace, or request IDs; timestamps; internal account IDs; or logs) and any auth secrets (tokens, keys, or passwords).
-  - You may also consider updating your published privacy policy so it explicitly discloses all categories of personal data you collect, process, or return and why—if a field isn't truly needed, remove it rather than disclose it.
-  - If a user identifier is truly necessary, make it explicitly requested and directly tied to the user's intent (not “looked up and echoed” by default).
-- **Tool hint annotations do not appear to match the tool's behavior:**
-  - **readOnlyHint:** Set to `true` if it strictly fetches/looks up/lists/retrieves data and does not modify anything. Set to `false` if the tool can create/update/delete anything, trigger actions (send emails/messages, run jobs, enqueue tasks, write logs, start workflows), or otherwise change state.
-  - **Destructive hint:** Set the destructive annotation to `true` if the tool can cause irreversible outcomes (deleting, overwriting, sending messages or transactions you can't undo, revoking access, or destructive admin actions), even in only select modes, through default parameters, or through indirect side effects. Ensure the justification explains what is irreversible and under what conditions, including safeguards such as confirmation steps, dry-run options, or scoping constraints. Otherwise, set it to `false`.
-  - **openWorldHint:** Set to `true` if it can write to or change publicly visible internet state (for example, posting to social media, blogs, or forums; sending emails, SMS, or messages to external recipients; creating public tickets or issues; publishing pages; pushing code or content to public endpoints; submitting forms to third parties; or otherwise affecting systems outside a private or first-party context). Set to `false` only if it operates entirely within closed or private systems (including internal writes) and cannot change the state of the publicly visible internet.
-
-#### Publication and distribution
-
-#### Publish the plugin
-
-Once the plugin is approved, you can publish it from the [plugin submission portal](https://platform.openai.com/plugins) by selecting **Publish**.
-
-#### Discovery
-
-Once published, users can find your plugin in the universal directory shared
-by ChatGPT and Codex by:
-
-- Clicking a direct link to the plugin listing in the directory.
-- Searching for the plugin by name.
-
-Plugins that demonstrate strong real-world utility and high user satisfaction may be eligible for enhanced distribution opportunities—such as directory placement or proactive suggestions—but few plugins will receive enhanced distribution at publication. Developers cannot request enhanced distribution.
-
-#### Publication and Distribution FAQs
-
-**What happens after the plugin is approved? Will it be listed in the plugin directory automatically?**
-
-After the plugin is approved, you can choose to publish it from the [plugin submission portal](https://platform.openai.com/plugins). You must publish before it can appear in the universal plugin directory.
-
-**Why can't I see my plugin in the directory?**
-
-Plugins appear on the directory's main pages only if OpenAI selects them for enhanced distribution. To confirm that your plugin is published, search for it using the exact publication name or open its directory URL from the plugin submission portal.
-
-**What should I do if I want to issue a press release or public announcement about my plugin?**
-
-Before issuing any press releases or public announcements regarding the launch
-of your plugin, please first reach out to
-[press@openai.com](mailto:press@openai.com) to coordinate with our
-communications team.
-
-#### Ongoing Maintenance
-
-#### How published MCP metadata versions work
-
-Treat the metadata exposed by your MCP server as a versioned API contract for
-the plugin. When you scan the MCP endpoint in the plugin submission portal,
-OpenAI stores the discovered metadata with that draft version. Submitting the
-version sends that stored snapshot for review. The published plugin uses this
-metadata snapshot while tool calls and UI resources continue to use your live
-MCP server.
-
-Use this table to determine how to ship each change:
-
-| Change                                                                                                                                                                                                   | Required action                                                                                                                                                                 | When users see the change                                                                                   |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Tool list, names, titles, descriptions, input or output schemas, annotations, tool security schemes, tool `_meta` fields (including UI resource references and visibility), or MCP server `instructions` | Deploy the change, create or update a draft version, scan the endpoint, submit the version for review, and publish it after approval.                                           | After you publish the approved version. Until then, users continue to use the currently published snapshot. |
-| UI resource URI or linked resource metadata, including content security policy (CSP) settings                                                                                                            | Deploy the change, create or update a draft version, scan the endpoint, submit the version for review, and publish it after approval.                                           | After you publish the approved version.                                                                     |
-| Backward-compatible content update served from the same published UI resource URI                                                                                                                        | Deploy the content update. You don't need to scan, submit, or publish a new version if the URI and published contract remain compatible.                                        | After deployment. ChatGPT may continue serving cached resource contents for up to one hour.                 |
-| Server-only fix or change to live tool results, including result `_meta`, or business data                                                                                                               | Deploy the server change. You don't need to scan, submit, or publish a new version if the change preserves the published contract.                                              | Through your live endpoint after deployment.                                                                |
-| MCP server origin (`scheme`, `hostname`, or `port`)                                                                                                                                                      | To change the origin, create a new plugin, then complete its scan, submission, review, and publication flow. To change only the endpoint path, use the normal new-version flow. | After you publish the new plugin or approved version.                                                       |
-
-Breaking changes to the MCP server contract inside a published plugin aren't
-currently supported. Removing or renaming a tool, making a schema incompatible,
-or serving incompatible content at or removing content from a published UI
-resource URI can break the current version as soon as the server change
-deploys. Make backward-compatible updates instead:
-
-1. Add new tools, fields, or UI resources while continuing to honor the published contracts.
-2. Submit the updated metadata as a new version.
-3. Publish the approved version and keep the old contracts available.
-
-You can deploy server-only fixes without submitting a new version if they preserve the published contract. If a deployment breaks the published version, roll back the server change rather than waiting for a new version to complete review.
-
-#### Submitting new versions for review
-
-Once your plugin is published, its submitted information and reviewed metadata
-snapshot are locked for safety. To update either, create a new draft version of
-the existing plugin and resubmit that version for review. Each resubmission
-starts a new review. In the release notes, describe what changed.
-
-The MCP server origin (`scheme`, `hostname`, or `port`) can't change between
-versions. To use a different origin, submit a new plugin with the new MCP
-server origin. You can change the endpoint path in a new version of the
-existing plugin.
-
-We will review the updated plugin metadata again and inform you by email and in
-the [plugin submission portal](https://platform.openai.com/plugins) whether the
-update was approved or rejected. If rejected, you may update and resubmit or
-appeal the decision.
-
-Once your resubmission is approved, you can publish the update, which will
-replace the previous plugin version.
-
-If you've made additional changes to the plugin between submission and approval
-and want to submit a new version for review, cancel the review from the plugin
-submission portal and resubmit.
-
-#### Changing published metadata versions and removing the plugin
-
-Once a plugin is published, you can change its published version from the
-[plugin submission portal](https://platform.openai.com/plugins) by removing the
-current version from publication and publishing an approved replacement. You
-can remove the plugin from public visibility by removing the current version
-from publication and not publishing an alternative version.
-
-To remove the plugin from your organization and from ChatGPT and Codex, delete
-it from the plugin submission portal.
-
-#### Maintenance requirements
-
-Plugins may be removed if they are inactive, unstable, or non-compliant. We may
-reject or remove any plugin from our services at any time and for any reason
-without notice, such as for legal or security concerns or policy violations.
-
-#### Ongoing Maintenance FAQs
-
-**What happens if users report my plugin as harmful or misleading?**
-
-OpenAI reviews user reports and may review or investigate your plugin,
-including its MCP server, tools, and UI. Plugins that violate our policies may
-be restricted or removed. You may appeal a removal or other enforcement action
-by following the appeals process described here. Regularly review and respond
-to feedback, and update your plugin if issues are found.
-
-**How long will updates take?**
-
-Similar to new reviews, we are unable to offer estimated times for update
-reviews.
-
 ### Memories
 
 Source: [Memories](https://learn.chatgpt.com/docs/customization/memories.md)
@@ -26369,9 +26078,12 @@ For each tool:
 - **Read-only hint:** annotate `readOnlyHint: true` on tools that only retrieve
   or compute information and never create, update, delete, or send data outside
   the conversation.
-- For tools that are not read-only:
-  - **Destructive hint** - annotate `destructiveHint: false` on tools that do not delete or overwrite user data.
-  - **Open-world hint** - annotate `openWorldHint: false` on tools that do not publish content or reach outside the user's account.
+- **Destructive hint:** Annotate `destructiveHint: false` on tools that don't
+  delete or overwrite user data.
+- **Open-world hint:** Annotate `openWorldHint: true` when a tool accesses the
+  public internet or open-ended external entities, including read-only tools
+  such as web search. Use `false` for a tool limited to a bounded private
+  account or workspace, even when that service is externally hosted.
 
 {/_ vale Vale.Terms = NO _/}
 
@@ -26397,7 +26109,7 @@ After each revision, repeat the evaluation. Aim for high precision on negative p
 
 #### Production monitoring
 
-Once your connector is live:
+Once your MCP server is live:
 
 - Review tool-call analytics weekly. Spikes in “wrong tool” confirmations usually indicate metadata drift.
 - Capture user feedback and update descriptions to cover common misconceptions.
@@ -26415,15 +26127,17 @@ people will install. Packaging gives the plugin a stable identity and tells
 ChatGPT and Codex which skills, MCP server connections, and other resources
 belong together.
 
-Every plugin has a `.codex-plugin/plugin.json` manifest. Depending on the
-plugin's architecture, its folder can also include:
+For a portable Agent Plugins package, add `plugin.json` at the plugin root and
+declare the Agent Plugins schema. Depending on the plugin's architecture, its
+folder can also include:
 
 - A `skills/` directory containing the workflows you built.
-- An `.app.json` file that references a registered MCP server connection. The
-  filename is a compatibility identifier; the underlying primitive is the MCP
-  server.
-- An `.mcp.json` file for an MCP server distributed with the plugin.
+- An `mcp.json` file for MCP servers distributed with the plugin.
 - Optional assets and lifecycle hooks.
+
+Put OpenAI-specific presentation, registered MCP server mappings, and hook settings
+under `extensions.com.openai` in root `plugin.json`. Existing
+`.codex-plugin/plugin.json` files remain supported as a compatibility fallback.
 
 UI and authentication remain part of the MCP server integration you built in
 the preceding steps; the plugin manifest connects that integration to the rest
@@ -26433,8 +26147,8 @@ Public plugins are published once to the universal plugin directory shared by
 ChatGPT and Codex. Local and repo marketplaces are separate authoring, testing,
 and team-distribution sources, and their availability can vary by surface.
 
-Use `@plugin-creator` for the fastest path, or create the manifest and folder
-structure manually. Both approaches produce the same plugin structure.
+Use `@plugin-creator` for the fastest OpenAI-specific path, or create the
+portable manifest and folder structure manually.
 
 For complete public examples, inspect
 [Figma](https://github.com/openai/plugins/tree/main/plugins/figma),
@@ -26445,10 +26159,42 @@ For complete public examples, inspect
 
 For the fastest setup, use the built-in `@plugin-creator` skill.
 
-It scaffolds the required `.codex-plugin/plugin.json` manifest and can also
-generate a local marketplace entry for testing. If you already have a plugin
-folder, you can still use `@plugin-creator` to wire it into a local
-marketplace.
+It scaffolds a supported `.codex-plugin/plugin.json` compatibility manifest
+and can also generate a local marketplace entry for testing. If you already
+have a plugin folder, you can still use `@plugin-creator` to wire it into a
+local marketplace.
+
+#### Plugin creator output
+
+The current scaffold uses the Codex compatibility layout, not the portable
+Agent Plugins layout. When you request all optional components, it can create:
+
+```text
+my-plugin/
+├── .codex-plugin/
+│   └── plugin.json
+├── .mcp.json
+├── .app.json
+├── skills/
+├── hooks/
+├── scripts/
+└── assets/
+```
+
+Only `.codex-plugin/plugin.json` is always created. The other files and
+directories are optional. `.mcp.json` starts with an empty `mcpServers` object,
+and `.app.json` starts with an empty `apps` object. The manifest references
+these files when requested. It also declares `skills: "./skills/"`; add your
+skill folders there before testing a skills-based plugin.
+
+Requesting hooks creates an empty `hooks/` directory, not a hook configuration
+or executable script. Add `hooks/hooks.json` and its scripts using the
+[bundled hooks guidance](#bundled-mcp-servers-and-lifecycle-hooks).
+
+The scaffold remains supported. To author a portable package, follow
+[Create a plugin manually](#create-a-plugin-manually) and use root `plugin.json`
+and `mcp.json` with their Agent Plugins schemas. Don't just rename `.mcp.json`:
+the portable MCP format also declares a transport `type` for each server.
 
 #### Create and test a plugin locally with an MCP server
 
@@ -26481,16 +26227,16 @@ or `$plugin-creator` in Codex. For example, in Work mode:
 Use plugin_asdk_app_6a4c0062f3b88191855c0a80eac5d53d and name it Acme Support.
 Include a personal marketplace entry so I can test it locally.`}
 
-The plugin-creator skill will create the plugin folder, create the required
-`.codex-plugin/plugin.json`, and add MCP server wiring for the plugin. If you ask
-it to create a personal marketplace entry, the plugin appears under your local
-source in the Plugins Directory for testing.
+The plugin-creator skill will create the plugin folder, create a supported
+`.codex-plugin/plugin.json` compatibility manifest, and add MCP server wiring
+for the plugin. If you ask it to create a personal marketplace entry, the
+plugin appears under your local source in the Plugins Directory for testing.
 
 After the plugin-creator skill creates the plugin:
 
 1. Review `.app.json` and confirm the registered MCP server mapping points at
    the correct `plugin_asdk_app...` ID.
-2. Review `.codex-plugin/plugin.json` and make sure its compatibility `apps`
+2. Review `.codex-plugin/plugin.json` and make sure its `apps`
    field points to `./.app.json`.
 3. Add any bundled skills under `skills/` if the plugin should include
    repeatable workflows alongside the MCP server.
@@ -26558,25 +26304,26 @@ configured marketplace snapshots.
 
 Start with a minimal plugin that packages one skill.
 
-1. Create a plugin folder with a manifest at `.codex-plugin/plugin.json`.
+1. Create a plugin folder with a portable manifest at `plugin.json`.
 
 ```bash
-mkdir -p my-first-plugin/.codex-plugin
+mkdir -p my-first-plugin
 ```
 
-`my-first-plugin/.codex-plugin/plugin.json`
+`my-first-plugin/plugin.json`
 
 ```json
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "my-first-plugin",
   "version": "1.0.0",
-  "description": "Reusable greeting workflow",
-  "skills": "./skills/"
+  "description": "Reusable greeting workflow"
 }
 ```
 
 Use a stable plugin `name` in kebab-case. Plugin hosts use it as the plugin
-identifier and component namespace.
+identifier and component namespace. Portable packages discover skills from
+the root `skills/` directory, so the manifest doesn't need a `skills` field.
 
 2. Add a skill under `skills//SKILL.md`.
 
@@ -26846,27 +26593,26 @@ plugin's on or off state in `~/.codex/config.toml`.
 
 #### Plugin structure
 
-Every plugin has a manifest at `.codex-plugin/plugin.json`. It can also include
-a `skills/` directory, a `hooks/` directory for lifecycle hooks, an `.app.json`
-file that maps registered MCP server connections, an `.mcp.json` file that
-configures bundled MCP servers, and assets used to present the plugin across
-supported surfaces.
+A portable plugin has a `plugin.json` manifest at its root. It can also include
+a `skills/` directory, an `mcp.json` file for bundled MCP servers, and assets.
+Put OpenAI-specific settings in the root manifest's `extensions.com.openai`
+object. A separate `.codex-plugin/plugin.json` is optional and serves as a
+compatibility fallback when that object is absent.
 
-Only `plugin.json` belongs in `.codex-plugin/`. Keep `skills/`, `hooks/`,
-`assets/`, `.mcp.json`, and `.app.json` at the plugin root.
+Keep `plugin.json`, `mcp.json`, `skills/`, and `assets/` at the plugin root.
+When you add a Codex overlay, keep only its `plugin.json` inside
+`.codex-plugin/`; referenced hooks, `.app.json`, and other resources stay at
+the plugin root.
 
-Published plugins typically use a richer manifest than the minimal example that
-appears in quick-start scaffolds. The manifest has three jobs:
+The portable manifest identifies the plugin. Fixed package paths identify its
+portable components: `skills/` contains skills, and `mcp.json` configures MCP
+servers.
 
-- Identify the plugin.
-- Point to bundled components such as skills, MCP servers, or hooks.
-- Provide install-surface metadata such as descriptions, icons, and legal
-  links.
-
-Here's a complete manifest example:
+Here's a complete portable manifest example:
 
 ```json
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "my-plugin",
   "version": "0.1.0",
   "description": "Bundle reusable skills and MCP servers.",
@@ -26878,48 +26624,82 @@ Here's a complete manifest example:
   "homepage": "https://example.com/plugins/my-plugin",
   "repository": "https://github.com/example/my-plugin",
   "license": "MIT",
-  "keywords": ["research", "crm"],
-  "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
-  "apps": "./.app.json",
-  "hooks": "./hooks/hooks.json",
-  "interface": {
-    "displayName": "My Plugin",
-    "shortDescription": "Reusable skills and MCP servers",
-    "longDescription": "Distribute skills and MCP servers together.",
-    "developerName": "Your team",
-    "category": "Productivity",
-    "capabilities": ["Read", "Write"],
-    "websiteURL": "https://example.com",
-    "privacyPolicyURL": "https://example.com/privacy",
-    "termsOfServiceURL": "https://example.com/terms",
-    "defaultPrompt": [
-      "Use My Plugin to summarize new CRM notes.",
-      "Use My Plugin to triage new customer follow-ups."
-    ],
-    "brandColor": "#10A37F",
-    "composerIcon": "./assets/icon.png",
-    "logo": "./assets/logo.png",
-    "screenshots": ["./assets/screenshot-1.png"]
+  "keywords": ["research", "crm"]
+}
+```
+
+The root `plugin.json` is the portable entry point. OpenAI also accepts legacy
+and Claude-compatible manifests, but new packages should use this format.
+
+#### Add OpenAI-specific metadata
+
+Add `extensions.com.openai` to root `plugin.json` for presentation, existing
+registered MCP server mappings, and lifecycle hooks. Keep portable identity and
+metadata, such as `name`, `version`, and `description`, at the root.
+
+For example:
+
+```json
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "my-plugin",
+  "version": "0.1.0",
+  "description": "Reusable skills and MCP servers",
+  "extensions": {
+    "com.openai": {
+      "apps": "./.app.json",
+      "hooks": "./hooks/hooks.json",
+      "interface": {
+        "displayName": "My Plugin",
+        "shortDescription": "Reusable skills and MCP servers",
+        "longDescription": "Distribute skills and MCP servers together.",
+        "developerName": "Your team",
+        "category": "Productivity",
+        "capabilities": ["Read", "Write"],
+        "websiteURL": "https://example.com",
+        "privacyPolicyURL": "https://example.com/privacy",
+        "termsOfServiceURL": "https://example.com/terms",
+        "defaultPrompt": [
+          "Use My Plugin to summarize new CRM notes.",
+          "Use My Plugin to triage new customer follow-ups."
+        ],
+        "brandColor": "#10A37F",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/logo.png",
+        "screenshots": ["./assets/screenshot-1.png"]
+      }
+    }
   }
 }
 ```
 
-`.codex-plugin/plugin.json` is the required entry point. The other manifest
-fields are optional, but published plugins commonly use them.
+When `extensions.com.openai` is an object, it replaces the entire
+`.codex-plugin/plugin.json` overlay as the source of OpenAI-specific settings;
+the two aren't merged. If the inline object is absent, the compatibility
+overlay supplies those settings. Root identity and portable components remain
+canonical in either case.
 
 #### Manifest fields
 
-Use the top-level fields to define package metadata and point to bundled
-components:
+Use the root manifest fields to define portable package metadata:
 
-- `name`, `version`, and `description` identify the plugin.
+- `$schema` declares the supported Agent Plugins version.
+- `name` identifies the plugin. `version` and `description` provide optional
+  release and discovery metadata.
 - `author`, `homepage`, `repository`, `license`, and `keywords` provide
   publisher and discovery metadata.
-- `skills`, `mcpServers`, and `hooks` point to bundled components relative to
-  the plugin root. The compatibility `apps` field points to registered MCP
-  server mappings.
-- `interface` controls how install surfaces present the plugin.
+
+Use `extensions.com.openai` for OpenAI-specific fields:
+
+- `apps` points to registered MCP server mappings in `.app.json`.
+- `hooks` points to lifecycle hook configuration.
+- `interface` controls how OpenAI install surfaces present the plugin.
+
+Portable packages always discover skills in `skills/` and MCP servers in
+`mcp.json`. A `skills` or `mcpServers` declaration in the inline extension or
+compatibility overlay can't replace, disable, or add to those components.
+Those declarations apply only to legacy packages without a recognized portable
+root manifest.
 
 Use the `interface` object for install-surface metadata:
 
@@ -26934,45 +26714,37 @@ Use the `interface` object for install-surface metadata:
 
 #### Path rules
 
-- Keep manifest paths relative to the plugin root and start them with `./`.
+- Keep portable `plugin.json`, `mcp.json`, and `skills/` at the plugin root.
+- Keep paths in `extensions.com.openai` or a compatibility manifest relative to
+  the plugin root and start them with `./`.
 - Store visual assets such as `composerIcon`, `logo`, and `screenshots` under
   `./assets/` when possible.
-- Use `skills` for bundled skill folders, `mcpServers` for `.mcp.json`, and
-  `hooks` for lifecycle hooks. Use the compatibility `apps` field only for
-  registered MCP server mappings in `.app.json`.
+- Use the OpenAI extension's `apps` field only for registered MCP server mappings in
+  `.app.json`.
 - Enabled plugins can include lifecycle hooks alongside skills and MCP servers.
-- If your plugin stores hooks at `./hooks/hooks.json`, you don't need a
-  `hooks` entry in `.codex-plugin/plugin.json`; Codex checks that default file
-  automatically.
 
 #### Bundled MCP servers and lifecycle hooks
 
-`mcpServers` can point to an `.mcp.json` file that contains either a direct
-server map or a wrapped `mcp_servers` object.
+Configure portable MCP servers in root `mcp.json`. Include the Agent Plugins
+MCP schema and a named entry under `mcpServers`.
 
-Direct server map:
-
-```json
-{
-  "docs": {
-    "command": "docs-mcp",
-    "args": ["--stdio"]
-  }
-}
-```
-
-Wrapped server map:
+Remote HTTP server:
 
 ```json
 {
-  "mcp_servers": {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
     "docs": {
-      "command": "docs-mcp",
-      "args": ["--stdio"]
+      "type": "streamable-http",
+      "url": "https://example.com/mcp"
     }
   }
 }
 ```
+
+For public submission, submit the remote HTTPS endpoint through **With MCP**.
+If your MCP server runs locally, deploy it to a public HTTPS URL. If you can't,
+reach out to your OpenAI contact for local MCP support.
 
 After installation, users can enable or disable a bundled MCP server and tune
 tool approval policy from their Codex config without editing the plugin. Use
@@ -26988,14 +26760,18 @@ enabled_tools = ["search"]
 approval_mode = "approve"
 ```
 
-When your plugin is enabled, Codex can load lifecycle hooks from your plugin
-alongside user, project, and managed hooks.
+When your plugin is enabled, the Codex runtime can load lifecycle hooks from
+your plugin alongside user, project, and managed hooks. This includes
+ChatGPT Work and Codex. Hook scripts must exist in the execution environment;
+installing a plugin on the web doesn't deploy them. Enterprise admins can
+deploy required scripts through mobile device management (MDM).
 
 Installing or enabling a plugin doesn't automatically trust its hooks.
 Plugin-bundled hooks are non-managed hooks, so Codex skips them until the user
 reviews and trusts the current hook definition.
 
-The default plugin hook file is `hooks/hooks.json`:
+Codex discovers `hooks/hooks.json` by default when the selected OpenAI extension
+or compatibility manifest doesn't define `hooks`:
 
 ```json
 {
@@ -27015,21 +26791,27 @@ The default plugin hook file is `hooks/hooks.json`:
 }
 ```
 
-If you define `hooks` in `.codex-plugin/plugin.json`, Codex uses that manifest
-entry instead of the default `hooks/hooks.json`. The manifest field can be a
-single path, an array of paths, an inline hooks object, or an array of inline
-hooks objects.
+To override that default, define `hooks` inside `extensions.com.openai` in root
+`plugin.json`. The field can be a single path, an array of paths, an inline
+hooks object, or an array of inline hooks objects. An explicit value replaces
+default-file discovery; it doesn't add to `hooks/hooks.json`.
 
 ```json
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "repo-policy",
-  "hooks": ["./hooks/session.json", "./hooks/tools.json"]
+  "extensions": {
+    "com.openai": {
+      "hooks": ["./hooks/session.json", "./hooks/tools.json"]
+    }
+  }
 }
 ```
 
-Hook paths follow the same manifest path rules as `skills`, `apps`, and
-`mcpServers`: start with `./`, resolve relative to the plugin root, and stay
-inside the plugin root.
+Legacy packages can declare `hooks` directly in `.codex-plugin/plugin.json`.
+
+Hook paths start with `./`, resolve relative to the plugin root, and stay inside
+the plugin root.
 
 Plugin hook commands receive the Codex-specific environment variables
 `PLUGIN_ROOT` and `PLUGIN_DATA`. `PLUGIN_ROOT` points to the installed plugin
@@ -27061,11 +26843,16 @@ ChatGPT and Codex. A plugin can contain:
 - **An MCP server** that exposes tools and connects to external systems.
 - **Both skills and an MCP server** when the model needs workflow guidance and
   server-backed capabilities.
+- **Lifecycle hooks** that run commands at configured points in the Codex
+  runtime, including ChatGPT Work and Codex.
 
 ChatGPT and Codex share one universal plugin directory. When you publish a
 public plugin, people can discover the same listing from supported surfaces in
 either product. Individual capabilities can still be surface-specific; for
-example, a plugin can include hooks that run only in Codex.
+example, hook scripts must be available in the execution environment.
+Installing a plugin on the web doesn't deploy those scripts. See
+[bundled hooks](https://developers.openai.com/plugins/build/plugins#bundled-mcp-servers-and-lifecycle-hooks)
+for setup and trust requirements.
 
 An MCP server can return structured data and model-readable text without
 custom UI. When a task benefits from visual interaction, the server can also
@@ -27239,7 +27026,10 @@ caution.
 - You should label a tool with the `readOnlyHint` annotation if it only retrieves
   or lists data and does not change anything outside the conversation.
 - Write or destructive tools (for example, creating, updating, deleting, posting, sending) must be explicitly marked using the `readOnlyHint` and `destructiveHint`.
-- Tools that interact with external systems, accounts, public platforms, or create publicly-visible content must be explicitly labeled using the `openWorldHint` annotation.
+- Set `openWorldHint` to `true` for tools that access the public internet or
+  open-ended external entities, including read-only web search. A tool limited
+  to a bounded private account or workspace can set it to `false`, even when
+  that service is externally hosted.
 - Incorrect or missing action labels are a common cause of rejection. Double-check that the `readOnlyHint`, `openWorldHint`, and `destructiveHint` annotations are correctly set, and provide a detailed justification for each when submitting the plugin.
 
 #### Minimal and purpose-driven inputs
@@ -27450,7 +27240,7 @@ Plugins submitted to the public directory are held to a higher standard than
 plugins installed in a workspace. Directory submissions must pass the shared
 package checks and the additional checks for listing fields, review materials,
 MCP tools, skills, assets, and images. This reference also covers shared
-package checks, such as app references, that can appear outside the submission
+package checks, such as MCP server references, that can appear outside the submission
 portal.
 
 Use the error code returned during submission to find the matching requirement.
@@ -27468,19 +27258,19 @@ A package can pass upload validation and still fail final directory submission.
 Final submission uses stricter listing limits and checks MCP configuration,
 skill scans, test cases, and policy attestations.
 
-| Field             | Final submission rule                                                                                                                                                       |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Package name      | Required; at most 64 characters. Start with an ASCII letter or digit and use only ASCII letters, digits, `_`, and `-`.                                                      |
-| Version           | Required; use a semantic version of at most 64 characters.                                                                                                                  |
-| Display name      | Required; one line; at most 30 characters.                                                                                                                                  |
-| Short description | Required; one line; at most 30 characters.                                                                                                                                  |
-| Long description  | Required; at most 4,000 characters. Line breaks are allowed.                                                                                                                |
-| Developer name    | Required; one line; at most 80 characters.                                                                                                                                  |
-| Category          | Required; choose a supported category listed in the [Listing and interface errors](#listing-and-interface-errors) section.                                                  |
-| Capabilities      | At most 20. Each capability must be non-empty, one line, and at most 120 characters.                                                                                        |
-| Starter prompts   | At most 3. Each prompt must be non-empty, unique after Unicode and whitespace normalization, one line, at most 128 characters, and contain no app `@mention`.               |
-| URLs              | Required for MCP-backed submissions; optional for skills-only submissions. Website, support, privacy policy, and terms URLs must use HTTPS and be at most 1,024 characters. |
-| Brand colors      | Optional six-digit hex colors. The light color must have at least 2:1 contrast against white, and the dark color must have at least 2:1 contrast against `#212121`.         |
+| Field             | Final submission rule                                                                                                                                                                    |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Package name      | Required; at most 64 characters. Start with an ASCII letter or digit and use only ASCII letters, digits, `_`, and `-`.                                                                   |
+| Version           | Required; use a semantic version of at most 64 characters.                                                                                                                               |
+| Display name      | Required; one line; at most 30 characters.                                                                                                                                               |
+| Short description | Required; one line; at most 30 characters.                                                                                                                                               |
+| Long description  | Required; at most 4,000 characters. Line breaks are allowed.                                                                                                                             |
+| Developer name    | Required; one line; at most 80 characters.                                                                                                                                               |
+| Category          | Required; choose a supported category listed in the [Listing and interface errors](#listing-and-interface-errors) section.                                                               |
+| Capabilities      | At most 20. Each capability must be non-empty, one line, and at most 120 characters.                                                                                                     |
+| Starter prompts   | At most 3. Each prompt must be non-empty, unique after Unicode and whitespace normalization, one line, at most 128 characters, and contain no MCP server `@mention`.                     |
+| URLs              | Required for remote MCP submissions; optional for ZIP uploads, for skills-only plugins. Website, support, privacy policy, and terms URLs must use HTTPS and be at most 1,024 characters. |
+| Brand colors      | Optional six-digit hex colors. The light color must have at least 2:1 contrast against white, and the dark color must have at least 2:1 contrast against `#212121`.                      |
 
 Every plugin submission also requires:
 
@@ -27489,7 +27279,7 @@ Every plugin submission also requires:
 - A verified developer or business identity and all required policy
   attestations.
 
-For an MCP-backed plugin, final submission also requires:
+For a remote MCP plugin, final submission also requires:
 
 - Website, support, privacy policy, and terms URLs that meet the rules above.
 - A demo-recording URL that shows the main use cases and tools across supported
@@ -27525,12 +27315,12 @@ means long description.
 | `submission_developer_name_too_long`              | Developer name must be 80 characters or fewer.                                                          |
 | `submission_developer_name_character_unsupported` | Developer name must use supported text and fit on one line.                                             |
 | `plugin_capability_invalid`                       | Each capability must be non-empty, use supported text, fit on one line, and be 120 characters or fewer. |
-| `plugin_default_prompt_mention`                   | Starter prompts must not contain app `@mentions`.                                                       |
+| `plugin_default_prompt_mention`                   | Starter prompts must not contain MCP server `@mentions`.                                                |
 | `plugin_default_prompt_duplicate`                 | Starter prompts must be unique after Unicode and whitespace normalization.                              |
 
 #### MCP and review errors
 
-These errors apply to MCP-backed submissions.
+These errors apply to remote MCP submissions.
 
 | Name                                | Requirement                                                                                                                                                                       |
 | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -27543,17 +27333,17 @@ These errors apply to MCP-backed submissions.
 
 #### Archive errors
 
-#### Skills-only ZIP upload errors and warnings
+#### ZIP upload errors and warnings
 
-**Skills only** uploads accept a plugin manifest and bundled skills. A changed
-package name blocks an update; the other findings require confirmation.
+The portal's **Skills only** path accepts skill ZIP packages. Errors block the
+upload; warnings require confirmation.
 
 | Name                                | Requirement                                                                                                                                               |
 | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `plugin_name_mismatch`              | The package name in an update must match the existing plugin name.                                                                                        |
 | `plugin_version_unchanged`          | A new release must use a different manifest `version`; reusing the published version requires confirmation.                                               |
-| `mcp_configuration_excluded`        | Skills-only ZIP uploads must not include `mcpServers` or `.mcp.json`; MCP-backed plugins must use **With MCP**.                                           |
-| `app_configuration_excluded`        | Skills-only ZIP uploads must not include `apps` or `.app.json`; plugins with app content must use **With MCP**.                                           |
+| `mcp_configuration_excluded`        | Skills-only uploads exclude `mcpServers`, `mcp.json`, and `.mcp.json`. Submit a remote MCP server through **With MCP**.                                   |
+| `app_configuration_excluded`        | Skills-only ZIP uploads must not include `apps` or `.app.json`; plugins with MCP servers must use **With MCP**.                                           |
 | `screenshot_configuration_excluded` | Skills-only ZIP uploads must not include `interface.screenshots`; screenshots require **With MCP** and custom UI.                                         |
 | `claude_format_normalized`          | `.claude-plugin/plugin.json` is converted to `.codex-plugin/plugin.json`, with missing interface defaults and normalized text fields added by the portal. |
 | `manifest_normalized`               | The portal saves the normalized manifest as `.codex-plugin/plugin.json`; changed fields require confirmation.                                             |
@@ -27585,57 +27375,57 @@ package name blocks an update; the other findings require confirmation.
 
 #### Plugin root errors
 
-| Name                           | Requirement                                                                                                    |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| `plugin_root_missing`          | The selected path must exist and be a directory containing a plugin.                                           |
-| `archive_plugin_files_missing` | A skills-only ZIP must contain a supported plugin manifest and at least one valid skill at `skills//SKILL.md`. |
-| `plugin_root_ambiguous`        | ZIP must contain exactly one plugin root, either at the archive root or in one top-level directory.            |
-| `plugin_root_has_siblings`     | A ZIP with a top-level plugin directory must not contain sibling files.                                        |
+| Name                           | Requirement                                                                                         |
+| ------------------------------ | --------------------------------------------------------------------------------------------------- |
+| `plugin_root_missing`          | The selected path must exist and be a directory containing a plugin.                                |
+| `archive_plugin_files_missing` | A skills-only ZIP must contain a supported plugin manifest and at least one valid skill.            |
+| `plugin_root_ambiguous`        | ZIP must contain exactly one plugin root, either at the archive root or in one top-level directory. |
+| `plugin_root_has_siblings`     | A ZIP with a top-level plugin directory must not contain sibling files.                             |
 
 #### Plugin manifest errors
 
-| Name                                        | Requirement                                                                                                                                                  |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `plugin_manifest_missing`                   | ZIP must contain `.codex-plugin/plugin.json`, `.agent-plugin/plugin.json`, or `.claude-plugin/plugin.json` at the root or in its single top-level directory. |
-| `plugin_manifest_not_file`                  | Plugin manifest must be a regular JSON file.                                                                                                                 |
-| `plugin_manifest_unreadable`                | Plugin manifest must be readable UTF-8 text.                                                                                                                 |
-| `plugin_manifest_json_malformed`            | Plugin manifest must contain valid JSON; malformed syntax is reported with a line number.                                                                    |
-| `plugin_manifest_root_not_object`           | Plugin manifest must contain a JSON object at the top level.                                                                                                 |
-| `codex_manifest_parent_not_directory`       | `.codex-plugin` must be a directory.                                                                                                                         |
-| `codex_manifest_path_not_file`              | `.codex-plugin/plugin.json` must be a regular JSON file.                                                                                                     |
-| `plugin_id_wrong_type`                      | `id` must be a string when provided.                                                                                                                         |
-| `plugin_id_empty`                           | `id` must be non-empty when provided.                                                                                                                        |
-| `plugin_name_missing`                       | `name` is required.                                                                                                                                          |
-| `plugin_name_wrong_type`                    | `name` must be a string.                                                                                                                                     |
-| `plugin_name_empty`                         | `name` must be non-empty.                                                                                                                                    |
-| `plugin_name_too_long`                      | `name` must be 64 characters or fewer.                                                                                                                       |
-| `plugin_name_format`                        | `name` must start with an ASCII letter or digit and contain only ASCII letters, digits, `_`, or `-`.                                                         |
-| `plugin_version_missing`                    | `version` is required.                                                                                                                                       |
-| `plugin_version_wrong_type`                 | `version` must be a string.                                                                                                                                  |
-| `plugin_version_empty`                      | `version` must be a non-empty semantic-version string, such as `1.0.0`.                                                                                      |
-| `plugin_version_not_semver`                 | `version` must use semantic versioning, such as `1.0.0`.                                                                                                     |
-| `plugin_version_too_long`                   | `version` must be 64 characters or fewer.                                                                                                                    |
-| `plugin_description_missing`                | `description` is required.                                                                                                                                   |
-| `plugin_description_wrong_type`             | `description` must be a string.                                                                                                                              |
-| `plugin_description_empty`                  | `description` must be non-empty.                                                                                                                             |
-| `plugin_description_too_long`               | `description` must be 1,024 characters or fewer.                                                                                                             |
-| `plugin_description_character_unsupported`  | `description` must use supported text. Line breaks are allowed.                                                                                              |
-| `plugin_developer_missing`                  | `author.name` is required. `interface.developerName` is also required and is reported separately.                                                            |
-| `plugin_author_wrong_type`                  | `author` must be an object.                                                                                                                                  |
-| `plugin_author_name_wrong_type`             | `author.name` must be a string.                                                                                                                              |
-| `plugin_author_name_empty`                  | `author.name` must be non-empty.                                                                                                                             |
-| `plugin_author_name_too_long`               | `author.name` must be 120 characters or fewer.                                                                                                               |
-| `plugin_author_name_character_unsupported`  | `author.name` must use supported text.                                                                                                                       |
-| `plugin_author_email_wrong_type`            | `author.email` must be a string when provided.                                                                                                               |
-| `plugin_author_email_empty`                 | `author.email` must be non-empty when provided.                                                                                                              |
-| `plugin_author_email_too_long`              | `author.email` must be 320 characters or fewer.                                                                                                              |
-| `plugin_author_email_character_unsupported` | `author.email` must use supported text.                                                                                                                      |
-| `plugin_author_url_wrong_type`              | `author.url` must be a string when provided.                                                                                                                 |
-| `plugin_author_url_empty`                   | `author.url` must be non-empty when provided.                                                                                                                |
-| `plugin_author_url_not_https`               | `author.url` must be an HTTPS URL.                                                                                                                           |
-| `plugin_author_url_has_credentials`         | `author.url` must not contain credentials.                                                                                                                   |
-| `plugin_author_url_too_long`                | `author.url` must be 2,048 characters or fewer.                                                                                                              |
-| `plugin_author_url_character_unsupported`   | `author.url` must use supported text.                                                                                                                        |
+| Name                                        | Requirement                                                                                                                                                                                                            |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `plugin_manifest_missing`                   | ZIP must contain root `plugin.json` with a supported Agent Plugins schema, `.codex-plugin/plugin.json`, `.agent-plugin/plugin.json`, or `.claude-plugin/plugin.json` at the root or in its single top-level directory. |
+| `plugin_manifest_not_file`                  | Plugin manifest must be a regular JSON file.                                                                                                                                                                           |
+| `plugin_manifest_unreadable`                | Plugin manifest must be readable UTF-8 text.                                                                                                                                                                           |
+| `plugin_manifest_json_malformed`            | Plugin manifest must contain valid JSON; malformed syntax is reported with a line number.                                                                                                                              |
+| `plugin_manifest_root_not_object`           | Plugin manifest must contain a JSON object at the top level.                                                                                                                                                           |
+| `codex_manifest_parent_not_directory`       | `.codex-plugin` must be a directory.                                                                                                                                                                                   |
+| `codex_manifest_path_not_file`              | `.codex-plugin/plugin.json` must be a regular JSON file.                                                                                                                                                               |
+| `plugin_id_wrong_type`                      | `id` must be a string when provided.                                                                                                                                                                                   |
+| `plugin_id_empty`                           | `id` must be non-empty when provided.                                                                                                                                                                                  |
+| `plugin_name_missing`                       | `name` is required.                                                                                                                                                                                                    |
+| `plugin_name_wrong_type`                    | `name` must be a string.                                                                                                                                                                                               |
+| `plugin_name_empty`                         | `name` must be non-empty.                                                                                                                                                                                              |
+| `plugin_name_too_long`                      | `name` must be 64 characters or fewer.                                                                                                                                                                                 |
+| `plugin_name_format`                        | `name` must start with an ASCII letter or digit and contain only ASCII letters, digits, `_`, or `-`.                                                                                                                   |
+| `plugin_version_missing`                    | `version` is required.                                                                                                                                                                                                 |
+| `plugin_version_wrong_type`                 | `version` must be a string.                                                                                                                                                                                            |
+| `plugin_version_empty`                      | `version` must be a non-empty semantic-version string, such as `1.0.0`.                                                                                                                                                |
+| `plugin_version_not_semver`                 | `version` must use semantic versioning, such as `1.0.0`.                                                                                                                                                               |
+| `plugin_version_too_long`                   | `version` must be 64 characters or fewer.                                                                                                                                                                              |
+| `plugin_description_missing`                | `description` is required.                                                                                                                                                                                             |
+| `plugin_description_wrong_type`             | `description` must be a string.                                                                                                                                                                                        |
+| `plugin_description_empty`                  | `description` must be non-empty.                                                                                                                                                                                       |
+| `plugin_description_too_long`               | `description` must be 1,024 characters or fewer.                                                                                                                                                                       |
+| `plugin_description_character_unsupported`  | `description` must use supported text. Line breaks are allowed.                                                                                                                                                        |
+| `plugin_developer_missing`                  | `author.name` is required. `interface.developerName` is also required and is reported separately.                                                                                                                      |
+| `plugin_author_wrong_type`                  | `author` must be an object.                                                                                                                                                                                            |
+| `plugin_author_name_wrong_type`             | `author.name` must be a string.                                                                                                                                                                                        |
+| `plugin_author_name_empty`                  | `author.name` must be non-empty.                                                                                                                                                                                       |
+| `plugin_author_name_too_long`               | `author.name` must be 120 characters or fewer.                                                                                                                                                                         |
+| `plugin_author_name_character_unsupported`  | `author.name` must use supported text.                                                                                                                                                                                 |
+| `plugin_author_email_wrong_type`            | `author.email` must be a string when provided.                                                                                                                                                                         |
+| `plugin_author_email_empty`                 | `author.email` must be non-empty when provided.                                                                                                                                                                        |
+| `plugin_author_email_too_long`              | `author.email` must be 320 characters or fewer.                                                                                                                                                                        |
+| `plugin_author_email_character_unsupported` | `author.email` must use supported text.                                                                                                                                                                                |
+| `plugin_author_url_wrong_type`              | `author.url` must be a string when provided.                                                                                                                                                                           |
+| `plugin_author_url_empty`                   | `author.url` must be non-empty when provided.                                                                                                                                                                          |
+| `plugin_author_url_not_https`               | `author.url` must be an HTTPS URL.                                                                                                                                                                                     |
+| `plugin_author_url_has_credentials`         | `author.url` must not contain credentials.                                                                                                                                                                             |
+| `plugin_author_url_too_long`                | `author.url` must be 2,048 characters or fewer.                                                                                                                                                                        |
+| `plugin_author_url_character_unsupported`   | `author.url` must use supported text.                                                                                                                                                                                  |
 
 #### Listing and interface errors
 
@@ -27657,9 +27447,10 @@ users. It lives in `.codex-plugin/plugin.json` and uses fields such as
 ```
 
 The four listing URLs (website, privacy policy, terms, and support) are
-optional for skills-only plugins and required for MCP-backed plugins. Their
-length limit is 2,048 characters for package validation and 1,024 characters
-for final directory submission.
+optional for ZIP uploads, for skills-only
+plugins. They are required for remote MCP submissions. Their length limit is
+2,048 characters for package validation and 1,024 characters for final
+directory submission.
 
 | Name                                             | Requirement                                                                                                                                                                                                                                     |
 | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -27728,19 +27519,42 @@ for final directory submission.
 
 #### Plugin content errors
 
-| Name                               | Requirement                                                                                                                           |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `plugin_skills_path_wrong_type`    | `skills` must be a string path for the root `skills/` directory.                                                                      |
-| `plugin_skills_path_empty`         | `skills` must be a non-empty path to the root `skills/` directory when provided.                                                      |
-| `plugin_skills_path_unsupported`   | `skills` must resolve to the root `skills/` directory.                                                                                |
-| `plugin_skills_directory_missing`  | A declared root `skills/` directory must exist.                                                                                       |
-| `plugin_skills_path_not_directory` | Root `skills/` must be a directory when declared.                                                                                     |
-| `plugin_apps_path_wrong_type`      | `apps` must be a string path for the root `.app.json`.                                                                                |
-| `plugin_apps_path_empty`           | `apps` must be a non-empty path to the root `.app.json` when provided.                                                                |
-| `plugin_apps_path_unsupported`     | `apps` must resolve to the root `.app.json`.                                                                                          |
-| `plugin_apps_file_missing`         | A declared root `.app.json` file must exist.                                                                                          |
-| `plugin_apps_path_not_file`        | Root `.app.json` must be a regular file when declared.                                                                                |
-| `plugin_runtime_surface_missing`   | A skills-only ZIP must contain at least one valid skill at `skills//SKILL.md`; app and MCP references don't satisfy this requirement. |
+| Name                               | Requirement                                                                                                                      |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `plugin_skills_path_wrong_type`    | `skills` must be a string path for the root `skills/` directory.                                                                 |
+| `plugin_skills_path_empty`         | `skills` must be a non-empty path to the root `skills/` directory when provided.                                                 |
+| `plugin_skills_path_unsupported`   | `skills` must resolve to the root `skills/` directory.                                                                           |
+| `plugin_skills_directory_missing`  | A declared root `skills/` directory must exist.                                                                                  |
+| `plugin_skills_path_not_directory` | Root `skills/` must be a directory when declared.                                                                                |
+| `plugin_apps_path_wrong_type`      | `apps` must be a string path for the root `.app.json`.                                                                           |
+| `plugin_apps_path_empty`           | `apps` must be a non-empty path to the root `.app.json` when provided.                                                           |
+| `plugin_apps_path_unsupported`     | `apps` must resolve to the root `.app.json`.                                                                                     |
+| `plugin_apps_file_missing`         | A declared root `.app.json` file must exist.                                                                                     |
+| `plugin_apps_path_not_file`        | Root `.app.json` must be a regular file when declared.                                                                           |
+| `plugin_mcp_path_wrong_type`       | `mcpServers` must be a string path for the root `.mcp.json`.                                                                     |
+| `plugin_mcp_path_empty`            | `mcpServers` must be a nonempty path. Set it to `./.mcp.json` or remove the field.                                               |
+| `plugin_mcp_path_unsupported`      | `mcpServers` must resolve to the root `.mcp.json`.                                                                               |
+| `plugin_mcp_file_missing`          | `mcpServers` declares the root `.mcp.json`, but that file doesn't exist.                                                         |
+| `plugin_mcp_path_not_file`         | Root `.mcp.json` must be a regular file.                                                                                         |
+| `plugin_runtime_surface_missing`   | A skills-only ZIP must contain at least one valid skill. Local and workspace packages can also reference an eligible MCP server. |
+
+#### MCP manifest errors
+
+These errors apply to the compatibility `.mcp.json` file. For portable packages,
+ingestion derives this file and `.codex-plugin/plugin.json` from root
+`plugin.json` and `mcp.json`. The component-path errors above can also refer to
+these generated files. Fix the source portable configuration; don't rename
+`mcp.json` to `.mcp.json` just because a compatibility diagnostic names it.
+
+| Name                          | Requirement                                                                           |
+| ----------------------------- | ------------------------------------------------------------------------------------- |
+| `mcp_manifest_unreadable`     | `.mcp.json` must be readable UTF-8 text.                                              |
+| `mcp_manifest_json_malformed` | `.mcp.json` must contain valid JSON; malformed syntax is reported with a line number. |
+| `mcp_manifest_wrong_type`     | `.mcp.json` must contain a JSON object at the top level.                              |
+| `mcp_servers_missing`         | `.mcp.json` must contain the top-level `mcpServers` field.                            |
+| `mcp_servers_wrong_type`      | `mcpServers` must be an object.                                                       |
+| `mcp_server_name_empty`       | Every MCP server name must contain at least one non-whitespace character.             |
+| `mcp_server_wrong_type`       | Each `mcpServers.` value must be an object containing that server's declaration.      |
 
 #### Skill errors
 
@@ -27854,30 +27668,31 @@ starter-prompt screenshots use the separate portal limits listed above.
 | `svg_dimensions_not_square`               | SVG dimensions must be square.                                             |
 | `svg_dimensions_too_small`                | SVG dimensions must be at least 48×48 pixels.                              |
 
-#### App reference errors
+#### MCP server reference errors
 
-The shared package checks validate `.app.json` when a plugin references apps.
-The submission portal doesn't publish references to existing ChatGPT apps: a
-**Skills only** upload removes `.app.json`, and an MCP-backed submission must
-use **With MCP** and submit the MCP server directly.
+The shared package checks validate `.app.json` when a plugin references
+registered MCP servers. The submission portal doesn't publish references to
+existing integrations. A **Skills only** upload removes `.app.json`. Use
+**With MCP** to submit the MCP server directly.
 
-For local or workspace packages, the top-level `apps` object maps each app
-alias to an app entry.
+For local or workspace packages, the top-level `apps` object maps each MCP
+server alias to a registered server entry. These configuration names and error
+codes retain their literal `app` spelling.
 
-| Name                            | Requirement                                                                                                                                                                                                               |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `app_manifest_unreadable`       | `.app.json` must be readable UTF-8 text.                                                                                                                                                                                  |
-| `app_manifest_json_malformed`   | `.app.json` contains malformed JSON near the reported line.                                                                                                                                                               |
-| `app_manifest_wrong_type`       | `.app.json` must contain a JSON object at the top level.                                                                                                                                                                  |
-| `app_entries_missing`           | `apps` is required.                                                                                                                                                                                                       |
-| `app_entries_wrong_type`        | `apps` must be an object.                                                                                                                                                                                                 |
-| `app_entry_wrong_type`          | Each app entry must be an object.                                                                                                                                                                                         |
-| `app_id_missing`                | Each app entry's `id` is required.                                                                                                                                                                                        |
-| `app_id_wrong_type`             | Each app entry's `id` must be a string.                                                                                                                                                                                   |
-| `app_id_format`                 | Each app entry's `id` must begin with `asdk_app_`, `connector_`, or `templated_apps_`, followed by a letter or digit and then only letters, digits, `_`, or `-`.                                                          |
-| `app_entry_optional_wrong_type` | Each app entry's `optional` value must be `true` or `false` when provided.                                                                                                                                                |
-| `app_entry_required_wrong_type` | Each app entry's `required` value must be `true` or `false` when provided.                                                                                                                                                |
-| `app_not_eligible`              | For a local or workspace package, each referenced app must be a released public Codex app, available connector, or released app template. Directory submissions must use **With MCP** and submit the MCP server directly. |
+| Name                            | Requirement                                                                                                                                                         |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app_manifest_unreadable`       | `.app.json` must be readable UTF-8 text.                                                                                                                            |
+| `app_manifest_json_malformed`   | `.app.json` contains malformed JSON near the reported line.                                                                                                         |
+| `app_manifest_wrong_type`       | `.app.json` must contain a JSON object at the top level.                                                                                                            |
+| `app_entries_missing`           | `apps` is required.                                                                                                                                                 |
+| `app_entries_wrong_type`        | `apps` must be an object.                                                                                                                                           |
+| `app_entry_wrong_type`          | Each server entry must be an object.                                                                                                                                |
+| `app_id_missing`                | Each server entry's `id` is required.                                                                                                                               |
+| `app_id_wrong_type`             | Each server entry's `id` must be a string.                                                                                                                          |
+| `app_id_format`                 | Each server entry's `id` must begin with `asdk_app_`, `connector_`, or `templated_apps_`, followed by a letter or digit and then only letters, digits, `_`, or `-`. |
+| `app_entry_optional_wrong_type` | Each server entry's `optional` value must be `true` or `false` when provided.                                                                                       |
+| `app_entry_required_wrong_type` | Each server entry's `required` value must be `true` or `false` when provided.                                                                                       |
+| `app_not_eligible`              | A local or workspace package must reference an eligible, available MCP server. Directory submissions must use **With MCP** and submit the MCP server directly.      |
 
 #### Package warnings
 
@@ -27887,7 +27702,7 @@ contains the expected files and settings.
 
 | Name                              | Requirement                                                                                                                                  |
 | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `duplicate_app_reference`         | Each app ID in `.app.json` must be referenced once; duplicate references are treated as one app.                                             |
+| `duplicate_app_reference`         | Each server ID in `.app.json` must be referenced once; duplicate references are treated as one server.                                       |
 | `undeclared_app_manifest_ignored` | A root `.app.json` is imported only when the plugin-manifest `apps` field is set to `./.app.json`.                                           |
 | `undeclared_mcp_manifest_ignored` | A root `.mcp.json` is imported only when the plugin-manifest `mcpServers` field is set to `./.mcp.json`.                                     |
 | `skill_file_ignored`              | Files directly under `skills/` aren't imported as skills; each skill must be in a directory containing `SKILL.md`.                           |
@@ -28395,12 +28210,12 @@ To label a tool as "read-only," use the following
 fields](https://modelcontextprotocol.io/specification/2025-11-25/schema#toolannotations)
 on the tool descriptor:
 
-| Key               | Type    | Required | Notes                                                                                                                                                           |
-| ----------------- | ------- | :------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `readOnlyHint`    | boolean | Required | Signal that the tool only retrieves or computes information and doesn't create, update, delete, or send data outside the conversation.                          |
-| `destructiveHint` | boolean | Required | Declare that the tool may delete or overwrite user data so the host knows to elicit explicit approval first.                                                    |
-| `openWorldHint`   | boolean | Required | Declare that the tool publishes content or reaches outside the current user’s account, prompting the client to summarize the impact before asking for approval. |
-| `idempotentHint`  | boolean | Optional | Declare that calling the tool with the same arguments has no extra effect on its environment.                                                                   |
+| Key               | Type    | Required | Notes                                                                                                                                                                                                                                       |
+| ----------------- | ------- | :------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `readOnlyHint`    | boolean | Required | Signal that the tool only retrieves or computes information and doesn't create, update, delete, or send data outside the conversation.                                                                                                      |
+| `destructiveHint` | boolean | Required | Declare that the tool may delete or overwrite user data so the host knows to elicit explicit approval first.                                                                                                                                |
+| `openWorldHint`   | boolean | Required | Declare that the tool accesses the public internet or open-ended external entities, including through read-only actions such as web search. A bounded private account or workspace isn't open-world solely because it is externally hosted. |
+| `idempotentHint`  | boolean | Optional | Declare that calling the tool with the same arguments has no extra effect on its environment.                                                                                                                                               |
 
 These hints only influence how ChatGPT or Codex frames the tool call to the
 user; servers must still enforce their own authorization logic.
@@ -28570,6 +28385,307 @@ server.registerTool(
   }
 );
 ```
+
+### Remote MCP server review requirements
+
+Source: [Remote MCP server review requirements](https://developers.openai.com/plugins/deploy/app-review.md)
+
+Prepare a remote MCP server and its optional UI for public review as part of a
+plugin.
+
+This page covers remote MCP submissions. Submit and publish the complete
+plugin, including its skills, MCP server, and optional UI, through the plugin
+submission portal. See
+Submit plugins for the
+source-of-truth submission flow. See
+Build an MCP server for how
+server-backed capabilities fit into plugins.
+
+#### Prepare remote MCP capabilities for plugin submission
+
+Use this page for requirements that apply when a plugin includes a remote MCP
+server: organization verification, management permissions, server requirements,
+review snapshots, and version maintenance.
+
+When the remote MCP server works in
+[developer mode](https://developers.openai.com/plugins/deploy/connect-chatgpt#test-an-mcp-server-optional),
+submit it
+for review in the
+[plugin submission portal](https://platform.openai.com/plugins). This page
+covers the remote MCP server and optional UI requirements for that submission.
+
+Only submit the plugin if you intend for it to be publicly available in the
+countries you define during submission. For private or workspace-only use, use
+[developer mode](https://platform.openai.com/docs/guides/developer-mode)
+instead.
+
+Before submitting the plugin, review the
+[plugin guidelines](https://developers.openai.com/plugins/app-guidelines) for MCP server and optional UI
+expectations, and see
+[Submit plugins](https://developers.openai.com/plugins/deploy/submission) for the full plugin submission,
+approval, and publishing flow.
+
+For the complete flow, including skills-only and MCP-backed plugins, review,
+approval, and publishing, see
+[Submit plugins](https://developers.openai.com/plugins/deploy/submission).
+
+#### Before you submit the plugin
+
+#### Organization verification
+
+Before submitting any plugin, complete identity verification
+in the [OpenAI Platform Dashboard](https://platform.openai.com/settings/organization/general)
+for the name you plan to publish under in the directory.
+
+- **If you want to publish under your own name**, complete **individual verification**.
+- **If you want to publish under a business name**, complete **business verification**.
+
+This is enforced during review. Publishing under an unverified individual or
+business name will result in rejection.
+
+#### Plugin submission permissions
+
+To create plugin drafts and submit them for review, you need
+the `api.apps.write` permission. To view drafts and review status in the
+Dashboard, you need the `api.apps.read` permission. Organization owners
+automatically have both permissions, and can grant them to non-owners through
+roles in the [OpenAI Platform Dashboard](https://platform.openai.com/settings/organization/roles).
+
+#### Remote MCP server requirements
+
+- Your MCP server is hosted on a publicly accessible domain
+- You are not using a local or testing endpoint
+- If the server returns UI, you defined a [content security policy (CSP)](https://developers.openai.com/plugins/build/chatgpt-ui#content-security-policy-csp) that allows the exact domains the component fetches from.
+
+#### Template MCP server URLs
+
+Most plugins should submit a universal MCP server URL: a single hosted MCP endpoint that works for all users and organizations. Choose **Template** only if the plugin uses workspace-specific MCP server URLs, such as when each customer has a separate tenant, workspace, or managed MCP endpoint. We only support template-based URLs for trusted developers with whom we have an established relationship.
+
+Template submissions require two URL values:
+
+- **Example MCP Server URL:** A concrete, working MCP endpoint for review and automated checks.
+- **Template MCP Server URL:** The URL pattern that describes which part of the MCP endpoint changes across customer workspaces.
+
+The example MCP server URL must be a real endpoint that OpenAI can connect to during submission review. Don't enter a placeholder URL in the **Example MCP Server URL** field.
+
+Use placeholders in the **Template MCP Server URL** for the parts that a workspace admin will configure later. Placeholders must use `{name}` syntax, start with a letter, and contain only letters, numbers, or underscores. Each placeholder name must be unique.
+
+Make sure the concrete **Example MCP Server URL** matches the template pattern after replacing each placeholder with a real value.
+
+For example:
+
+```text
+Example MCP Server URL: https://acme.example.com/mcp
+Template MCP Server URL: https://{workspace}.example.com/mcp
+```
+
+#### Submit for review
+
+If the prerequisites are met, you can submit the plugin
+for review from the [plugin submission portal](https://platform.openai.com/plugins).
+
+#### Start the review process
+
+In the plugin submission portal:
+
+1. Add your MCP server details (as well as OAuth credentials if OAuth is selected), and then select **Scan Tools**.
+2. Complete the required fields in the submission form and check all confirmation boxes. You will need to provide the plugin name, logo, description, company and privacy policy URLs, MCP and tool information, test prompts and responses, and localization information. If the plugin has UI, you may also provide optional screenshots. Don't provide screenshots when the plugin has no UI.
+3. Select **Submit for review**.
+
+#### Metadata stored during tool scanning
+
+When you select **Scan Tools**, the dashboard imports metadata advertised by your MCP endpoint into the draft. This includes tool names, titles, and descriptions; input and output schemas; security schemes; `_meta` fields; [tool annotations](https://developers.openai.com/plugins/reference#annotations); linked UI resource metadata, including CSP settings; and MCP server `instructions`. The dashboard displays the annotation values provided by your server.
+
+Your submission justifications should explain why those server-provided annotation values match each tool's behavior. They don't override the annotations. For example, if your server advertises `readOnlyHint: false`, describing the tool as “functionally read-only” in the justification doesn't make the tool read-only. If the tool is truly read-only, update its server annotation to `readOnlyHint: true`, deploy the change, select **Scan Tools** again, verify the updated value, and then submit.
+
+Each organization can publish multiple unique plugins with MCP. For each MCP
+server integration, only one version may be published at a time and only one
+version may be in review at a time. If you need to make changes after
+submitting, withdraw that submission by selecting **Cancel Review** and
+resubmit the same version draft.
+
+_For now, projects with EU data residency cannot submit plugins with MCP
+servers for review. Use a project with global data residency. If you don't have
+one, create a new project in your current organization from the OpenAI
+Dashboard._
+
+#### Review and approval
+
+Once submitted, the plugin will enter the review queue. You can review the
+status within the Dashboard and will receive an email notification informing
+you of any status changes.
+
+#### Reviews and checks
+
+We may perform automated scans or manual reviews to understand how your plugin
+works and whether it may conflict with our policies.
+
+#### Approval, rejection, and appeals
+
+If your plugin is approved, we will notify you by email. Once approved, you can publish it from the plugin submission portal.
+
+If your plugin is rejected or removed because of its MCP server, tools, or UI,
+you will receive feedback on which checks were unsuccessful. After making the
+necessary changes, you may resubmit the plugin for review. To appeal the
+decision, respond to the email you received with a clear rationale and any new
+information that can assist the review.
+
+#### Getting help
+
+If you have questions before, during, or after submission and the documentation
+does not answer them, contact OpenAI support. Include the ID shown in the plugin
+submission portal so the support team can identify your plugin.
+
+#### Review and approval FAQs
+
+**How long does review take?**
+
+Review timelines may vary as we continue to build and scale our processes. Please do not contact support to request expedited review, as these requests cannot be accommodated.
+
+**What are common rejection reasons and how can I resolve them?**
+
+- **We're unable to connect to your MCP server using the MCP URL and/or test credentials we were given.**
+  - For servers requiring authentication, our review team must be able to log into a demo account with no further configuration required.
+  - Ensure that the provided URL and credentials are correct, do not feature MFA (including requiring SMS codes, login through systems that require SMS, email or other verification schemes).
+  - Ensure that the provided credentials can be used to log in successfully (test them outside any company networks, local area networks, or other internal networks).
+  - Confirm that the credentials have not expired.
+- **One or more of your test cases did not produce correct results.**
+  - Review all test cases carefully and rerun each one. Ensure that outputs match the expected results. Verify that there are no errors in the UI (if applicable) - for example, issues with loading content, images, or other UI issues.
+  - Ensure that the returned textual output closely adheres to the user's request, and does not offer extraneous information that is irrelevant to the request, including personal identifiers.
+  - Ensure that all test cases pass on the supported ChatGPT and Codex surfaces
+    where the plugin will be available.
+  - Compare actual outputs to precise expected behavior for each tool and fix any mismatch so results are relevant to the user's input and the plugin reliably does what it promises.
+  - If required, in your resubmission, modify your test cases and expected responses to be clear and unambiguous.
+- **Your plugin returns user-related data types that are not disclosed in your privacy policy.**
+  - Audit your MCP tool responses in developer mode by running a few realistic example requests and listing every user-related field the server returns (including nested fields and “debug” payloads). Ensure tools return only what's strictly necessary for the user's request and remove any unnecessary PII, telemetry/internal identifiers (for example, session, trace, or request IDs; timestamps; internal account IDs; or logs) and any auth secrets (tokens, keys, or passwords).
+  - You may also consider updating your published privacy policy so it explicitly discloses all categories of personal data you collect, process, or return and why—if a field isn't truly needed, remove it rather than disclose it.
+  - If a user identifier is truly necessary, make it explicitly requested and directly tied to the user's intent (not “looked up and echoed” by default).
+- **Tool hint annotations do not appear to match the tool's behavior:**
+  - **readOnlyHint:** Set to `true` if it strictly fetches/looks up/lists/retrieves data and does not modify anything. Set to `false` if the tool can create/update/delete anything, trigger actions (send emails/messages, run jobs, enqueue tasks, write logs, start workflows), or otherwise change state.
+  - **Destructive hint:** Set the destructive annotation to `true` if the tool can cause irreversible outcomes (deleting, overwriting, sending messages or transactions you can't undo, revoking access, or destructive admin actions), even in only select modes, through default parameters, or through indirect side effects. Ensure the justification explains what is irreversible and under what conditions, including safeguards such as confirmation steps, dry-run options, or scoping constraints. Otherwise, set it to `false`.
+  - **openWorldHint:** Set to `true` if the tool accesses the public internet or open-ended external entities. This includes read-only tools such as web search and write tools that post to public platforms, send messages to external recipients, publish content, push code, or submit forms. Set to `false` if the tool is limited to a bounded private account or workspace, even when that service is externally hosted.
+
+#### Publication and distribution
+
+#### Publish the plugin
+
+Once the plugin is approved, you can publish it from the [plugin submission portal](https://platform.openai.com/plugins) by selecting **Publish**.
+
+#### Discovery
+
+Once published, users can find your plugin in the universal directory shared
+by ChatGPT and Codex by:
+
+- Clicking a direct link to the plugin listing in the directory.
+- Searching for the plugin by name.
+
+Plugins that demonstrate strong real-world utility and high user satisfaction may be eligible for enhanced distribution opportunities—such as directory placement or proactive suggestions—but few plugins will receive enhanced distribution at publication. Developers cannot request enhanced distribution.
+
+#### Publication and Distribution FAQs
+
+**What happens after the plugin is approved? Will it be listed in the plugin directory automatically?**
+
+After the plugin is approved, you can choose to publish it from the [plugin submission portal](https://platform.openai.com/plugins). You must publish before it can appear in the universal plugin directory.
+
+**Why can't I see my plugin in the directory?**
+
+Plugins appear on the directory's main pages only if OpenAI selects them for enhanced distribution. To confirm that your plugin is published, search for it using the exact publication name or open its directory URL from the plugin submission portal.
+
+**What should I do if I want to issue a press release or public announcement about my plugin?**
+
+Before issuing any press releases or public announcements regarding the launch
+of your plugin, please first reach out to
+[press@openai.com](mailto:press@openai.com) to coordinate with our
+communications team.
+
+#### Ongoing Maintenance
+
+#### How published MCP metadata versions work
+
+Treat the metadata exposed by your MCP server as a versioned API contract for
+the plugin. When you scan the MCP endpoint in the plugin submission portal,
+OpenAI stores the discovered metadata with that draft version. Submitting the
+version sends that stored snapshot for review. The published plugin uses this
+metadata snapshot while tool calls and UI resources continue to use your live
+MCP server.
+
+Use this table to determine how to ship each change:
+
+| Change                                                                                                                                                                                                   | Required action                                                                                                                                                                 | When users see the change                                                                                   |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Tool list, names, titles, descriptions, input or output schemas, annotations, tool security schemes, tool `_meta` fields (including UI resource references and visibility), or MCP server `instructions` | Deploy the change, create or update a draft version, scan the endpoint, submit the version for review, and publish it after approval.                                           | After you publish the approved version. Until then, users continue to use the currently published snapshot. |
+| UI resource URI or linked resource metadata, including content security policy (CSP) settings                                                                                                            | Deploy the change, create or update a draft version, scan the endpoint, submit the version for review, and publish it after approval.                                           | After you publish the approved version.                                                                     |
+| Backward-compatible content update served from the same published UI resource URI                                                                                                                        | Deploy the content update. You don't need to scan, submit, or publish a new version if the URI and published contract remain compatible.                                        | After deployment. ChatGPT may continue serving cached resource contents for up to one hour.                 |
+| Server-only fix or change to live tool results, including result `_meta`, or business data                                                                                                               | Deploy the server change. You don't need to scan, submit, or publish a new version if the change preserves the published contract.                                              | Through your live endpoint after deployment.                                                                |
+| MCP server origin (`scheme`, `hostname`, or `port`)                                                                                                                                                      | To change the origin, create a new plugin, then complete its scan, submission, review, and publication flow. To change only the endpoint path, use the normal new-version flow. | After you publish the new plugin or approved version.                                                       |
+
+Breaking changes to the MCP server contract inside a published plugin aren't
+currently supported. Removing or renaming a tool, making a schema incompatible,
+or serving incompatible content at or removing content from a published UI
+resource URI can break the current version as soon as the server change
+deploys. Make backward-compatible updates instead:
+
+1. Add new tools, fields, or UI resources while continuing to honor the published contracts.
+2. Submit the updated metadata as a new version.
+3. Publish the approved version and keep the old contracts available.
+
+You can deploy server-only fixes without submitting a new version if they preserve the published contract. If a deployment breaks the published version, roll back the server change rather than waiting for a new version to complete review.
+
+#### Submitting new versions for review
+
+Once your plugin is published, its submitted information and reviewed metadata
+snapshot are locked for safety. To update either, create a new draft version of
+the existing plugin and resubmit that version for review. Each resubmission
+starts a new review. In the release notes, describe what changed.
+
+The MCP server origin (`scheme`, `hostname`, or `port`) can't change between
+versions. To use a different origin, submit a new plugin with the new MCP
+server origin. You can change the endpoint path in a new version of the
+existing plugin.
+
+We will review the updated plugin metadata again and inform you by email and in
+the [plugin submission portal](https://platform.openai.com/plugins) whether the
+update was approved or rejected. If rejected, you may update and resubmit or
+appeal the decision.
+
+Once your resubmission is approved, you can publish the update, which will
+replace the previous plugin version.
+
+If you've made additional changes to the plugin between submission and approval
+and want to submit a new version for review, cancel the review from the plugin
+submission portal and resubmit.
+
+#### Changing published metadata versions and removing the plugin
+
+Once a plugin is published, you can change its published version from the
+[plugin submission portal](https://platform.openai.com/plugins) by removing the
+current version from publication and publishing an approved replacement. You
+can remove the plugin from public visibility by removing the current version
+from publication and not publishing an alternative version.
+
+To remove the plugin from your organization and from ChatGPT and Codex, delete
+it from the plugin submission portal.
+
+#### Maintenance requirements
+
+Plugins may be removed if they are inactive, unstable, or non-compliant. We may
+reject or remove any plugin from our services at any time and for any reason
+without notice, such as for legal or security concerns or policy violations.
+
+#### Ongoing Maintenance FAQs
+
+**What happens if users report my plugin as harmful or misleading?**
+
+OpenAI reviews user reports and may review or investigate your plugin,
+including its MCP server, tools, and UI. Plugins that violate our policies may
+be restricted or removed. You may appeal a removal or other enforcement action
+by following the appeals process described here. Regularly review and respond
+to feedback, and update your plugin if issues are found.
+
+**How long will updates take?**
+
+Similar to new reviews, we are unable to offer estimated times for update
+reviews.
 
 ### Review GitHub pull requests with Codex
 
@@ -29337,16 +29453,21 @@ If the portal returns an error code, use the
 [submission error reference](https://developers.openai.com/plugins/deploy/submission-errors) to find the
 matching requirement.
 
-A plugin can contain skills, an MCP server, or both. You can submit:
+A plugin can contain skills, MCP servers, or both. You can submit:
 
 - A skills-only plugin that packages reusable workflows.
-- An MCP-only plugin. Custom UI is optional.
-- A plugin that combines an MCP server with uploaded or MCP-imported skills.
+- A remote MCP-only plugin. Custom UI is optional.
+- A plugin that combines a remote MCP server with uploaded or MCP-imported
+  skills.
 
-The submission form collects listing information, MCP server details, skills,
-starter prompts, test cases, country availability, and policy
-attestations. Which fields you complete depends on whether the plugin includes
-skills, an MCP server, or both.
+Submit MCP servers through **With MCP** using a stable, public HTTPS endpoint.
+If your MCP server runs locally, deploy it to a public HTTPS URL. If you can't,
+reach out to your OpenAI contact for local MCP support.
+
+The portal collects listing information, MCP server or package details, skills,
+starter prompts, test cases, country availability, and policy attestations.
+Which fields you complete depends on whether the plugin includes skills, a
+remote MCP server, or both.
 
 For local development, packaging, and marketplace setup, see
 [Build plugins](https://developers.openai.com/plugins/build/plugins).
@@ -29356,7 +29477,7 @@ For server-backed capabilities, see
 
 #### Before you submit
 
-#### Submit the MCP server, not an existing integration reference
+#### Submit the remote MCP server, not an existing integration reference
 
 You cannot submit a plugin that references an existing, already-published
 integration. If your plugin includes an MCP server that already exists in
@@ -29415,27 +29536,27 @@ submitting, then reload the plugin submission portal.
 
 Before opening the form, collect:
 
-| Material           | What to prepare                                                                                                                                                                   |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Listing details    | Plugin name, short description, long description, logo, category, website, support URL, privacy policy URL, and terms URL.                                                        |
-| Developer identity | Verified individual or business identity in the OpenAI Platform.                                                                                                                  |
-| MCP server         | For plugins with MCP: public MCP server URL, domain verification access, authentication details, demo credentials if needed, content security policy, and accurate tool metadata. |
-| Tool annotations   | For plugins with MCP: `readOnlyHint`, `openWorldHint`, and `destructiveHint` values for every MCP tool.                                                                           |
-| Skills             | For skills plugins: a final skill bundle or an MCP server that exposes static skills for **Scan Tools** to import.                                                                |
-| Prompts            | Starter prompts that show useful, realistic workflows.                                                                                                                            |
-| Test cases         | Five positive test cases and three negative test cases with clear expected behavior.                                                                                              |
-| Availability       | Countries or regions where the plugin should be available.                                                                                                                        |
-| Release notes      | A short summary of what you are submitting and what changed since any prior version.                                                                                              |
+| Material           | What to prepare                                                                                                                                             |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Listing details    | Plugin name, short description, long description, logo, category, website, support URL, privacy policy URL, and terms URL.                                  |
+| Developer identity | Verified individual or business identity in the OpenAI Platform.                                                                                            |
+| Remote MCP server  | Public MCP server URL, domain verification access, authentication details, demo credentials if needed, content security policy, and accurate tool metadata. |
+| Tool annotations   | For plugins with remote MCP: `readOnlyHint`, `openWorldHint`, and `destructiveHint` values for every MCP tool.                                              |
+| Skills             | For skills plugins: a final skill bundle or a remote MCP server that exposes static skills for **Scan Tools** to import.                                    |
+| Prompts            | Starter prompts that show useful, realistic workflows.                                                                                                      |
+| Test cases         | Five positive test cases and three negative test cases with clear expected behavior.                                                                        |
+| Availability       | Countries or regions where the plugin should be available.                                                                                                  |
+| Release notes      | A short summary of what you are submitting and what changed since any prior version.                                                                        |
 
 #### Create a plugin submission
 
 1. Open the [plugin submission portal](https://platform.openai.com/plugins).
 2. Select **Create plugin**.
 3. Choose the submission type:
-   - **Skills only** for a plugin that only packages skills.
-   - **With MCP** for an MCP-only plugin.
-   - **With MCP** for a plugin that combines an MCP server with uploaded or
-     MCP-imported skills.
+   - **Skills only** for a skills-only plugin.
+   - **With MCP** for a remote MCP-only plugin.
+   - **With MCP** for a plugin that combines a remote MCP server with uploaded
+     or MCP-imported skills.
 
 The portal saves the submission as a draft while you complete the form.
 
@@ -29460,7 +29581,7 @@ and undisclosed user-related fields from tool responses.
 
 #### MCP
 
-For submissions with MCP:
+For submissions with a remote MCP server:
 
 1. Choose the MCP server URL type:
    - Choose **Universal** when one fixed MCP server URL works for all users and
@@ -29563,11 +29684,11 @@ what the tool returns.
 
 Set tool annotations to match each tool's real behavior:
 
-| Annotation        | Use it when                                                                                                                                                                                                                                                                                                                                            |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `readOnlyHint`    | Set to `true` only when the tool fetches, looks up, lists, retrieves, previews, or computes information and doesn't change anything. Set to `false` if the tool can create, update, delete, send, enqueue, run jobs, start workflows, write logs, or otherwise change state.                                                                           |
-| `openWorldHint`   | For write tools, set to `true` if the tool can change publicly visible internet state, such as posting online, sending external messages, publishing content, pushing code, or submitting forms to third parties. Set to `false` only if the tool operates entirely within closed or private systems and can't change publicly visible internet state. |
-| `destructiveHint` | For write tools, set to `true` if the tool can delete, overwrite, revoke access, send messages or transactions that can't be undone, or cause another irreversible side effect. Otherwise, set it to `false`.                                                                                                                                          |
+| Annotation        | Use it when                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `readOnlyHint`    | Set to `true` only when the tool fetches, looks up, lists, retrieves, previews, or computes information and doesn't change anything. Set to `false` if the tool can create, update, delete, send, enqueue, run jobs, start workflows, write logs, or otherwise change state.                                                                                |
+| `openWorldHint`   | Set to `true` when the tool accesses the public internet or open-ended external entities, including read-only tools such as web search and write tools that post, send messages, publish content, push code, or submit forms. Set to `false` when the tool is limited to a bounded private account or workspace, even if that service is externally hosted. |
+| `destructiveHint` | For write tools, set to `true` if the tool can delete, overwrite, revoke access, send messages or transactions that can't be undone, or cause another irreversible side effect. Otherwise, set it to `false`.                                                                                                                                               |
 
 For implementation details, see
 [tool annotations and elicitation](https://developers.openai.com/plugins/build/mcp-server#tool-annotations-and-elicitation).
@@ -29579,8 +29700,8 @@ For review expectations, see the
 Add skills to the draft in either of these ways:
 
 - Upload the final skill bundle for skills-only or skills-plus-MCP submissions.
-- For submissions with MCP, import static skills from the MCP server. When you
-  select **Scan Tools**, OpenAI imports them into the draft.
+- For a remote MCP submission, import static skills from the MCP server. When
+  you select **Scan Tools**, OpenAI imports them into the draft.
 
 Use the same file tree and instructions you tested locally. To import skills
 from MCP, follow the
@@ -29683,10 +29804,11 @@ appear in the Plugins Directory.
 
 #### How published MCP metadata versions work
 
-Plugins with MCP publish reviewed metadata and skill snapshots. To change a
-snapshot, scan the MCP server, submit a new version for review, and publish the
-approved version. For metadata-specific maintenance rules, see
-[MCP server review requirements](https://developers.openai.com/plugins/deploy/app-review#how-published-mcp-metadata-versions-work).
+Remote MCP plugins publish reviewed server metadata and imported skill
+snapshots. To change a remote snapshot, scan the MCP server, submit a new
+version for review, and publish the approved version. For metadata-specific
+maintenance rules, see
+[Remote MCP server review requirements](https://developers.openai.com/plugins/deploy/app-review#how-published-mcp-metadata-versions-work).
 
 #### Final checklist
 
@@ -29694,20 +29816,23 @@ Before submitting, confirm:
 
 - The submitter has **Apps Management** write access.
 - The publisher has a verified developer or business identity.
-- The MCP server uses a public, production URL.
 - Plugins with UI define a content security policy for the exact domains the
   component fetches from.
-- Reviewer credentials work without MFA, email confirmation, SMS confirmation,
-  or private-network access.
 - Tool names, descriptions, schemas, and annotations match actual behavior.
 - Every tool has accurate `readOnlyHint`, `openWorldHint`, and
   `destructiveHint` values.
 - Tool responses don't include unnecessary personal data, auth secrets, debug
   payloads, internal identifiers, or undisclosed user-related fields.
 - You tested the skills locally with the final file tree.
-- MCP-imported skills match the latest **Scan Tools** snapshot.
 - Starter prompts show realistic user workflows.
 - The submission includes five positive and three negative test cases.
+
+For a remote MCP submission, also confirm:
+
+- The MCP server uses a public, production URL.
+- Reviewer credentials work without MFA, email confirmation, SMS confirmation,
+  or private-network access.
+- MCP-imported skills match the latest **Scan Tools** snapshot.
 - Privacy policy, terms, support, and website URLs are public and match the
   publisher identity.
 
@@ -29725,7 +29850,7 @@ behavior.
 
 #### Server-side issues
 
-- **No tools listed:** Confirm your server is running and that you are connecting to the `/mcp` endpoint. If you changed ports, update the connector URL and restart MCP Inspector.
+- **No tools listed:** Confirm your server is running and that you are connecting to the `/mcp` endpoint. If you changed ports, update the MCP server URL and restart MCP Inspector.
 - **Structured content only, no component:** Confirm the tool descriptor sets `_meta.ui.resourceUri` to a registered HTML resource with `mimeType: "text/html;profile=mcp-app"` (ChatGPT honors `_meta["openai/outputTemplate"]` as an optional compatibility alias), and that the resource loads without CSP errors.
 - **Schema mismatch errors:** Ensure your Python or TypeScript models match the schema advertised in `outputSchema`. Regenerate types after making changes.
 - **Slow responses:** Components feel sluggish when tool calls take longer than a few hundred milliseconds. Profile server calls and cache results when possible.
@@ -29746,7 +29871,7 @@ behavior.
 
 - **401 errors:** Include a `WWW-Authenticate` header in the error response so ChatGPT knows to start the OAuth flow again. Double-check issuer URLs and audience claims.
 - **Client registration fails:** If you use CIMD, confirm your authorization server metadata includes `client_id_metadata_document_supported: true` and can fetch ChatGPT's client metadata document. For `private_key_jwt`, confirm your authorization server can fetch ChatGPT's public JWKS and check the signed client assertion. If you use DCR, confirm your authorization server exposes `registration_endpoint` and that newly created clients have at least one login connection enabled.
-- **An existing connector returns `invalid_client`:** Confirm that the dynamically registered OAuth client still exists and that your authorization server accepts its client secret, if it has one. ChatGPT reuses these credentials, so restore them instead of creating a new client. An expired access token requires a different fix.
+- **An existing MCP server connection returns `invalid_client`:** Confirm that the dynamically registered OAuth client still exists and that your authorization server accepts its client secret, if it has one. ChatGPT reuses these credentials, so restore them instead of creating a new client. An expired access token requires a different fix.
 
 #### Deployment problems
 
@@ -29761,7 +29886,7 @@ If you have validated the points above and the issue persists:
 2. Note the prompt you issued and any confirmation messages.
 3. Share the details with your OpenAI partner contact so they can reproduce the issue internally.
 
-A crisp troubleshooting log shortens turnaround time and keeps your connector reliable for users.
+A crisp troubleshooting log shortens turnaround time and keeps your MCP server reliable for users.
 
 ### UI guidelines
 
@@ -30231,7 +30356,7 @@ Source: [Plugins](https://learn.chatgpt.com/docs/plugins.md)
 #### Overview
 
 Plugins bundle capabilities into reusable workflows in ChatGPT and Codex. They
-can include skills, connectors, or both. Both products use one universal plugin
+can include skills, MCP servers, and lifecycle hooks. Both products use one universal plugin
 directory, so the same public plugins are discoverable from their supported
 surfaces.
 
@@ -30241,9 +30366,13 @@ for Codex environments. The IDE extension doesn't support plugins.
 
 On mobile, you can use plugins available to your account in Chat or Work.
 
+Plugins marked **Desktop only** require the ChatGPT desktop app. You can discover these plugins on the web,
+but you must open the ChatGPT desktop app to install and use them. They aren't
+available on mobile.
+
 Open the **Plugins** tab to browse and install plugins. After installation, you
 can use plugins in Chat or Work in ChatGPT, or in Codex. Installed plugins can
-add skills, connectors, and MCP tools to new chats.
+add skills and MCP tools to new chats.
 
 Open the **Plugins** tab to browse and install plugins. After installation, you
 can use plugins in Chat or Work. A plugin can prompt you to connect an external
@@ -30272,19 +30401,18 @@ A plugin can contain one or more of these parts:
 - **Skills:** reusable instructions for specific kinds of work. ChatGPT and
   Codex can load them when needed so they follow the right steps and use the
   right references or helper scripts for a task.
-- **Connectors:** connections to tools like GitHub, Slack, or Google Drive, so
-  ChatGPT and Codex can read information from those tools and take actions in
-  them. Connectors expose tools and can optionally include custom UI.
-- **MCP servers:** services that give ChatGPT and Codex access to more tools or
-  shared information, often from systems outside your local project. They're
-  also the services behind connectors. They define tools, enforce auth, return
-  structured data, and perform actions against external systems.
+- **MCP servers:** services that connect ChatGPT and Codex to tools and
+  information in systems such as GitHub, Slack, or Google Drive. They define
+  tools, enforce authentication, return structured data, and perform actions
+  against external systems. They can optionally include custom UI.
 - **Browser extensions:** browser capabilities that a plugin needs for its
   workflow.
-- **Hooks:** commands that run at configured lifecycle points. Review and trust
-  plugin hooks before you enable them.
-- **Scheduled task templates:** reusable starting points for recurring tasks
-  where scheduled tasks are available.
+- **Hooks:** commands that run at configured lifecycle points in the Codex
+  runtime, including ChatGPT Work and Codex. Hook scripts must be
+  available in the execution environment; installing a plugin on the web doesn't
+  deploy those scripts. Enterprise admins can deploy required scripts through
+  mobile device management (MDM). Review and trust plugin hooks before they run.
+  See [Hooks](https://learn.chatgpt.com/docs/hooks) for setup and managed-hook policies.
 
 You can share plugins by publishing them through a marketplace source, such as a
 repo marketplace for a project or team. See [Build plugins](https://developers.openai.com/plugins/build/plugins)
@@ -30321,7 +30449,7 @@ Once you open the Plugins Directory:
 
 1. Search or browse for a plugin, then open its details.
 2. Select the plus button to install the plugin.
-3. If the plugin needs a connector, connect it when prompted. Some plugins
+3. If the plugin needs an MCP server connection, connect it when prompted. Some plugins
    ask you to authenticate during install. Others wait until the first time you
    use them.
 4. After installation, start a new chat and ask ChatGPT or Codex to use the
@@ -30424,7 +30552,7 @@ on the [Platform Usage page](https://platform.openai.com/usage).
 #### How permissions and data sharing work
 
 In ChatGPT on the web, Chat and Work use the workspace permissions and tools
-available to that chat. Connectors still require their own sign-in and access.
+available to that chat. MCP servers still require their own sign-in and access.
 
 When a plugin capability runs through a Codex host, the host's [sandbox and
 approval policy](https://learn.chatgpt.com/docs/agent-approvals-security) applies.
@@ -30433,11 +30561,9 @@ access controls.
 
 - Bundled skills become available when you start a new chat or CLI session
   after installation.
-- If a plugin includes connectors, the active product may prompt you to install
-  or sign in to those connectors during setup or the first time you use them.
 - If a plugin includes MCP servers, they may require extra setup or
   authentication before you can use them.
-- When ChatGPT sends data through a bundled connector, that service's terms and privacy
+- When ChatGPT sends data through an MCP server, that service's terms and privacy
   policy apply.
 
 #### Remove a plugin
@@ -30448,8 +30574,8 @@ default plugins may not offer that action; your workspace administrator controls
 them instead.
 
 Uninstalling a plugin removes the plugin bundle from that ChatGPT or Codex
-environment, but bundled connectors stay connected until you manage them in
-ChatGPT.
+environment. Separately connected MCP server integrations remain connected in
+ChatGPT until you disconnect them there.
 
 #### Build your own plugin
 
@@ -30485,9 +30611,10 @@ same prompt, template, requirements, or process into every chat.
 
 - A **skill** packages instructions and supporting resources for a specific
   task or workflow.
-- A **plugin** is an installable bundle that can include skills, connectors, or
-  both. Connectors are backed by Model Context Protocol (MCP) servers and can
-  optionally include custom ChatGPT UI.
+- A **plugin** is an installable bundle that can include skills and Model Context
+  Protocol (MCP) servers. MCP servers expose tools and can optionally include
+  custom ChatGPT UI. Plugins can also include [lifecycle hooks](https://learn.chatgpt.com/docs/hooks)
+  for the Codex runtime, including ChatGPT Work and Codex.
 
 #### Use skills for repeatable work
 
@@ -30549,8 +30676,8 @@ For more details on building skills, see our dedicated guide below.
 #### Use plugins for tools and shared workflows
 
 Plugins make reusable capabilities easier to install and share. A plugin can
-combine skills with connectors for services such as GitHub, Google Drive, or
-Slack, and can include MCP servers for additional tools and context.
+combine skills with MCP servers for tools and context from services such as
+GitHub, Google Drive, or Slack.
 
 ChatGPT and Codex share one universal plugin directory. Browse it when you want
 to add an existing workflow instead of building one yourself. After installing
@@ -37400,14 +37527,14 @@ log_user_prompt = false            # keep prompts redacted
 
 Source: [Plugin controls](https://learn.chatgpt.com/docs/enterprise/apps-and-connectors.md)
 
-Plugins package reusable workflows and can include skills and apps that connect
+Plugins package reusable workflows and can include skills and MCP servers that connect
 to other tools. ChatGPT and Codex use the same public plugin directory on
 supported surfaces, while admins decide which plugins are available in their workspace.
 Learn more about [plugins](https://learn.chatgpt.com/docs/plugins),
 [skills](https://learn.chatgpt.com/docs/skills-and-plugins), and
-[apps and connectors](https://help.openai.com/en/articles/11487775).
+[connected services](https://help.openai.com/en/articles/11487775).
 
-A member can use a connector-backed capability only when the plugin and app are
+A member can use an MCP server's capabilities only when the plugin and MCP server are
 available to their role and they have access to the connected service.
 
 Plugins work in Chat and Work across ChatGPT on the web, desktop, and mobile,
@@ -37421,14 +37548,14 @@ To see how these controls fit with workspace roles and permissions, see
 
 A plugin can span these control layers:
 
-| Layer                   | What it determines                                                           | Where to manage it                                                                                                              |
-| ----------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Availability            | Whether the plugin bundle is available to the user                           | [Workspace settings](https://chatgpt.com/admin/settings) for supported web and desktop surfaces; the CLI plugin browser for CLI |
-| Included skills         | Which reusable instructions the installed plugin contributes                 | The plugin package and [Skill controls](https://learn.chatgpt.com/docs/enterprise/skills)                                                               |
-| App access              | Whether users can use a connector-backed capability                          | [Workspace apps](https://chatgpt.com/admin/ca) and [Permissions & roles](https://chatgpt.com/admin/settings)                    |
-| Actions and permissions | Which actions users can run and when ChatGPT asks before using the connector | The connector's Action control and App permissions in [Workspace apps](https://chatgpt.com/admin/ca)                            |
-| Service authorization   | Which external data and actions the authenticated identity can access        | The connected service and its identity provider                                                                                 |
-| Runtime permissions     | What an agent can do after it receives data or a tool                        | The runtime, sandbox, and approval controls for the active surface                                                              |
+| Layer                   | What it determines                                                       | Where to manage it                                                                                                              |
+| ----------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| Availability            | Whether the plugin bundle is available to the user                       | [Workspace settings](https://chatgpt.com/admin/settings) for supported web and desktop surfaces; the CLI plugin browser for CLI |
+| Included skills         | Which reusable instructions the installed plugin contributes             | The plugin package and [Skill controls](https://learn.chatgpt.com/docs/enterprise/skills)                                                               |
+| MCP server access       | Whether users can use an MCP server's capabilities                       | [Workspace apps](https://chatgpt.com/admin/ca) and [Permissions & roles](https://chatgpt.com/admin/settings)                    |
+| Actions and permissions | Which actions users can run and when ChatGPT asks before using its tools | The connection's **Action control** and **App permissions** in [Workspace apps](https://chatgpt.com/admin/ca)                   |
+| Service authorization   | Which external data and actions the authenticated identity can access    | The connected service and its identity provider                                                                                 |
+| Runtime permissions     | What an agent can do after it receives data or a tool                    | The runtime, sandbox, and approval controls for the active surface                                                              |
 
 Use these layers as a two-step rollout: first make the right plugins available,
 then configure the capabilities and permissions each workflow needs.
@@ -37448,7 +37575,7 @@ To import workspace plugins from GitHub and keep them up to date, see
 
 Eligible ChatGPT Enterprise workspace owners and admins can download a CSV of
 the public plugins available to their workspace. Use the export to review
-plugin, app, and skill metadata before changing plugin availability.
+plugin, MCP server, and skill metadata before changing plugin availability.
 
 1. Open [Admin > Plugins](https://chatgpt.com/admin/plugins).
 2. Select **Public**.
@@ -37458,10 +37585,10 @@ The download uses the filename `public-plugins-security-review.csv` and includes
 
 - Plugin metadata: `Plugin Name`, `Plugin Description`, `Date Added (UTC)`,
   `OpenAI Verified`, `Developer Name`, and `Version`.
-- App metadata: `App Name(s)` and `App Description(s)`.
+- MCP server metadata: `App Name(s)` and `App Description(s)`.
 - Chat skill metadata: `Skill Name(s)` and `Skill Description(s)`.
 
-When a plugin includes more than one app or skill, semicolons separate the
+When a plugin includes more than one MCP server or skill, semicolons separate the
 corresponding values. The export uses a public-catalog snapshot that can be up
 to 48 hours old,
 includes only public plugins visible to the current workspace, and does not
@@ -37470,25 +37597,25 @@ workspaces.
 
 #### Step 2: Manage capabilities
 
-Making an app or plugin available in ChatGPT doesn't grant access to files,
-records, or actions in the connected service. Before troubleshooting or
+Making an MCP server or plugin available in ChatGPT doesn't grant access to
+files, records, or actions in the connected service. Before troubleshooting or
 expanding access, check the member's workspace role and approved action
 settings. Then confirm the authenticated account or shared connection has the
 expected permissions in the connected service.
 
-Plugins in ChatGPT and Codex can include connectors that search, retrieve, sync,
+Plugins in ChatGPT and Codex can include MCP server connections that search, retrieve, sync,
 or act on external systems. Plugin availability and the access and actions
-granted to each connector are separate controls.
+granted to each connection are separate controls.
 
-Manage connector-backed capabilities from
+Manage MCP server capabilities from
 [Workspace apps](https://chatgpt.com/admin/ca) and
 [Permissions & roles](https://chatgpt.com/admin/settings). Available controls
 let admins:
 
-- Enable apps or connectors and assign access by workspace role.
-- For connectors that support Action control, allow read-only actions or an
+- Enable MCP server connections and assign access by workspace role.
+- For connections that support **Action control**, allow read-only actions or an
   approved custom set, including how the workspace handles newly added actions.
-- Set App permissions that determine when ChatGPT asks before using an app.
+- Set **App permissions** that determine when ChatGPT asks before using a connection.
 - Keep access within the scopes and permissions granted by each connected
   service and authenticated user.
 
@@ -37514,36 +37641,36 @@ calendar, and file or document systems. Use the
 and capabilities across supported ChatGPT and Codex surfaces.
 
 Whatever the initial set, start with read actions. Before enabling write
-actions, identify the plugin owner, review connector scopes and service
+actions, identify the plugin owner, review MCP server scopes and service
 permissions, confirm data access, and document external effects and a recovery
 path.
 
 #### Understand data flow and security
 
-When ChatGPT uses an app or connector included with a plugin, it sends a request
+When ChatGPT uses an MCP server included with a plugin, it sends a request
 to the connected service and returns data or action results allowed by the
 authenticated user's permissions in that service.
 
-ChatGPT handles connected app data in two ways:
+ChatGPT handles data from connected services in two ways:
 
 - **Non-synced:** ChatGPT processes data from Chat and deep research transiently
   and doesn't index it.
 - **Synced:** ChatGPT indexes selected connected content in advance. You can see
-  whether an app supports sync on its plugin page.
+  whether a connection supports sync on its plugin page.
 
 The mode changes how ChatGPT indexes connected content; it doesn't replace
-normal chat-retention controls. ChatGPT conversations that use apps remain
+normal chat-retention controls. ChatGPT conversations that use these connections remain
 available through the Compliance API.
 
-OpenAI's app guidance documents encryption in transit and at rest, per-user
+OpenAI's connected-service guidance documents encryption in transit and at rest, per-user
 authorization, role and action controls, restricted network access for
-conversations that use apps, and no model training on information accessed
-through apps for Business, Enterprise, and Edu customers. When a request reaches
+conversations that use these connections, and no model training on information accessed
+through these connections for Business, Enterprise, and Edu customers. When a request reaches
 a connected service, that service's scopes, retention, data residency, and other
 policies also apply.
 
-See [app security and compliance](https://help.openai.com/en/articles/11509118)
-and [apps with sync](https://help.openai.com/en/articles/10847137) for current
+See [security and compliance for connected services](https://help.openai.com/en/articles/11509118)
+and [connections with sync](https://help.openai.com/en/articles/10847137) for current
 data-handling details. For locally configured MCP servers in the ChatGPT desktop
 app, Codex CLI, or IDE extension, see
 [Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp).
