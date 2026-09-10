@@ -21896,7 +21896,8 @@ for optional files and directories.
 After it finishes:
 
 1. Review `.codex-plugin/plugin.json`.
-2. Check each bundled skill under `skills/`.
+2. Check each bundled skill under `skills/` against the
+   [instruction-following guidance](https://developers.openai.com/plugins/build/skills#review-instruction-following).
 3. Refresh ChatGPT or Codex and install the plugin from its local marketplace
    source.
 4. Test the plugin in a new conversation with representative requests.
@@ -22224,6 +22225,12 @@ following clear:
 Prefer one focused skill over a large collection of loosely related
 instructions. Split workflows when they have different triggers, inputs, or
 success criteria.
+
+#### Review instruction following
+
+When writing or importing skills for GPT-6 Astra, review the instruction-following guidance.
+Audit skills and supporting files for unclear or conflicting instructions, and
+make the priority of explicit user instructions over skill guidelines clear.
 
 #### Add supporting resources
 
@@ -26192,6 +26199,9 @@ people will install. Packaging gives the plugin a stable identity and tells
 ChatGPT and Codex which skills, MCP server connections, and other resources
 belong together.
 
+Before bundling skills, review the
+[instruction-following guidance](https://developers.openai.com/plugins/build/skills#review-instruction-following).
+
 For a portable Agent Plugins package, add `plugin.json` at the plugin root and
 declare the Agent Plugins schema. Depending on the plugin's architecture, its
 folder can also include:
@@ -26983,6 +26993,9 @@ skills into one installable experience.
 
 For example, a meeting follow-up plugin might include separate skills for
 drafting a recap, identifying action items, and preparing a customer email.
+
+When writing skill instructions, follow the
+[instruction-following guidance](https://developers.openai.com/plugins/build/skills#review-instruction-following).
 
 #### MCP servers
 
@@ -30458,7 +30471,7 @@ Source: [Plugins](https://learn.chatgpt.com/docs/plugins.md)
 #### Overview
 
 Plugins bundle capabilities into reusable workflows in ChatGPT and Codex. They
-can include skills, MCP servers, and lifecycle hooks. Both products use one universal plugin
+can include skills and MCP servers. Both products use one universal plugin
 directory, so the same public plugins are discoverable from their supported
 surfaces.
 
@@ -37717,6 +37730,11 @@ supported surfaces, while admins decide which plugins are available in their wor
 Learn more about [plugins](https://learn.chatgpt.com/docs/plugins),
 [skills](https://learn.chatgpt.com/docs/skills-and-plugins), and
 [connected services](https://help.openai.com/en/articles/11487775).
+
+In this guide, **app** and **MCP server** refer to the same connected
+integration and are interchangeable terms. We use **MCP server** in the prose,
+but preserve **app** in UI labels such as **Workspace apps** and
+**App permissions**, and in CSV column names.
 
 A member can use an MCP server's capabilities only when the plugin and MCP server are
 available to their role and they have access to the connected service.
