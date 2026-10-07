@@ -4407,8 +4407,8 @@ asks for a final check without spelling out every step.
 
 #### Use voice dictation
 
-In the ChatGPT desktop app, press Ctrl+Shift+D while the composer is
-visible, then start talking. ChatGPT transcribes your speech into the composer
+In the ChatGPT desktop app, select **Dictate** in the composer, then start
+talking. ChatGPT transcribes your speech into the composer
 so you can review and edit it before sending the prompt.
 
 #### Prompting examples for Chat
@@ -13588,6 +13588,11 @@ from either one wins.
 | `allowed_permission_profiles.`                               | `boolean`                              |         | Allow or deny a built-in or custom permission profile defined in a loaded config or requirements source. A later, higher-precedence requirements source can use `false` to turn off a profile allowed by an earlier, lower-precedence source.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `allowed_sandbox_modes`                                      | `array`                                |         | Allowed values for `sandbox_mode`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `allowed_web_search_modes`                                   | `array`                                |         | Allowed values for `web_search` (`disabled`, `cached`, `indexed`, `live`). `disabled` is always allowed; an empty list effectively allows only `disabled`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `application`                                                | `table`                                |         | Managed desktop application requirements.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `application.network`                                        | `table`                                |         | Destination restrictions for desktop app network requests, separate from command networking and browser origin rules. This doesn't impose destination restrictions on native modules or spawned processes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `application.network.domains`                                | `table`                                |         | Exact domain rules for desktop app requests. Enabled policies allow HTTPS and WSS requests only to explicitly allowed domains; subdomains aren't implicitly allowed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `application.network.domains.`                               | `allow \| deny`                        |         | Allow or deny an exact domain. Use domain names without URL schemes, ports, or wildcards.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `application.network.enabled`                                | `boolean`                              |         | Defaults to true when the table is present. When true, external desktop app requests require an explicitly allowed domain. An empty domain map allows no external destinations. An absent application network policy or false value doesn't restrict destinations through this policy.                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `apps`                                                       | `table`                                |         | Managed app requirements keyed by app identifier. Requirements can disable an app or constrain approval behavior for individual tools.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `apps..enabled`                                              | `boolean`                              |         | Set to `false` to disable an app. A disabled requirement remains restrictive when multiple requirements sources are merged.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `apps..tools..approval_mode`                                 | `auto \| prompt \| writes \| approve`  |         | Set the managed approval mode for one app tool.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
@@ -16793,11 +16798,11 @@ Personalize ChatGPT so its responses and working style better match your
 preferences. You control which personalization features are enabled and can
 change them in settings. Available controls vary between web and desktop.
 
-#### Choose a personality
+#### Choose a personality on the web
 
-Choose **Friendly**, **Pragmatic**, or **None** as the default personality in
-**Settings > Personalization**. A personality changes how ChatGPT communicates;
-it doesn't change what the model can do.
+On ChatGPT web, open **Settings > Personalization > Base style and tone** to
+choose how ChatGPT responds. A personality changes its style and tone; it
+doesn't change its capabilities.
 
 #### Add custom instructions
 
@@ -16847,8 +16852,8 @@ clear recent or all history at any time.
 
 #### Manage personalization
 
-Open [**Settings**](codex://settings) to update your personality, custom
-instructions, memories, and other available personalization controls. See
+Open [**Settings**](codex://settings) to update your personal instructions,
+memories, and other available personalization controls. See
 [ChatGPT desktop app settings](https://learn.chatgpt.com/docs/reference/settings) for an overview of
 everyday preferences.
 
@@ -17609,8 +17614,10 @@ Use the browser to open http://localhost:3000/settings, reproduce the layout
 bug, and fix only the overflowing controls.
 ```
 
-ChatGPT asks before it uses a website unless you have already allowed that
-site. Manage allowed and blocked sites in **Settings > Browser**. ChatGPT also
+In **Settings > Browser > Agent permissions**, choose default permissions for
+browsing, downloads, and uploads, and add exceptions for specific websites.
+Removing a site's custom permissions restores its defaults. Your organization
+can restrict these controls. ChatGPT also
 asks for confirmation before sensitive actions such as submitting information,
 making a purchase, changing permissions, or deleting data. ChatGPT can't
 automate file uploads in the built-in browser.
@@ -18221,8 +18228,10 @@ Cmd+, on macOS or Ctrl+, on Windows.
 
 #### General
 
-Require Cmd+Enter for multiline prompts, or turn on
-**Prevent sleep while running** so local chats can continue while you step away.
+Choose whether **Enter** sends prompts, or require Cmd+Enter
+on macOS or Ctrl+Enter on Windows and Linux for multiline
+prompts or every prompt. On macOS and Linux, turn on **Prevent sleep while
+running** so local chats can continue while you step away.
 Under **Follow-up behavior**, choose whether a message sent while ChatGPT works
 should steer the current run or wait for the next run.
 
@@ -18271,9 +18280,12 @@ visible without a pet.
 #### Browser
 
 Use these settings to install or enable the bundled Browser plugin, set up the
-[browser extension](https://learn.chatgpt.com/docs/chrome-extension), and manage allowed and blocked
-websites. ChatGPT asks before using a website unless you've allowed it. Removing
-a blocked site lets ChatGPT ask again before using it in the browser.
+[browser extension](https://learn.chatgpt.com/docs/chrome-extension), and manage browser permissions.
+Under **Agent permissions**, choose default permissions and add exceptions for
+specific websites. Controls include **Browse**, **Download**, and **Upload**,
+with options such as **Requires approval**, **Always allow**, and **Block**.
+Removing a site's custom permissions resets them to the defaults. Your
+organization can restrict these controls.
 
 See [Built-in browser](https://learn.chatgpt.com/docs/browser?surface=app) for browser preview, comment, and
 Computer Use workflows.
@@ -18286,11 +18298,8 @@ Recording or Accessibility permissions in macOS Privacy & Security settings.
 
 #### Personalization
 
-Choose **Friendly**, **Pragmatic**, or **None** as your default personality. Use
-**None** to disable personality instructions. You can update this at any time.
-
-You can also add your own custom instructions. Editing custom instructions updates your
-[personal instructions in `AGENTS.md`](https://learn.chatgpt.com/docs/agent-configuration/agents-md).
+Edit your [personal instructions in `AGENTS.md`](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
+for the selected machine. Repository instructions can also apply to your chats.
 
 #### Suggested prompts
 
@@ -18299,8 +18308,8 @@ start or return to ChatGPT.
 
 #### Memories
 
-Enable Memories, where available, to let ChatGPT carry useful context from past
-chats into future work. See [Memories](https://learn.chatgpt.com/docs/customization/memories)
+In **Personalization**, turn on **Enable Codex memories**, where available, to
+carry useful context from past chats into future work. See [Memories](https://learn.chatgpt.com/docs/customization/memories)
 for setup, storage, and controls for individual chats.
 
 #### Archived chats
@@ -23077,6 +23086,11 @@ enabled, the app can open a generated file after a task finishes.
 When HTML previews are available, generated `.html` and `.htm` files can also
 open as interactive previews. Switch between the rendered preview and source
 view to inspect the output or its underlying HTML.
+
+Open a standalone `.tex` file to edit its LaTeX source alongside a PDF preview.
+When the built-in compiler is available, the app compiles the document and
+refreshes the preview after edits. If compilation fails, the last successful
+PDF remains visible and your source edits are preserved.
 
 Use annotations to point at a specific part of a supported preview and request
 a focused revision.
@@ -29595,8 +29609,15 @@ memories as a helpful recall layer, not as the only source for rules that must
 always apply.
 
 In the ChatGPT desktop app, use `/memories` to choose whether a chat can use
-local memories or contribute to future memories. Manage the feature from
-**Settings > Personalization** when you need to turn it on or off.
+local memories or contribute to future memories. In **Settings >
+Personalization**, use **Enable Codex memories** to turn the feature on or off
+for the selected machine. Use **Allow memories from tool-assisted chats** to
+choose whether chats that use MCP tools or web search can contribute to future
+memories.
+
+To reset the selected machine's memory store, select **Delete Codex memories**
+and confirm. On the local machine, this also clears Computer History when that
+feature is available.
 
 Manage ChatGPT memory from **Settings > Personalization**. ChatGPT Work uses
 the memory settings available to your account and workspace; it doesn't use a
@@ -29661,7 +29682,7 @@ directory or generated memory artifacts.
 #### Configure local memories
 
 Local Codex memories are off by default. In the ChatGPT desktop app, open
-**Settings > Personalization** and turn on **Enable memories**.
+**Settings > Personalization** and turn on **Enable Codex memories**.
 
 For config-based setup, add the feature flag to `config.toml`:
 
@@ -43564,6 +43585,19 @@ A managed command allowlist applies to commands using the managed proxy. Where p
 > **Codex Cloud local/private connectivity:** An explicit Off value for local/private connectivity can prevent Codex Cloud from reaching its upstream proxy, even when the destination domain is allowed. Check the final `allow_local_binding` value and identify which policy or setting supplies it. On the supported Cloud proxy path, this defaults to true only when no applicable requirement, selected network profile, or proxy feature setting supplies a value. An inherited false still counts as an explicit setting. Where supported, set a higher-priority Cloud override to change this value for Codex Cloud without changing the Global value used by Local. This does not add domain Allow entries. Verify executor support before relying on the override. Do not apply this Cloud default to Local.
 
 Empty environment requirements inherit Global. Manage Networking Off is not the Cloud environment Internet access Off switch. See [Configure networking in the UI](https://learn.chatgpt.com/docs/enterprise/agent-security#configure-networking-in-the-ui).
+
+#### Control desktop app network destinations
+
+Use `[application.network]` in `requirements.toml` to restrict the desktop
+app's network destinations. With `enabled = true`, external requests must use
+HTTPS or WSS and match an exact domain with an `"allow"` value in
+`[application.network.domains]`. Subdomains aren't implicitly allowed. An empty
+domain map permits no external destinations. See the [Configuration
+Reference](https://learn.chatgpt.com/docs/config-file/config-reference) for the supported keys.
+
+This policy is separate from command networking and browser origin rules. It
+doesn't impose destination restrictions on native modules or spawned processes,
+and it doesn't govern Work Cloud execution.
 
 #### Control browser and Computer Use
 
