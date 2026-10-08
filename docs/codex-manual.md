@@ -269,6 +269,24 @@ Source: [Glossary](https://learn.chatgpt.com/docs/glossary.md)
 
 Use this glossary as a quick reference for Codex terms across the app, CLI, IDE extension, cloud, SDK, and related integrations.
 
+### October 5–9, 2026
+
+Source: [October 5–9, 2026](https://learn.chatgpt.com/docs/whats-new/october-5-9-2026.md)
+
+#### Use GPT-6.1 Sol with Ultrafast mode
+
+Ultrafast mode speeds up token generation with [GPT-6.1 Sol](https://learn.chatgpt.com/docs/models#gpt-61-sol)
+in Codex and ChatGPT Work. Ultrafast is available on Pro $500 and eligible
+Enterprise and Edu plans.
+
+Enterprise access is off by default; workspace owners must enable it.
+GPT-6.1 Sol Ultrafast supports inference residency in the United States and
+Europe (EEA + Switzerland).
+
+See [Ultrafast mode](https://learn.chatgpt.com/docs/agent-configuration/speed#ultrafast-mode) for plan
+and workspace requirements and [Pricing](https://learn.chatgpt.com/docs/pricing) for usage and credit
+rates. Read the [launch announcement](https://learn.chatgpt.com/docs/changelog#codex-2026-10-08-gpt-61-sol-ultrafast).
+
 ### Resources
 
 Source: [Resources](https://learn.chatgpt.com/resources.md)
@@ -674,6 +692,16 @@ a]:min-w-0 [&>a]:no-underline">
 Source: [What's new](https://learn.chatgpt.com/docs/whats-new.md)
 
 For every versioned update, bug fix, and minor improvement, see the [Codex changelog](https://learn.chatgpt.com/docs/changelog) and [API changelog](https://developers.openai.com/api/docs/changelog).
+
+#### [October 5–9, 2026](https://learn.chatgpt.com/docs/whats-new/october-5-9-2026)
+
+#### Use GPT-6.1 Sol with Ultrafast mode
+
+[Ultrafast mode](https://learn.chatgpt.com/docs/agent-configuration/speed#ultrafast-mode) speeds up
+token generation with GPT-6.1 Sol in Codex and ChatGPT Work. Ultrafast is
+available on Pro $500 and eligible Enterprise and Edu plans.
+
+[Read the full update →](https://learn.chatgpt.com/docs/whats-new/october-5-9-2026)
 
 #### [DevDay 2026](https://learn.chatgpt.com/docs/whats-new/devday-2026)
 
@@ -1888,7 +1916,7 @@ Choose the Pro plan that fits your usage.
 Everything in Plus and:
 
 - Plans at $100, $200, or $500 USD per month
-- [Astra Ultrafast](https://learn.chatgpt.com/docs/agent-configuration/speed#ultrafast-mode)
+- [Ultrafast mode](https://learn.chatgpt.com/docs/agent-configuration/speed#ultrafast-mode)
   access on Pro $500
 - Other [ChatGPT features](https://chatgpt.com/pricing) as part of the
   Pro plan
@@ -2025,17 +2053,16 @@ at different rates, relative to Standard mode for the same model:
 | --------------------- | --------------------------- | ---------------------------------------------------- |
 | Fast                  | 2.5x                        | 2x                                                   |
 | GPT-6 Astra Ultrafast | 8x                          | 6x                                                   |
+| GPT-6.1 Sol Ultrafast | 8x                          | 6x                                                   |
 
-These billing multipliers don't describe speed increases. Credit rates
-alone don't determine how quickly you use included subscription limits;
-check your [usage dashboard](#where-can-i-see-my-current-usage-limits) for
+Check your [usage dashboard](#where-can-i-see-my-current-usage-limits) for
 current limits and reset times. See [Speed](https://learn.chatgpt.com/docs/agent-configuration/speed)
 for supported models and how speed modes affect usage.
 
 Image generations use included limits ~3-5x faster on average, depending on
 image quality and size.
 
-For GPT-6 Astra Ultrafast eligibility, billing, and administrator controls,
+For Ultrafast mode eligibility and administrator controls,
 see [Ultrafast mode](https://learn.chatgpt.com/docs/agent-configuration/speed#ultrafast-mode).
 
 #### How much does Sites cost?
@@ -2201,8 +2228,8 @@ sales](https://chatgpt.com/contact-sales?utm_internal_source=openai_developers_c
 
           These are Standard credit rates. For purchased credits and Enterprise
           pay-as-you-go usage, Fast mode uses 2x the Standard rate where
-          available, and GPT-6 Astra Ultrafast uses 6x. Included subscription
-          usage has different multipliers. See
+          available, and Ultrafast mode uses 6x. Included subscription usage has
+          different multipliers. See
           [Speed](https://learn.chatgpt.com/docs/agent-configuration/speed) for availability
           and billing details.
 
@@ -3302,22 +3329,22 @@ ChatGPT desktop app, Codex CLI, and IDE extension when you sign in with ChatGPT.
 
 For supported models, Fast mode uses included subscription limits at 2.5x the
 Standard rate. Purchased credits and Enterprise pay-as-you-go usage are billed
-at 2x the Standard rate. These billing multipliers don't describe speed increases.
+at 2x the Standard rate.
 
 #### Ultrafast mode
 
+Ultrafast supports GPT-6 Astra and GPT-6.1 Sol.
+
 GPT-6 Astra Ultrafast generates tokens up to 8x faster than GPT-6 Astra in
-Standard mode in Codex. This comparison measures token generation speed,
-not billing rates or overall task completion time.
+Standard mode in Codex.
 
 Ultrafast is available in Codex and ChatGPT Work on Pro $500 and eligible
 Enterprise and Edu plans. On Pro $500, Ultrafast uses your included usage first,
 then your available credits after that allowance runs out.
 
-For GPT-6 Astra, Ultrafast uses included subscription limits at 8x the
-Standard rate. Purchased credits and Enterprise pay-as-you-go usage are billed
-at 6x the Standard rate. These billing multipliers don't describe speed increases.
-Enterprise billing remains subject to the workspace's agreement.
+Ultrafast mode bills purchased credits and Enterprise pay-as-you-go usage at
+6x the Standard rate. Ultrafast uses included subscription limits at 8x the
+Standard rate.
 
 For Enterprise workspaces, Ultrafast is off by default. Workspace owners can
 enable access for selected users or the workspace through
@@ -3331,11 +3358,6 @@ ChatGPT Work and Codex share usage. Both use the same
 pricing, credits, and usage limits. See [Codex pricing](https://learn.chatgpt.com/docs/pricing) for
 details.
 
-#### Supported models
-
-GPT-6 Astra, GPT-6 Sol, and GPT-6 Luna support Fast mode where available.
-[GPT-6.1 Sol](https://learn.chatgpt.com/docs/models#gpt-61-sol) supports Standard and Fast where
-available. Access depends on your plan, client, workspace settings, and rollout.
 See [Models](https://learn.chatgpt.com/docs/models) for model availability and
 [Pricing](https://learn.chatgpt.com/docs/pricing#token-rates) for token rates.
 
@@ -3349,9 +3371,9 @@ See [Models](https://learn.chatgpt.com/docs/models) for model availability and
 Other self-serve plans don't have access to Ultrafast at launch, even with
 purchased credits.
 
-Ultrafast isn't available to workspaces that require inference residency
-outside the United States. A workspace's location alone doesn't determine
-eligibility.
+GPT-6.1 Sol Ultrafast supports inference residency in the United States and
+Europe (EEA + Switzerland). GPT-6 Astra Ultrafast supports inference residency
+in the United States only.
 
 #### API billing
 
@@ -15370,7 +15392,7 @@ Codex. They aren't available in Chat.
 GPT-5.6 Sol, GPT-5.6 Terra, and GPT-5.6 Luna remain available during the rollout. Selecting a
 new model doesn't change workspace permissions or grant access to it.
 
-For Astra Ultrafast availability and credit usage on Pro $500 and eligible
+For Ultrafast mode availability and credit usage on Pro $500 and eligible
 Enterprise and Edu plans, see [Speed](https://learn.chatgpt.com/docs/agent-configuration/speed#ultrafast-mode).
 
 Availability depends on the rollout, your sign-in method, and your client.
@@ -15386,8 +15408,10 @@ For Enterprise and Edu, the plan keeps GPT-6.1 Sol off by default until an
 administrator enables it.
 Free and Go are not included at launch.
 
-Standard and Fast modes are available at launch. Ultrafast support for
-GPT-6.1 Sol is coming later.
+Standard and Fast modes are available where supported. Ultrafast is available
+on Pro $500 and eligible Enterprise and Edu plans. See
+[Ultrafast mode](https://learn.chatgpt.com/docs/agent-configuration/speed#ultrafast-mode) for plan and
+workspace requirements.
 
 Use `gpt-6.1-sol`. Available controls depend on your plan, client, and workspace
 settings.
@@ -45131,7 +45155,11 @@ Source: [Sign in with ChatGPT through a gateway](https://learn.chatgpt.com/docs/
 
 #### Why you would want this
 
-If you already have a model gateway and use Codex with the API Platform, you can keep your gateway while moving to **Sign in with ChatGPT**. This gives you access to eligible ChatGPT workspace features and controls, including [voice mode](#voice-through-a-gateway), while keeping your model gateway. Compare the sign-in methods in [Feature availability](https://learn.chatgpt.com/docs/pricing#feature-availability).
+{/_ vale Microsoft.Foreign = NO _/}
+
+If you already have a model gateway and use Codex with the API Platform, you can keep your gateway while moving to **Sign in with ChatGPT**. This gives you access to eligible ChatGPT workspace features and controls (e.g. [**voice mode**](#voice-through-a-gateway)) while keeping your model gateway. Compare the sign-in methods in [Feature availability](https://learn.chatgpt.com/docs/pricing#feature-availability).
+
+{/_ vale Microsoft.Foreign = YES _/}
 
 #### How to set it up
 
@@ -45188,7 +45216,7 @@ codex_with_gateway() (
 codex_with_gateway
 ```
 
-Configure your gateway to accept `X-Gateway-Key`, validate the key, and remove that header before forwarding the request. The request now carries:
+Configure your gateway to accept `X-Gateway-Key`, validate the key, and remove that header before forwarding the request to the backend. The request from the client now carries:
 
 ```http
 Authorization: Bearer <ChatGPT token>
