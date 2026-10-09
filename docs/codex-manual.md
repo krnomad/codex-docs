@@ -42031,6 +42031,110 @@ For more information about the provisioning setting, see Microsoft's [applicatio
 - [Managed configuration](https://learn.chatgpt.com/docs/enterprise/managed-configuration)
 - [ChatGPT desktop app for Windows](https://learn.chatgpt.com/docs/windows/windows-app)
 
+### Dynamic groups
+
+Source: [Dynamic groups](https://learn.chatgpt.com/docs/enterprise/dynamic-groups.md)
+
+Dynamic groups organize workspace members using user attributes sent by your identity provider through SCIM. You define membership rules using supported attributes, such as department or location. As those attributes change, group membership updates to include people who match the rules and remove people who no longer match.
+
+For example, a dynamic group can include members whose department is Engineering and whose location is London. You manage the rules in ChatGPT Admin, while your identity provider supplies the user attributes.
+
+#### Before you begin
+
+- Sign in as a workspace owner or admin in a workspace where dynamic groups are available.
+- Configure SCIM provisioning for your workspace and make sure your identity provider sends the attributes you want to use.
+- Choose attribute values that match the values your identity provider sends. See the supported attributes and payload paths in this guide.
+
+Group membership and feature permissions are separate. A member’s applicable roles, seat type, and product eligibility still determine access. See [Groups and provisioning](https://learn.chatgpt.com/docs/enterprise/groups-and-provisioning) for the access model.
+
+#### Create a dynamic group
+
+1. Open [ChatGPT Admin](https://admin.openai.com/) and select your workspace.
+2. Under **Identity & access**, select **Groups & roles**.
+3. Select **Create group** using the **+** button.
+4. Enter a group name, such as **Demo**, turn on **Dynamic group**, and select **Next**.
+
+5. Under **Add membership rules**, choose an **Attribute**, an **Operator**, and a **Value**. In this example, select **department**, **Equals**, and enter **Engineering**.
+6. Select **Add condition** to add another rule. For this example, select **location**, **Equals**, and enter **London**.
+
+Members must match **all conditions**. The example below matches members whose department is Engineering **and** whose location is London.
+
+7. Select **Create**. Open the group’s **Settings** tab to review its name and membership rules.
+
+Creating the group saves its membership rules. Select **Re-sync** to apply those rules to existing workspace members.
+
+#### Edit membership rules
+
+To change which members qualify for a dynamic group:
+
+1. Open the group and select **Settings**.
+2. Edit its membership rules and select **Save changes**.
+3. Select **Re-sync** to apply the saved rules to existing workspace members.
+
+**Save changes** stores the rules without starting a re-sync. **Re-sync** uses the saved rules and is unavailable while you have unsaved changes.
+
+#### Re-sync membership
+
+Use **Re-sync** to re-evaluate the group’s membership against its current rules and the SCIM attributes already available in the workspace.
+
+1. Open the dynamic group and select **Settings**.
+2. In **Membership rules**, select **Re-sync**.
+3. Follow the **Syncing group membership** status panel. A queued sync can show **Starts in** with a countdown before processing begins. You can collapse the panel or use **Cancel sync** while that option is available.
+4. After processing finishes, open **Group members** to review the result.
+
+Membership rule controls are unavailable while the sync is active. Canceling a sync can leave membership partially updated. After making any rule changes, save them and run **Re-sync** again to apply the saved rules. If an expected member is missing, check that their SCIM attributes have reached the workspace and that their values match every condition.
+
+#### View a member’s SCIM attributes
+
+Use a member’s profile card to check the SCIM attribute values available in your workspace and compare them with your dynamic group’s membership rules.
+
+1. Under **Identity & access**, select **Members**.
+2. Search for the member by name or email, then select their name to open their profile card.
+3. Review the **SCIM attributes** table, which lists each available attribute and its value.
+
+The example below shows a test member’s SCIM values, including `department`, `title`, and `costCenter`.
+
+#### Supported SCIM attributes
+
+The following table lists the supported attribute names and the user-payload fields recognized for each one. All attributes in this catalog use the string type, including `isAdmin`.
+
+A plain field name refers to a top-level field. A path beginning with `/` identifies a field inside the named SCIM extension object. For example, `/urn:ietf:params:scim:schemas:extension:enterprise:2.0:User/department` refers to `department` inside the `urn:ietf:params:scim:schemas:extension:enterprise:2.0:User` object.
+
+| Attribute name | Recognized fields in the SCIM payload |
+| -------------- | ------------------------------------- |
+| `department`   | `department`                          |
+
+`/urn:ietf:params:scim:schemas:extension:enterprise:2.0:User/department`
+`/urn:scim:schemas:extension:enterprise:1.0/department`
+`/urn:scim:schemas:extension:enterprise:2.0/department` |
+| `title` | `title` |
+| `manager` | `manager`
+`/urn:ietf:params:scim:schemas:extension:enterprise:2.0:User/manager/value`
+`/urn:ietf:params:scim:schemas:extension:enterprise:2.0:User/manager/displayName`
+`/urn:scim:schemas:extension:enterprise:1.0/manager/value`
+`/urn:scim:schemas:extension:enterprise:1.0/manager/displayName`
+`/urn:scim:schemas:extension:enterprise:2.0/manager/value`
+`/urn:scim:schemas:extension:enterprise:2.0/manager/displayName` |
+| `costCenter` | `costCenter`
+`/urn:ietf:params:scim:schemas:extension:enterprise:2.0:User/costCenter`
+`/urn:scim:schemas:extension:enterprise:1.0/costCenter` |
+| `division` | `division`
+`/urn:ietf:params:scim:schemas:extension:enterprise:2.0:User/division`
+`/urn:scim:schemas:extension:enterprise:1.0/division` |
+| `organization` | `organization`
+`/urn:ietf:params:scim:schemas:extension:enterprise:2.0:User/organization`
+`/urn:scim:schemas:extension:enterprise:1.0/organization` |
+| `userType` | `userType` |
+| `country` | `country` |
+| `isAdmin` | `isAdmin` |
+| `location` | `location` |
+
+For `manager`, the catalog recognizes the top-level field and the nested extension `value` or `displayName` fields. For `country`, send the top-level field shown in the table.
+
+#### Related documentation
+
+- [Groups and provisioning](https://learn.chatgpt.com/docs/enterprise/groups-and-provisioning)
+
 ### Gateway compatibility requirements
 
 Source: [Gateway compatibility requirements](https://learn.chatgpt.com/docs/enterprise/gateway-compatibility.md)
@@ -42330,19 +42434,25 @@ workspace operators, or members who need the same supported feature.
 
 Workspace owners and admins can create and manage groups. Create a manually
 managed group for a small or temporary audience, or sync an established group
-from your identity provider when membership should follow your directory.
+from your identity provider when membership should follow your directory. Use a
+dynamic group when membership should follow rules based on SCIM user attributes.
 
 Each group has one authoritative membership source:
 
-| Group type                | Membership source                   | When it applies                                                                  |
-| ------------------------- | ----------------------------------- | -------------------------------------------------------------------------------- |
-| Manually managed          | ChatGPT workspace administration    | The group is small, temporary, or not managed through directory sync             |
-| Identity-provider managed | Your identity provider through SCIM | Membership should follow the organization's directory and member-removal process |
+| Group type                | Membership source                            | When it applies                                                                  |
+| ------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------- |
+| Manually managed          | ChatGPT workspace administration             | The group is small, temporary, or not managed through directory sync             |
+| Identity-provider managed | Your identity provider through SCIM          | Membership should follow the organization's directory and member-removal process |
+| Dynamic                   | Rules evaluated against SCIM user attributes | Membership should follow attributes such as department or location               |
 
-Manual and identity-provider-managed groups can coexist. For synchronized
-groups, the identity provider is the membership source; later provisioning
-updates can overwrite workspace-side changes. The Help Center owns current SCIM
-behavior, supported attributes, and setup steps.
+Dynamic groups evaluate SCIM user attributes against rules you define in
+ChatGPT Admin. See [Dynamic groups](https://learn.chatgpt.com/docs/enterprise/dynamic-groups) for setup
+steps and supported attributes.
+
+Manual and identity-provider-managed groups can coexist. For
+identity-provider-managed groups, the identity provider is the membership source;
+later provisioning updates can overwrite workspace-side changes. The Help Center
+owns current SCIM provisioning behavior and setup steps.
 
 #### Understand the access boundary
 
@@ -47055,7 +47165,9 @@ Manage sign-in, provisioning, roles, and credentials.
 
 - [Authentication overview](https://learn.chatgpt.com/docs/auth): Compare sign-in methods, credential storage, and enforcement controls.
 
-- [Groups and provisioning](https://learn.chatgpt.com/docs/enterprise/groups-and-provisioning): Manage manual and SCIM groups, provisioning, and rollout cohorts.
+- [Groups and provisioning](https://learn.chatgpt.com/docs/enterprise/groups-and-provisioning): Compare membership sources and understand group permissions.
+
+- [Dynamic groups](https://learn.chatgpt.com/docs/enterprise/dynamic-groups): Manage group membership with rules based on SCIM user attributes.
 
 - [User lifecycle management](https://learn.chatgpt.com/docs/enterprise/user-lifecycle): Provision employees, update group access, and revoke departing users' credentials.
 
