@@ -11519,6 +11519,19 @@ profile-defined workspace root. Use it when you want to preserve normal
 workspace writes while keeping environment files, generated secrets, or similar
 credential-bearing files unreadable.
 
+On Linux, WSL, and native Windows with MXC or `elevated`, deny-read glob matches
+are enumerated when each sandboxed process starts. Matching files created afterward are not
+added to that process's deny list and remain readable if its other permissions
+allow access. For example, a long-running shell, script, watcher, or development
+server can read a matching `.env` file created after it started.
+
+This snapshot lasts for the sandboxed process's lifetime, not the whole Codex
+session. Starting a new sandboxed process through Codex enumerates the matches
+again; continuing to use an already-running process does not refresh its deny
+list. Don't rely on a glob to block newly created files in that running process.
+See [Windows MXC compatibility](https://learn.chatgpt.com/docs/windows/windows-sandbox#mxc-compatibility)
+for Windows-specific limits.
+
 `deny` glob patterns are supported as deny-read rules. `read` or `write` globs
 are less portable on Linux, WSL, and native Windows sandboxing, so prefer exact
 paths or subtree rules such as `"docs/**" = "read"` when possible.
@@ -48216,6 +48229,7 @@ Note these compatibility limits:
 
 - Managed networking requires effective `allow_local_binding = true`. MXC permits connections to and from services on host loopback. Proxy domain rules still apply to proxied traffic, but the proxy's additional private-network destination checks are removed.
 - Remaining child processes stop when the foreground command exits. Test workflows that rely on detached development servers.
+- Deny-read globs use the files that match when each sandboxed process starts, as on Linux and WSL. Matching files created later remain readable to that running process if its other permissions allow access. Long-running shells, scripts, watchers, and development servers keep that snapshot for their lifetime, not the whole Codex session. See [deny-read glob timing](https://learn.chatgpt.com/docs/permissions#deny-reads-with-exact-paths-or-globs).
 
 #### Configure a legacy fallback
 
@@ -48227,6 +48241,8 @@ sandbox = "elevated" # or "unelevated"
 ```
 
 `elevated` is the preferred legacy fallback. It uses dedicated lower-privilege sandbox users, filesystem permission boundaries, firewall rules, and local policy changes needed for commands that run in the sandbox.
+
+Like MXC, `elevated` enumerates deny-read glob matches when each sandboxed process starts. Matching files created later remain readable to that running process if its other permissions allow access. See [deny-read glob timing](https://learn.chatgpt.com/docs/permissions#deny-reads-with-exact-paths-or-globs) for the consequences for long-running processes.
 
 `unelevated` is a legacy fallback. It runs commands with a restricted Windows token derived from your current user, applies ACL-based filesystem boundaries, and uses environment-level offline controls instead of the dedicated offline-user firewall rule. It provides weaker network isolation than `elevated` and doesn't support denied read paths, but is still useful when administrator-approved setup is blocked by local or enterprise policy.
 
