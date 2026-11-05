@@ -324,6 +324,26 @@ Source: [Glossary](https://learn.chatgpt.com/docs/glossary.md)
 
 Use this glossary as a quick reference for Codex terms across the app, CLI, IDE extension, cloud, SDK, and related integrations.
 
+### November 2–6, 2026
+
+Source: [November 2–6, 2026](https://learn.chatgpt.com/docs/whats-new/november-2-6-2026.md)
+
+#### Reply to your dot from an iOS notification
+
+On iOS, you can [reply to your dot from a notification or share content from another app](https://learn.chatgpt.com/docs/dots/channels#reply-and-share-on-ios). If you tap a notification to open the conversation, it loads faster. Supported Gmail message links open the referenced email in the Gmail app when available, or in your browser. You can also [set up the Action button](https://learn.chatgpt.com/docs/dots/channels#create-an-apple-shortcut) to open your dot on supported iPhones.
+
+When you call your dot, it greets you sooner.
+
+To report a bug, suggest a feature, or give product feedback, tell your main dot in conversation. Your dot can also suggest submitting feedback when you run into a problem.
+
+On desktop, [browser and file annotations](https://learn.chatgpt.com/docs/dots/computers-and-apps#annotate-a-browser-page-or-file) are rolling out. You can point your dot to the part of a page or file you want it to work on.
+
+On Windows, your dot can more reliably continue tasks in local threads, use your computer and browser, and work with local tools and plugins.
+
+[GPT-6.1 Terra is now one of the models that power dots](https://learn.chatgpt.com/docs/dots).
+
+Eligible ChatGPT Enterprise, Edu, and Healthcare workspaces can now enable dots. Enterprise admins can review [preview access and billing](https://learn.chatgpt.com/docs/enterprise/dots-admin-guide#enterprise-preview-and-billing) before billing begins on November 18.
+
 ### October 26–30, 2026
 
 Source: [October 26–30, 2026](https://learn.chatgpt.com/docs/whats-new/october-26-30-2026.md)
@@ -799,6 +819,14 @@ a]:min-w-0 [&>a]:no-underline">
 Source: [What's new](https://learn.chatgpt.com/docs/whats-new.md)
 
 For every versioned update, bug fix, and minor improvement, see the [ChatGPT and Codex changelog](https://learn.chatgpt.com/docs/changelog) and [API changelog](https://developers.openai.com/api/docs/changelog).
+
+#### [November 2–6, 2026](https://learn.chatgpt.com/docs/whats-new/november-2-6-2026)
+
+#### Reply to your dot from an iOS notification
+
+Reply to your dot from a notification or share a photo from another app on iOS. This update also improves reliability on Windows and lets you report a problem to your main dot in conversation.
+
+[Read the full update →](https://learn.chatgpt.com/docs/whats-new/november-2-6-2026)
 
 #### [October 26–30, 2026](https://learn.chatgpt.com/docs/whats-new/october-26-30-2026)
 
@@ -3572,6 +3600,14 @@ keep its state between periods of use. It has its own files, software, and
 browser sessions. Signing in to a website on your computer doesn't sign your
 dot in to that website.
 
+#### Annotate a browser page or file
+
+Browser and file annotations are rolling out in the ChatGPT desktop app for Pro, Business Premium, and Enterprise. Use an annotation to show your dot which part of a page or file you want it to work on.
+
+For a browser page, use the annotation tool in the in-app browser toolbar. Select the part of the page you want to discuss, add a comment, and send it to your dot.
+
+For a file, open a PDF, document, presentation, or spreadsheet in your own dot. Select the part you want to discuss, add a comment, and select **Send** in the file viewer.
+
 #### Cloud threads
 
 Your dot can start separate threads for cloud work. These appear in your desktop, web, and mobile apps, where you can review results and give further instructions while your dot continues coordinating. For coding work, it can use a Codex cloud environment you’ve set up with the repository and configuration it needs.
@@ -3641,7 +3677,7 @@ enabling Work Sync. Neither connection alone gives your dot access.
 
 Your dot can use supported [plugins](https://learn.chatgpt.com/docs/plugins) installed and enabled for your account. Access depends on the plugin’s connected account, permissions, and the environment where the work runs. Local skills require a connected computer.
 
-For example, connect Gmail to find relevant email, Google Drive to read and update documents, or GitHub to investigate an issue and prepare a pull request. Install and connect each plugin you want your dot to use.
+For example, connect Gmail to find relevant email, Google Drive to read and update documents, or GitHub to investigate an issue and prepare a pull request. Install and connect each plugin you want your dot to use. On iOS, supported Gmail message links from your dot open the referenced email in the Gmail app when available, or in your browser.
 
 Review
 the connected account and its allowed actions. Your existing ChatGPT app
@@ -3812,8 +3848,6 @@ Add Codex to products, systems, and automated workflows.
 - [Codex SDK](https://learn.chatgpt.com/docs/codex-sdk): Control Codex programmatically from your application.
 
 - [App Server](https://learn.chatgpt.com/docs/app-server): Integrate with the protocol that powers Codex clients.
-
-- [Model catalogs](https://learn.chatgpt.com/docs/model-catalogs): Serve current model defaults through a cloud or gateway integration.
 
 - [GitHub Action](https://learn.chatgpt.com/docs/github-action): Run Codex from GitHub Actions workflows.
 
@@ -4180,7 +4214,7 @@ We’re expanding the family of frontier models that power dots to include GPT-6
 
 Your dot lives in the cloud and has its own computer and browser. You can reach it and it can keep working even when your computer is off. It can research, analyze data, prepare documents, and build software, using relevant context from past conversations and your preferences.
 
-**Dots are rolling out gradually to eligible accounts.** See [availability and access](#access) for plan, region, and workspace requirements.
+See [availability and access](#access) for plan, region, and workspace requirements.
 
 #### Make it your own
 
@@ -4313,13 +4347,13 @@ Give your dot access to the relevant sources and tell it what to keep track of. 
 
 **For workspace admins:** See [Set up dots for work](https://learn.chatgpt.com/docs/enterprise/dots-admin-guide) for workspace setup, permissions, and security and governance guidance.
 
-Dots are rolling out gradually. You may not see dots immediately, even if your plan is eligible.
+Access depends on your plan, region, and workspace settings. Dots are rolling out gradually to eligible Pro and Business Premium accounts.
 
-- **Pro 100, Pro 200, and Pro 500:** For users over 18 outside the European Economic Area, United Kingdom, and Switzerland.
-- **Business Premium:** Rolling out worldwide.
-- **Enterprise:** Rolling out worldwide. Dots are off by default and must be enabled by a workspace administrator.
+- **Pro 100, Pro 200, and Pro 500:** For users aged 18 and older outside the European Economic Area, United Kingdom, and Switzerland.
+- **Business Premium:** Available in supported ChatGPT regions, subject to workspace eligibility.
+- **Enterprise, Edu, and Healthcare:** Generally available in eligible workspaces. Workspaces with UAE data or inference residency are ineligible. During the admin preview, your admin can enable access for your role. Starting November 18, 2026, access is on by default unless your workspace opts out.
 
-Conversations with your dot don’t count toward your ChatGPT usage limits. Tasks your dot starts or manages in Work or Codex count toward those products’ usage limits as usual. Your plan includes an allowance for deeper work, with extended limits for the first month after launch.
+For Pro and Business Premium, conversations with your dot don’t count toward your ChatGPT usage limits. Tasks your dot starts or manages in Work or Codex count toward those products’ usage limits as usual. Your plan includes an allowance for deeper work, with extended limits for the first month after launch. For Enterprise pricing and delegated task charges, see [Enterprise preview and billing](https://learn.chatgpt.com/docs/enterprise/dots-admin-guide#enterprise-preview-and-billing).
 
 You can create your dot in the ChatGPT mobile app, desktop app, or a desktop browser. Use the latest version of the mobile app for mobile setup. Mobile web is not supported.
 
@@ -4356,6 +4390,12 @@ By default, your dot responds to you in Slack. You can instruct it to engage wit
 Tell your dot where you want different updates. For example, keep routine progress in ChatGPT and ask it to bring decisions to you in Slack.
 
 For monitoring, specify which channels to check, what to watch for, and when to notify you. Ask your dot to confirm the recurring task. Adding it to a channel doesn't establish a monitoring schedule.
+
+#### Reply and share on iOS
+
+To reply from a notification, touch and hold the notification from your dot, type your reply, and tap **Send**.
+
+To share a photo with your dot, open the photo, tap **Share**, and choose your dot. Review the photo in the composer, add a message if you want, and tap **Send**. You can also share content from other apps that use the iOS share sheet.
 
 #### iOS widgets and shortcuts
 
@@ -8665,13 +8705,17 @@ differ because `run` generates its own unique destination. Capture the actual
 archive path with `onOutputArchived`:
 
 ```typescript
-await security.run(repository, {
-  outputDir: outputDir,
-  archiveExisting: true,
-  onOutputArchived(archiveDir) {
-    console.log("Archived results:", archiveDir);
-  },
-});
+try {
+  await security.run(repository, {
+    outputDir: outputDir,
+    archiveExisting: true,
+    onOutputArchived(archiveDir) {
+      console.log("Archived results:", archiveDir);
+    },
+  });
+} finally {
+  await security.close();
+}
 ```
 
 The scan archives the earlier results and starts with an empty output
@@ -8687,9 +8731,13 @@ The default target is the complete repository.
 Pass an array of paths inside the repository:
 
 ```typescript
-const result = await security.run(repository, {
-  target: ["services/billing", "packages/auth"],
-});
+try {
+  const result = await security.run(repository, {
+    target: ["services/billing", "packages/auth"],
+  });
+} finally {
+  await security.close();
+}
 ```
 
 Paths can identify files or directories. The SDK resolves each path inside the
@@ -8708,7 +8756,11 @@ const target = DiffTarget.refs({
   head: "HEAD",
 });
 
-const result = await security.run(repository, { target });
+try {
+  const result = await security.run(repository, { target });
+} finally {
+  await security.close();
+}
 ```
 
 The head defaults to `HEAD`. Pass the Git worktree root as the repository and
@@ -8722,7 +8774,11 @@ revision:
 ```typescript
 import { DiffTarget } from "@openai/codex-security";
 const target = DiffTarget.workingTree({ base: "HEAD" });
-const result = await security.run(repository, { target });
+try {
+  const result = await security.run(repository, { target });
+} finally {
+  await security.close();
+}
 ```
 
 The base defaults to `HEAD`. Fetch the selected revisions before starting a
@@ -8733,15 +8789,19 @@ diff or working-tree scan.
 Set `mode: "deep"` for a repository or path scan that needs broader review:
 
 ```typescript
-const result = await security.run(repository, {
-  target: ["services/billing"],
-  mode: "deep",
-  workers: 2,
-  subagents: 0,
-  stopAfterNoNew: 3,
-  maxDiscoveryRuns: 10,
-  maxTimeMinutes: 90,
-});
+try {
+  const result = await security.run(repository, {
+    target: ["services/billing"],
+    mode: "deep",
+    workers: 2,
+    subagents: 0,
+    stopAfterNoNew: 3,
+    maxDiscoveryRuns: 10,
+    maxTimeMinutes: 90,
+  });
+} finally {
+  await security.close();
+}
 ```
 
 Deep mode supports repository and path targets. Use standard mode for diff and
@@ -8766,9 +8826,13 @@ import { join } from "node:path";
 
 const knowledgeBase = join(repository, "security.md");
 
-const result = await security.run(repository, {
-  knowledgeBasePaths: [knowledgeBase],
-});
+try {
+  const result = await security.run(repository, {
+    knowledgeBasePaths: [knowledgeBase],
+  });
+} finally {
+  await security.close();
+}
 ```
 
 The SDK accepts files or directories and searches directories recursively.
@@ -8786,10 +8850,14 @@ change or are deleted. Canonical reports don't embed the document text.
 Use `scanPrompt` to focus the scan and `postScanPrompt` to request a follow-up:
 
 ```typescript
-const result = await security.run(repository, {
-  scanPrompt: "Focus on tenant isolation and authorization checks.",
-  postScanPrompt: "Write confirmed findings to post-scan-summary.md.",
-});
+try {
+  const result = await security.run(repository, {
+    scanPrompt: "Focus on tenant isolation and authorization checks.",
+    postScanPrompt: "Write confirmed findings to post-scan-summary.md.",
+  });
+} finally {
+  await security.close();
+}
 ```
 
 If the follow-up fails, the SDK keeps the completed scan and reports the
@@ -8829,14 +8897,18 @@ Set `maxCostUsd` to stop a scan when its estimated model cost exceeds a limit.
 Use `onCost` to track cost as the scan runs and report `estimatedUsdRange`:
 
 ```typescript
-const result = await security.run(repository, {
-  maxCostUsd: 5,
-  onCost(cost) {
-    console.log(cost.estimatedUsdRange);
-  },
-});
+try {
+  const result = await security.run(repository, {
+    maxCostUsd: 5,
+    onCost(cost) {
+      console.log(cost.estimatedUsdRange);
+    },
+  });
 
-console.log(result.cost?.estimatedUsdRange);
+  console.log(result.cost?.estimatedUsdRange);
+} finally {
+  await security.close();
+}
 ```
 
 The limit uses `estimatedUsd`, the short-context baseline. Requests already
@@ -8872,6 +8944,9 @@ const result = await runComponentScans({
 });
 
 console.log(result.reportPath);
+if (result.failed > 0) {
+  throw new Error(`${result.failed} component scans failed.`);
+}
 ```
 
 Set `workers` to control how many components run at once. The default is four.
@@ -9034,29 +9109,33 @@ Pass `ScanOptions` callbacks to report scan startup, worker progress, and
 connection retries:
 
 ```typescript
-const result = await security.run(repository, {
-  outputDir: outputDir,
-  onScanStarted() {
-    console.log("Scan started");
-  },
-  onProgress(progress) {
-    console.log(progress.phase, progress.filesCompleted, progress.filesTotal);
-  },
-  onWorkerStatus(status) {
-    console.log(status.kind, status);
-  },
-  onSessionEvent(session) {
-    console.log(session.threadId, session.worker, session.event["type"]);
-  },
-  onReconnect(attempt, maxAttempts) {
-    console.log(`Reconnect attempt ${attempt} of ${maxAttempts}`);
-  },
-  onObserverError(observer, error) {
-    console.error(`${observer} failed`, error);
-  },
-});
+try {
+  const result = await security.run(repository, {
+    outputDir: outputDir,
+    onScanStarted() {
+      console.log("Scan started");
+    },
+    onProgress(progress) {
+      console.log(progress.phase, progress.filesCompleted, progress.filesTotal);
+    },
+    onWorkerStatus(status) {
+      console.log(status.kind, status);
+    },
+    onSessionEvent(session) {
+      console.log(session.threadId, session.worker, session.event["type"]);
+    },
+    onReconnect(attempt, maxAttempts) {
+      console.log(`Reconnect attempt ${attempt} of ${maxAttempts}`);
+    },
+    onObserverError(observer, error) {
+      console.error(`${observer} failed`, error);
+    },
+  });
 
-console.log(result.reportPath);
+  console.log(result.reportPath);
+} finally {
+  await security.close();
+}
 ```
 
 Pass an `AbortSignal` from your request or job controller to cancel a scan.
@@ -9077,6 +9156,8 @@ try {
   } else {
     throw error;
   }
+} finally {
+  await security.close();
 }
 ```
 
@@ -25523,6 +25604,7 @@ The optional second argument supports these fields:
 | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `mode`                | Use `"advanced"` to open advanced controls for an element, or `"default"` to use the default editor behavior. Defaults to `"default"`. Custom controls can still open with `"default"`; see [Editor defaults](#choose-the-editors-default-mode). Text ranges support only `"default"`. |
 | `enterAnnotationMode` | Set to `true` to enter Annotation mode and remain in it after canceling or sending the annotation.                                                                                                                                                                                     |
+| `omitScreenshot`      | Set to `true` to omit the automatic screenshot for this annotation. Defaults to `false`, which preserves normal screenshot behavior. Applies to element and text-range requests.                                                                                                       |
 | `metadata`            | Valid, nonempty metadata replaces the target's HTML metadata for this request. This option is ignored for text ranges and when the target element is inside a shadow DOM.                                                                                                              |
 | `initialComment`      | Supplies an editable comment, up to 240 UTF-16 code units.                                                                                                                                                                                                                             |
 
@@ -26822,7 +26904,7 @@ Gather likely requests from:
 - User interviews, support requests, search queries, and feature requests.
 - Common terms people use for your product, data, and workflows.
 - Existing workarounds that require copying data between tools.
-- The plugin name, listing, screenshots, and starter prompts.
+- The plugin name, listing, and starter prompts.
 
 Include direct requests that name your plugin and indirect requests that state
 the goal. For example, a project-management plugin might need to handle both
@@ -32572,8 +32654,7 @@ For example:
         ],
         "brandColor": "#10A37F",
         "composerIcon": "./assets/icon.png",
-        "logo": "./assets/logo.png",
-        "screenshots": ["./assets/screenshot-1.png"]
+        "logo": "./assets/logo.png"
       }
     }
   }
@@ -32607,7 +32688,7 @@ for manifest examples, supported fields, requirements, and import behavior.
 - Keep portable `plugin.json`, `mcp.json`, and `skills/` at the plugin root.
 - Keep paths in `extensions.com.openai` or a compatibility manifest relative to
   the plugin root and start them with `./`.
-- Store visual assets such as `composerIcon`, `logo`, and `screenshots` under
+- Store visual assets such as `composerIcon` and `logo` under
   `./assets/` when possible.
 - Use the OpenAI extension's `apps` field only for registered MCP server mappings in
   `.app.json`.
@@ -33204,7 +33285,7 @@ Plugins should be stable, responsive, and complete. Trial or demo plugins will n
 
 #### Plugin name, description, and prompts
 
-Plugin names and descriptions must be clear, accurate, and straightforward. Screenshots are no longer shown in the Directory, instead provide example Prompts that help users get started with your plugin.
+Plugin names and descriptions must be clear, accurate, and straightforward. Provide example prompts that help users get started with your plugin.
 
 - **Names:** Avoid overly generic names, especially single-word dictionary terms that aren’t explicitly tied to your brand. Do not append “MCP,” “MCP Server,” or “Plugin” to a company or product name.
 - **Subtitles and descriptions:** Describe the plugin’s functionality without comparing it with other products, disparaging alternatives, or making unverifiable claims. Do not advertise pricing, subscriptions, free trials, discounts, or promotions.
@@ -33511,9 +33592,6 @@ For a remote MCP plugin, final submission also requires:
 - Explicit `readOnlyHint`, `openWorldHint`, and `destructiveHint` values and a
   justification for each value on every MCP tool.
 - Reviewer-ready demo credentials when the server uses OAuth.
-- Screenshots only when the MCP server provides custom UI. If you add
-  screenshots, provide one PNG or JPEG image for every starter prompt. Each
-  screenshot must be exactly 706 pixels wide and 400–860 pixels tall.
 
 #### Final metadata errors
 
@@ -33549,7 +33627,6 @@ These errors apply to remote MCP submissions.
 | `scan_required`                     | MCP tools must have a successful, current scan of the production MCP server.                                                                                                      |
 | `domain_verification_required`      | The exact verification token must be hosted at the generated `/.well-known/openai-apps-challenge` URL on the MCP host or an allowed parent host, and **Verify Domain** must pass. |
 | `frame_domain_explanation_required` | Every external frame domain reported by the MCP tool scan must have an explanation of why the UI needs it and what content it provides.                                           |
-| `screenshots_not_allowed`           | Screenshots are allowed only when the current MCP tool scan reports a UI output template.                                                                                         |
 
 #### Archive errors
 
@@ -33560,16 +33637,15 @@ The portal's **Skills only** path accepts skill ZIP packages and
 plugins don't need to include skills. Errors block the upload; warnings require
 confirmation.
 
-| Name                                | Requirement                                                                                                                                                                                                                                                                                 |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `plugin_name_mismatch`              | The package name in an update must match the existing plugin name.                                                                                                                                                                                                                          |
-| `plugin_version_unchanged`          | A new release must use a different manifest `version`; reusing the published version requires confirmation.                                                                                                                                                                                 |
-| `mcp_configuration_excluded`        | MCP configuration is excluded unless your organization is approved for [local MCP submissions](https://developers.openai.com/plugins/deploy/desktop-only). For a local MCP plugin, ask your OpenAI representative to confirm the submitting organization is allowlisted. Submit remote MCP servers through **With MCP**. |
-| `app_configuration_excluded`        | ZIP uploads must not include `apps` or `.app.json`. Submit remote MCP servers through **With MCP**; for local MCP servers, follow the [desktop-only submission instructions](https://developers.openai.com/plugins/deploy/desktop-only).                                                                                 |
-| `screenshot_configuration_excluded` | Skills-only ZIP uploads must not include `interface.screenshots`; screenshots require **With MCP** and custom UI.                                                                                                                                                                           |
-| `claude_format_normalized`          | `.claude-plugin/plugin.json` is converted to `.codex-plugin/plugin.json`, with missing interface defaults and normalized text fields added by the portal.                                                                                                                                   |
-| `manifest_normalized`               | The portal saves the normalized manifest as `.codex-plugin/plugin.json`; changed fields require confirmation.                                                                                                                                                                               |
-| `developer_name_defaulted`          | The listing’s developer name is set automatically from your selected verified developer identity, regardless of the name in your ZIP.                                                                                                                                                       |
+| Name                         | Requirement                                                                                                                                                                                                                                                                                 |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `plugin_name_mismatch`       | The package name in an update must match the existing plugin name.                                                                                                                                                                                                                          |
+| `plugin_version_unchanged`   | A new release must use a different manifest `version`; reusing the published version requires confirmation.                                                                                                                                                                                 |
+| `mcp_configuration_excluded` | MCP configuration is excluded unless your organization is approved for [local MCP submissions](https://developers.openai.com/plugins/deploy/desktop-only). For a local MCP plugin, ask your OpenAI representative to confirm the submitting organization is allowlisted. Submit remote MCP servers through **With MCP**. |
+| `app_configuration_excluded` | ZIP uploads must not include `apps` or `.app.json`. Submit remote MCP servers through **With MCP**; for local MCP servers, follow the [desktop-only submission instructions](https://developers.openai.com/plugins/deploy/desktop-only).                                                                                 |
+| `claude_format_normalized`   | `.claude-plugin/plugin.json` is converted to `.codex-plugin/plugin.json`, with missing interface defaults and normalized text fields added by the portal.                                                                                                                                   |
+| `manifest_normalized`        | The portal saves the normalized manifest as `.codex-plugin/plugin.json`; changed fields require confirmation.                                                                                                                                                                               |
+| `developer_name_defaulted`   | The listing’s developer name is set automatically from your selected verified developer identity, regardless of the name in your ZIP.                                                                                                                                                       |
 
 #### ZIP structure and limit errors
 
@@ -33867,8 +33943,7 @@ interface:
 #### Image errors
 
 Directory branding images must use a supported file type and meet the size and
-dimension limits below. These rules apply to packaged branding assets;
-starter-prompt screenshots use the separate portal limits listed above.
+dimension limits below. These rules apply to packaged branding assets.
 
 | Name                                      | Requirement                                                                |
 | ----------------------------------------- | -------------------------------------------------------------------------- |
@@ -34837,7 +34912,7 @@ for review from the [plugin submission portal](https://platform.openai.com/plugi
 In the plugin submission portal:
 
 1. Add your MCP server details (as well as OAuth credentials if OAuth is selected), and then select **Scan Tools**.
-2. Complete the required fields in the submission form and check all confirmation boxes. You will need to provide the plugin name, logo, description, company and privacy policy URLs, MCP and tool information, test prompts and responses, and localization information. If the plugin has UI, you may also provide optional screenshots. Don't provide screenshots when the plugin has no UI.
+2. Complete the required fields in the submission form and check all confirmation boxes. You will need to provide the plugin name, logo, description, company and privacy policy URLs, MCP and tool information, test prompts and responses, and localization information.
 3. Select **Submit for review**.
 
 #### Metadata stored during tool scanning
@@ -36312,7 +36387,7 @@ These examples describe the same illustrative notes plugin in each format. Copy 
 Include the files referenced by the manifest:
 
 - `skills/get-started/SKILL.md`, with valid name and description fields in the YAML header.
-- The four icon files and screenshot under `assets/`.
+- The four icon files under `assets/`.
 - Exactly one remote MCP server named notes, configured in `mcp.json` for Agent Plugins or `.mcp.json` for Codex, using the matching configuration that follows.
 
 Use your own accessible demo and review attachment URLs. The example.com links show the expected shape and aren’t working submission materials. If your plugin contains only skills, omit review and the MCP configuration, and omit `mcpServers` from the Codex manifest.
@@ -36385,8 +36460,7 @@ Save this complete manifest as plugin.json at the plugin root:
         "composerIcon": "./assets/icon.png",
         "composerIconDark": "./assets/icon-dark.png",
         "logo": "./assets/logo.png",
-        "logoDark": "./assets/logo-dark.png",
-        "screenshots": ["./assets/screenshot.png"]
+        "logoDark": "./assets/logo-dark.png"
       },
       "onboardingSkill": "./skills/get-started/SKILL.md",
       "review": {
@@ -36506,8 +36580,7 @@ Save this complete manifest as .codex-plugin/plugin.json. The presentation field
     "composerIcon": "./assets/icon.png",
     "composerIconDark": "./assets/icon-dark.png",
     "logo": "./assets/logo.png",
-    "logoDark": "./assets/logo-dark.png",
-    "screenshots": ["./assets/screenshot.png"]
+    "logoDark": "./assets/logo-dark.png"
   },
   "extensions": {
     "com.openai": {
@@ -36656,13 +36729,12 @@ Put the following fields in `extensions.com.openai.interface` for Agent Plugins 
 | `composerIconDark`  | Optional                                                 | String                     | Optional relative path to its dark-theme variant.                                                                                        |
 | `logo`              | Required for Codex; primary icon required for submission | String                     | Relative path to the primary listing icon.                                                                                               |
 | `logoDark`          | Optional                                                 | String                     | Optional relative path to its dark-theme variant.                                                                                        |
-| `screenshots`       | Optional                                                 | Array of strings           | Optional relative paths to screenshots.                                                                                                  |
 
 For an attached MCP app that needs public review, all four listing URLs are required: `websiteURL`, `supportURL`, `privacyPolicyURL`, and `termsOfServiceURL`. Use HTTPS URLs without embedded credentials. Skills-only metadata validation doesn’t require all four URLs. The package’s `homepage` and `author.url` don’t fill these listing fields automatically.
 
-#### Icons and screenshots
+#### Icons
 
-Include `logo` and `composerIcon` in packages you prepare for distribution. Codex package validation requires both; you can upload a portable package without them, but the dashboard requires a primary app icon before submission. Dark variants and screenshots are optional. To resolve an “App icon required” warning, add `logo` and its image file, or provide the icon in the dashboard.
+Include `logo` and `composerIcon` in packages you prepare for distribution. Codex package validation requires both; you can upload a portable package without them, but the dashboard requires a primary app icon before submission. Dark variants are optional. To resolve an “App icon required” warning, add `logo` and its image file, or provide the icon in the dashboard.
 
 Use ./-prefixed paths relative to the plugin root and include every referenced file. Supported image formats are PNG, JPEG, WebP, and SVG, at most 5 MiB each. Icons and logos must be square and at least 48 by 48 pixels. Raster images can be at most 4096 pixels in either dimension. For SVG icons, provide square numeric dimensions or a square `viewBox` of at least 48 by 48.
 
@@ -37818,6 +37890,10 @@ rl.on("line", (line) => {
     });
   }
   if (msg.method === "turn/completed") {
+    if (msg.params?.turn?.status !== "completed") {
+      console.error(msg.params?.turn?.error ?? "The turn did not complete.");
+      process.exitCode = 1;
+    }
     proc.stdin.end();
     rl.close();
   }
@@ -37854,6 +37930,9 @@ proc.on("error", (error) => {
   console.error(error);
   process.exitCode = 1;
   rl.close();
+});
+proc.on("exit", (code) => {
+  if (code !== 0) process.exitCode = code ?? 1;
 });
 ```
 
@@ -40280,7 +40359,9 @@ console.log(result.finalResponse);
 // resuming past thread
 
 const threadId = thread.id!;
-const thread2 = codex.resumeThread(threadId);
+const thread2 = codex.resumeThread(threadId, {
+  sandboxMode: "workspace-write",
+});
 const result2 = await thread2.run("Pick up where you left off");
 
 console.log(result2.finalResponse);
@@ -40419,152 +40500,6 @@ passed to `run(...)` or `turn(...)` applies to that turn and later turns
 on the thread.
 
 For more details, check out the [Python repo](https://github.com/openai/codex/tree/main/sdk/python).
-
-### Implementing model catalogs for gateways and clouds
-
-Source: [Implementing model catalogs for gateways and clouds](https://learn.chatgpt.com/docs/model-catalogs.md)
-
-This page is for developers implementing the Codex Models format, which defines
-the model catalog and powers the model picker. If you build an inference
-provider, such as a gateway or cloud service, use this specification to let the
-Codex desktop app and CLI discover your models and use their instructions and
-capability settings.
-
-If you administer an enterprise and want to control the model catalog, see the
-[`model_catalog_url` configuration guidance](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#serve-a-remote-catalog).
-
-To support the format, implement an authenticated catalog endpoint. Fetch your
-upstream provider's current defaults for the requesting Codex version, apply
-your overrides, and return the resulting catalog.
-
-Authenticated reads · `client_version`
-Model catalogs
-
-      OpenAI
-      Current model defaults
-      Instructions and settings
-
-      Cloud / upstream provider
-      Match deployed models
-      Account and region availability
-
-      Enterprise gateway
-      Read upstream catalogs
-      Filter and apply overrides
-
-      Codex app and CLI
-      Show available models
-      Use compatible settings
-
-      Enterprise / custom models
-      Optional reviewed definitions
-      Can originate outside OpenAI
-
-#### Implement the catalog endpoint
-
-The default catalog endpoint is `/models` under the provider's `base_url`.
-For example, with `base_url = "https://gateway.example.com/v1"`, Codex requests:
-
-```http
-GET /v1/models?client_version=0.162.1
-Authorization: Bearer <PROVIDER_ACCESS_TOKEN>
-```
-
-Default discovery supports command-backed authentication and Codex-backend
-authentication, such as ChatGPT. For a custom provider using API-key authentication
-without command-backed authentication, set `model_providers..model_catalog_url`
-explicitly to enable remote discovery. An API key alone doesn't trigger discovery
-at the default path.
-
-Use `model_catalog_url` to choose a full catalog URL, such as
-`https://gateway.example.com/codex/models`. It can also point to the default
-`/v1/models` endpoint. Codex uses this URL directly without appending `/models`.
-For API-key discovery, keep `features.api_key_model_discovery` enabled; it is on
-by default. Custom headers alone don't enable discovery.
-
-Codex sends the selected provider's authentication and configured headers, and
-appends `client_version` and any provider `query_params`. Host the catalog on a
-service authorized to receive those credentials.
-
-Authenticate the caller, fetch the corresponding upstream defaults, apply your
-overrides, and return the complete `ModelsResponse` JSON directly. Give every
-entry a unique, nonempty `slug`. For an explicit `model_catalog_url`, Codex rejects
-redirects and responses larger than 1 MiB. Continue enforcing model access on
-inference requests.
-
-Remove any effective `model_catalog_json` setting from clients using the endpoint:
-the local file takes precedence and prevents remote fetching.
-
-#### Match the client's schema
-
-Read the `client_version` query parameter on the catalog request. Codex sends its
-CLI version as `major.minor.patch`, with any prerelease suffix removed. For desktop
-clients, this is the bundled CLI version.
-
-Use the matching `rust-v` tag in the public Codex repository, or the
-exact source commit for a custom build. These links use `rust-v0.162.1`; select
-the revision matching your client:
-
-- Read the [`ModelsResponse` and `ModelInfo` response types](https://github.com/openai/codex/blob/rust-v0.162.1/codex-rs/protocol/src/openai_models.rs) for the schema.
-- Inspect the [bundled `models.json`](https://github.com/openai/codex/blob/rust-v0.162.1/codex-rs/models-manager/models.json) for a complete example. This is catalog data, not a JSON Schema document.
-
-The bundled file is a release snapshot. Fetch current defaults before producing
-your catalog.
-
-#### Fetch current upstream defaults
-
-Cloud providers serving OpenAI models fetch defaults from OpenAI. Gateways read
-their cloud or upstream provider's catalog so they retain the deployed model's
-settings and account and region availability. Pass the requesting Codex version
-at each step, and authenticate separately to each endpoint.
-
-To fetch defaults directly from OpenAI, call the Codex models endpoint with the
-same `client_version`. For example, with an OpenAI API key:
-
-```bash
-curl --fail --silent --show-error \
-  'https://chatgpt.com/backend-api/codex/models?client_version=0.162.1' \
-  -H "Authorization: Bearer $OPENAI_API_KEY"
-```
-
-For a ChatGPT integration, use the caller's ChatGPT access token and
-`ChatGPT-Account-ID` header when applicable. Use credentials authorized for the
-upstream endpoint; your gateway's own API key doesn't authenticate to OpenAI.
-
-Parse the full response, including its top-level `models` array. This endpoint
-returns Codex metadata such as instructions, reasoning defaults, tool settings,
-context limits, and service tiers. The public `/v1/models` endpoint doesn't
-supply this catalog.
-
-Refresh these defaults even when the Codex version hasn't changed. Keep requests
-scoped to the intended upstream identity and honor response cache controls:
-catalogs can depend on the caller's access. Keep your overrides separate so you
-can reapply them to fresh defaults.
-
-#### Apply provider overrides
-
-Change field values while preserving the version's response structure:
-
-- Filter models to those the caller can use. Map each `slug` to a supported
-  inference route, and adjust `display_name`, `description`, or `priority`.
-  For an alias without a model migration, set `upgrade` to `null`.
-- Set reasoning options, context limits, input modalities, and service tiers to
-  values your model and route support. Keep defaults within the supported
-  choices. For a route without service tiers, clear `service_tiers` and
-  `additional_speed_tiers`, and set `default_service_tier` to `null`.
-- Preserve upstream instructions and tool settings unless you have tested a
-  replacement. Metadata doesn't add model capabilities or grant inference access.
-
-For Bedrock through LiteLLM, apply the
-[required catalog edits](https://learn.chatgpt.com/docs/enterprise/bedrock-through-litellm#prepare-the-client-catalog).
-Test the resulting catalog with each supported Codex version.
-
-#### Use the public Rust types
-
-Use crates from the same public Git tag or commit as the client's schema:
-
-- Use [`codex-protocol`](https://github.com/openai/codex/tree/rust-v0.162.1/codex-rs/protocol) for `codex_protocol::openai_models::{ModelsResponse, ModelInfo}`. Parse with `serde_json::from_slice::()`, edit `catalog.models`, and serialize the whole wrapper with `serde_json::to_vec()`. The wrapper handles compatibility fields for model instructions.
-- Use [`codex-models-manager::bundled_models_response()`](https://github.com/openai/codex/blob/rust-v0.162.1/codex-rs/models-manager/src/lib.rs) to load that revision's static bundled catalog as a `ModelsResponse`. It doesn't fetch current upstream defaults.
 
 ### Non-interactive mode
 
@@ -41871,192 +41806,6 @@ doesn't duplicate that contract.
 - [Admin rollout guide](https://learn.chatgpt.com/docs/enterprise/admin-setup)
 - [Governance](https://learn.chatgpt.com/docs/enterprise/governance)
 - [Compliance API](https://learn.chatgpt.com/docs/enterprise/compliance-api)
-
-### Bedrock through LiteLLM
-
-Source: [Bedrock through LiteLLM](https://learn.chatgpt.com/docs/enterprise/bedrock-through-litellm.md)
-
-Use this page when your organization routes Codex to Amazon Bedrock through
-LiteLLM. If a LiteLLM gateway already exists, connect Codex first. Deploy LiteLLM
-only when your organization needs a new gateway.
-
-To use an existing gateway, start with [Connect to an existing
-gateway](#connect-to-an-existing-gateway). To deploy LiteLLM on AWS, start
-with [Prepare a gateway](#prepare-a-gateway). For access without a gateway,
-see [Amazon Bedrock](https://learn.chatgpt.com/docs/amazon-bedrock).
-
-Other gateway products follow the same [gateway requirements](https://learn.chatgpt.com/docs/enterprise/gateway-compatibility)
-and [gateway connection flow](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway).
-
-#### Connect to an existing gateway
-
-Get these values from your gateway administrator:
-
-- The HTTPS base URL, such as `https://gateway.example.com/v1`.
-- The model alias that LiteLLM routes to an approved Bedrock model.
-- The provider ID to use in Codex configuration.
-- Native gateway OAuth settings, a scoped gateway API key, or an authentication
-  helper that returns the key.
-- Any model catalog distributed with your organization's configuration.
-
-Then complete the connection in this order:
-
-1. Ask your gateway team to confirm that the gateway serves `POST /v1/responses`,
-   streams responses, preserves follow-up turns and tool calls, and routes the
-   approved alias. See [Gateway compatibility](https://learn.chatgpt.com/docs/enterprise/gateway-compatibility).
-2. Follow [Connect to a gateway](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#configure-the-provider)
-   to configure the provider, model, and credential.
-3. Verify the active provider and alias, send the short `gateway-ok` prompt from
-   the connection guide, and confirm that the LiteLLM record shows the expected
-   user and alias.
-4. For organization-wide distribution, continue with [Roll out a gateway](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway).
-
-Your gateway credential authenticates you to LiteLLM. The gateway manages its own Bedrock credentials; you don't need to copy those credentials to your workstation.
-
-If your gateway accepts OAuth access tokens, use [native gateway
-OAuth](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#use-native-gateway-oauth) for browser
-sign-in without ChatGPT sign-in or a credential helper. Confirm that your deployed
-gateway validates the token in the configured cookie or custom header. A LiteLLM
-API key alone doesn't enable this flow.
-
-#### Prepare a gateway
-
-Use this section only when you need to create a LiteLLM gateway before connecting
-Codex.
-
-#### Before you deploy
-
-Confirm that you have:
-
-- Permission to deploy the approved LiteLLM architecture in your AWS environment.
-- Bedrock access to the models or inference profiles you will route.
-- A reviewed LiteLLM image and deployment pattern.
-- A trusted HTTPS host name and certificate.
-- A restricted client network range.
-
-For the Runtime example below, the gateway's AWS identity needs `bedrock:InvokeModel` for the selected inference profile and the account's default project. See AWS's [GPT-6 Sol setup instructions](https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-sol.html) for the required permissions.
-
-#### Architecture
-
-The deployment keeps LiteLLM between Codex and Bedrock, with HTTPS at the client
-boundary. The load balancer and LiteLLM are inside your organization's gateway
-boundary; the provider credential stays on the gateway.
-
-Restrict inbound access to approved clients, keep database and cache ports private, and grant the gateway only the Bedrock permissions it needs. Pin the deployed image by digest so that a restart doesn't silently change the implementation.
-
-Prompts, source excerpts, and tool results pass through the gateway and may enter its logs. Decide retention, access, and redaction before enabling request logging. MCP servers and plugins have separate connections and authentication; this gateway configuration doesn't configure them.
-
-#### Deployment checkpoints
-
-Complete these checkpoints in order before handing the gateway to developers:
-
-| Checkpoint                                                     | Output                                                                                    |
-| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Deploy the proxy with private database and cache dependencies. | A stable HTTPS base URL ending in `/v1`, with gateway-managed Bedrock authentication.     |
-| Configure a model route and its matching client catalog.       | A stable Codex-facing alias mapped to the intended Bedrock target.                        |
-| Verify Responses support.                                      | A streamed `POST /v1/responses` response ending with `response.completed`.                |
-| Issue a test credential.                                       | A per-user virtual key restricted to the alias, with expiration, budget, and rate limits. |
-| Connect one developer.                                         | Codex provider configuration and a verified short prompt through the gateway.             |
-
-The sections below cover each checkpoint. For production rollout, also test
-follow-up turns, tools, and credential revocation.
-
-#### Choose the Bedrock route
-
-The LiteLLM upstream route determines the Bedrock endpoint, model identifier, and authentication method. Keep these choices together when you deploy or change the gateway.
-
-Use Bedrock Runtime for new configurations. The example below uses its OpenAI-compatible Responses endpoint.
-
-Hosted web search isn't available on Bedrock Runtime. If you need it, use
-Mantle and confirm that your gateway preserves the tool request and response.
-
-See LiteLLM's [Bedrock Mantle integration](https://docs.litellm.ai/docs/providers/bedrock_mantle) for the alternative route.
-
-For an AWS deployment example, use the pinned [LiteLLM on ECS reference](https://github.com/openai-on-aws/guidance-codex/blob/eb04fe0/docs/QUICKSTART_LLM_GATEWAY_LITELLM.md). That implementation uses Bedrock Runtime and refreshes authentication from the ECS task role. Follow its deployment and authentication steps together, and review its production requirements against your networking, TLS, logging, and resource-retention policies.
-
-Whichever route you choose, verify the deployed combination of gateway version, upstream endpoint, and model against [Gateway compatibility](https://learn.chatgpt.com/docs/enterprise/gateway-compatibility). An upstream model appearing in the gateway's model list doesn't establish that its streaming, continuation, and tool behavior work with Codex.
-
-#### Configure a Runtime model route
-
-Map a stable Codex-facing alias to the approved upstream model. Confirm access in your AWS account and Region before using this Runtime example.
-
-```yaml
-model_list:
-  - model_name: company-coding-model
-    litellm_params:
-      model: openai/global.openai.gpt-6-sol
-      api_key: os.environ/AWS_BEARER_TOKEN_BEDROCK
-      api_base: https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1
-```
-
-Supply a valid Bedrock API key as `AWS_BEARER_TOKEN_BEDROCK` through your secret-management system. For a short-lived key, issue a replacement before it expires, update the gateway process environment, and restart or redeploy the workers that use it. The ECS reference instead refreshes credentials in-process from its task role; use its configuration and entrypoint together.
-
-The `openai/` prefix selects LiteLLM's OpenAI-compatible adapter; the configured `api_base` sends requests to Bedrock Runtime. The Global inference profile can route requests outside the source Region. Choose a profile and Region that meet your AWS permissions and data-residency requirements, and replace both values as needed.
-
-The client sends `company-coding-model`; LiteLLM uses the configured upstream route. This custom alias requires the matching client catalog described next. A generic gateway does not inherit the built-in Bedrock provider's metadata adjustments.
-
-#### Prepare the client catalog
-
-For this GPT-6 Sol/Runtime example with Codex 0.158.0, start with the complete `gpt-6-sol` entry from that version's [model catalog](https://github.com/openai/codex/blob/rust-v0.158.0/codex-rs/models-manager/models.json). Apply all of these edits to that entry:
-
-| Field                        | Required edit                                                           |
-| ---------------------------- | ----------------------------------------------------------------------- |
-| `slug`                       | Set to `"company-coding-model"`, matching the LiteLLM alias.            |
-| `visibility`                 | Set to `"list"`.                                                        |
-| `availability_nux`           | Set to `null`.                                                          |
-| `upgrade`                    | Set to `null`.                                                          |
-| `use_responses_lite`         | Set to `false`.                                                         |
-| `tool_mode`                  | Set to `null`.                                                          |
-| `supported_reasoning_levels` | Remove the entry whose `effort` is `"ultra"`; retain the other entries. |
-| `additional_speed_tiers`     | Set to `[]`.                                                            |
-| `service_tiers`              | Set to `[]`.                                                            |
-| `default_service_tier`       | Set to `null`.                                                          |
-| `web_search_tool_type`       | Set to `"text"`.                                                        |
-| `multi_agent_version`        | Set to `"v1"`.                                                          |
-| `supports_search_tool`       | Set to `false` for Runtime.                                             |
-
-Preserve the remaining fields, including the model's instructions and context limits. Keep the edited entry in the catalog's top-level `models` array. These changes mirror the released [Bedrock metadata adjustments](https://github.com/openai/codex/blob/rust-v0.158.0/codex-rs/model-provider/src/amazon_bedrock/catalog.rs) and [Runtime search restriction](https://github.com/openai/codex/blob/rust-v0.158.0/codex-rs/model-provider/src/amazon_bedrock/runtime_catalog.rs). Recheck them against the matching source when changing the client version or upstream model.
-
-Distribute the complete JSON file and configure `model_catalog_json` using [Roll out a gateway](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#supply-metadata-for-a-custom-alias). Keep `web_search = "disabled"` in the Runtime client configuration. Verify the edited catalog through the gateway before distributing it to more users.
-
-#### Verify Responses support
-
-Expose `POST /v1/responses` at the client-facing HTTPS endpoint. Configure the load balancer and any reverse proxy to pass streaming events without buffering. Preserve follow-up turns and function-call results. A working Chat Completions endpoint alone isn't sufficient for this connection.
-
-Complete the checks in [Gateway compatibility](https://learn.chatgpt.com/docs/enterprise/gateway-compatibility) before distributing client configuration. Test through the same host name, network controls, and authentication path your users will use.
-
-#### Issue a test credential
-
-Create a scoped LiteLLM virtual key for one test user. Restrict it to the approved alias and configure expiration, rate limits, and a budget. See LiteLLM's [virtual-key documentation](https://docs.litellm.ai/docs/proxy/virtual_keys) for the applicable controls.
-
-Distribute the key through your secret-management process or an authentication helper. Don't give users the LiteLLM administrative key or embed gateway credentials in `config.toml`.
-
-#### Verify the user connection
-
-Complete these checks before expanding access:
-
-1. Confirm that the HTTPS certificate matches the gateway host name and the service is healthy.
-2. Connect one user through [Connect to a gateway](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway).
-3. Run a short prompt, a follow-up turn, and a read-only tool task.
-4. Confirm that gateway records show the expected identity, alias, and upstream route without exposing credentials or sensitive prompt content.
-5. Test credential expiration or revocation and confirm that unauthorized model aliases are rejected.
-
-Keep the deployed image version, route configuration, and test results with your rollout record. Continue with [Roll out a gateway](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway) for team distribution and ongoing operations.
-
-#### Troubleshoot the connection
-
-Use the failing layer to narrow the problem:
-
-| Symptom                                    | What to check                                                                                                                                                      |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| HTTPS fails before inference               | DNS, certificate host name, load-balancer health, and allowed client networks.                                                                                     |
-| Gateway returns `401` or `403`             | Distinguish a rejected user credential from an upstream Bedrock authentication or permission failure using gateway logs.                                           |
-| Requested model isn't found                | Confirm the exact client-facing alias and its upstream model or inference-profile mapping.                                                                         |
-| Request is blocked before reaching LiteLLM | Check load-balancer and web application firewall logs, including request-body limits. Preserve your security controls while testing representative Codex requests. |
-| Text works, but a turn doesn't finish      | Check streaming buffers, timeouts, terminal events, and the follow-up and tool-call checks in Gateway compatibility.                                               |
-| Upstream request times out                 | Check model availability in the source Region, routing configuration, quotas, and gateway logs before changing timeouts.                                           |
-
-Retest the same user path after a fix. A successful gateway health check doesn't verify an authenticated inference request or a complete Codex turn.
 
 ### Best practices for ChatGPT Edu workspace configuration in higher education
 
@@ -45102,7 +44851,7 @@ Bedrock](https://learn.chatgpt.com/docs/amazon-bedrock).
 
 #### Check for an existing configuration
 
-Before adding anything, check whether your administrator already configured Codex.
+Install the Codex client and version your administrator tested. If your organization manages the settings, open that client and complete the sign-in steps in your handoff. You can skip the provider configuration examples below.
 
 - For the CLI, inspect the selected profile and run `codex doctor`. After startup,
   use `/status` to confirm the active model and provider.
@@ -45111,20 +44860,19 @@ Before adding anything, check whether your administrator already configured Code
 - For the Windows app, inspect `%USERPROFILE%\.codex\config.toml` or the system
   configuration your organization delivers.
 
-If the expected gateway provider and model are already active, continue to
-[Verify the connection](#verify-the-connection).
+If the expected gateway provider and model are already active, complete any sign-in steps supplied by your administrator, then continue to [Verify the connection](#verify-the-connection). Avoid adding a second provider configuration to a managed machine. If the settings differ from your administrator's handoff, ask which configuration layer should supply them before editing local files.
 
 #### Get your gateway connection details
 
-Install the [Codex CLI](https://learn.chatgpt.com/docs/codex/cli) or the desktop app approved by your
-organization. To configure Codex yourself, get these values from your gateway team:
+For manual setup, confirm whether you need ChatGPT workspace sign-in, gateway authentication, or both.
+
+To configure Codex yourself, get these values from your gateway team:
 
 - The HTTPS gateway base URL, including its API path, such as `https://gateway.example.com/v1`.
 - The model name and provider ID to use.
 - The authentication method: [native gateway OAuth](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway?gateway-auth=oauth#use-native-gateway-oauth),
   a scoped API key and its environment variable, or an installed credential helper.
-- For OAuth, the authorization URL, token URL, public client ID, required scopes,
-  and the cookie or custom header the gateway accepts.
+- For OAuth, the authorization URL, token URL, public client ID, and any required scopes. For gateways that use a cookie or custom header, its name.
 - Any required model catalog URL, or a catalog file and its absolute local path.
 
 #### Configure the provider
@@ -45157,6 +44905,20 @@ requires_openai_auth = false
 Then add the [authentication settings](#choose-an-authentication-method) your
 gateway team supplies.
 
+`enterprise-gateway` is an illustrative provider ID. Use the same ID in
+`model_provider` and its provider and authentication tables.
+This example disables web search
+for the initial connection test; your administrator should verify feature support
+before enabling it.
+
+#### Configure your model catalog
+
+Confirm with your gateway team how Codex gets the capabilities and instructions for your selected model:
+
+- **Built-in name:** If the gateway accepts the exact model name bundled with your Codex version and routes it to the matching model, set `model` to that name. Codex already has its metadata.
+- **Catalog endpoint:** If the gateway serves Codex-compatible metadata, use its full catalog URL. This can be a `/v1/models` endpoint that implements the [Codex catalog response](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#implement-the-catalog-endpoint). A response that only lists model IDs is insufficient for custom aliases.
+- **Catalog file:** If your gateway uses custom aliases and your administrator distributes a file, use the [local models.json example](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#start-with-a-local-modelsjson-file). Use a local file when native gateway OAuth is your only credential and you need custom metadata.
+
 For API-key or helper authentication, if your administrator supplies a catalog
 URL, add it to the existing
 `[model_providers.enterprise-gateway]` table:
@@ -45180,12 +44942,6 @@ model_catalog_json = "/etc/codex/gateway-models.json"
 Use the model name and catalog supplied together by your administrator. Don't
 add a catalog path unless the file exists at that location.
 
-`enterprise-gateway` is an illustrative provider ID. Use the same ID in
-`model_provider` and its provider and authentication tables.
-This example disables web search
-for the initial connection test; your administrator should verify feature support
-before enabling it.
-
 #### Choose an authentication method
 
 Use native gateway OAuth for browser sign-in, an API key for a scoped credential, or a credential helper if your organization supplies a command.
@@ -45199,16 +44955,17 @@ organization's identity provider, such as Microsoft Entra ID. Codex handles the
 browser sign-in, encrypted credential storage, and token refresh when the
 authorization server issues a refresh token.
 
+For gateway-only authentication, Codex CLI 0.166.0 and later sends the access token in `Authorization: Bearer ` by default. Remove any `Authorization` entry from this provider's `http_headers` or `env_http_headers`.
+
 Your gateway team must register a public OAuth client that supports the
 authorization code flow with PKCE. Add this table to the provider configuration
-in `config.toml`, replacing the URLs, client ID, and cookie name with their values:
+in `config.toml`, replacing the URLs and client ID with their values:
 
 ```toml
 [model_providers.enterprise-gateway.gateway_oauth]
 authorization_url = "https://login.example.com/oauth/authorize"
 token_url = "https://login.example.com/oauth/token"
 client_id = "YOUR_PUBLIC_CLIENT_ID"
-delivery = { kind = "cookie", name = "auth-openid" }
 # redirect_port = 43127
 ```
 
@@ -45218,22 +44975,26 @@ tokens if your provider requires them. Codex uses an available loopback port by 
 If your identity provider requires a fixed redirect URI, set `redirect_port` and
 register `http://127.0.0.1:43127/callback` for this example.
 
-The gateway must validate the OAuth access token received in the configured
-cookie. If it accepts a custom header instead, replace `delivery` with the header
-your administrator provides, for example:
+If your gateway expects a cookie or custom header, set the optional `delivery` field in the OAuth table. Choose the method your gateway validates:
+
+```toml
+delivery = { kind = "cookie", name = "auth-openid" }
+```
 
 ```toml
 delivery = { kind = "header", name = "X-Gateway-Token", scheme = "Bearer" }
 ```
 
-Codex reserves `Authorization`; you can't use it as the `gateway_oauth` delivery header.
+If your deployment also requires ChatGPT sign-in, use the cookie or a separate
+gateway header shown above. See [Enable ChatGPT sign-in](#enable-chatgpt-sign-in-recommended).
+
 A gateway that accepts only a static API key must add support for the OAuth token
 and its delivery method before you can use this flow. The gateway continues to
 manage its own upstream credentials, such as its AWS credentials for Bedrock.
 
 When OAuth is your only credential, keep `requires_openai_auth = false` and remove the
 previous `env_key`, `experimental_bearer_token`, or `auth` settings used for the
-gateway credential. Use a local `model_catalog_json` file if you need custom model
+gateway credential. Use a [local model catalog](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#start-with-a-local-modelsjson-file) if you need custom model
 metadata; OAuth alone doesn't enable remote catalog discovery.
 
 Restart the desktop app and follow its gateway sign-in prompt to open the browser.
@@ -45319,19 +45080,14 @@ Use resolved absolute paths for helper executables and catalog files.
 
 If your organization uses a ChatGPT workspace, signing in gives users access to eligible features such as first-party plugins. Your workspace controls apply, and your gateway still handles model requests. [Compare feature availability](https://learn.chatgpt.com/docs/pricing#feature-availability).
 
-Add the gateway provider to your workspace's [managed `requirements.toml`](https://learn.chatgpt.com/docs/enterprise/managed-configuration). These settings apply when users sign in to that workspace.
+For manual setup, update the existing `[model_providers.enterprise-gateway]` table before signing in:
 
-```toml
-# requirements.toml
-model_provider = "enterprise-gateway"
+1. Set `requires_openai_auth = true` and keep `base_url` pointing to your gateway. Remove any `env_key`, `experimental_bearer_token`, and provider `auth` settings so Codex uses your OpenAI credential for primary authentication.
+2. Send the gateway credential separately. For [native gateway OAuth](#use-native-gateway-oauth), configure `gateway_oauth.delivery` to use the cookie or custom header your gateway accepts. For an API key or credential helper, use a [custom authentication header](#use-a-custom-authentication-header). Reserve `Authorization` for the OpenAI credential.
 
-[model_providers.enterprise-gateway]
-name = "Enterprise gateway"
-base_url = "https://gateway.example.com/backend-api/codex"
-requires_openai_auth = true
-```
+Sign in to the ChatGPT workspace your administrator named. Complete the gateway sign-in if prompted, then [verify your connection](#verify-the-connection).
 
-Configure [gateway authentication](#choose-an-authentication-method) as described above. Codex sends the user's OpenAI credential to your gateway in `Authorization`. Use a separate header for the gateway credential. With native gateway OAuth, `gateway_oauth.delivery` can specify a header or a cookie.
+Administrators can [distribute managed provider settings](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#distribute-the-configuration) and [verify credential forwarding](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#test-codex-through-the-gateway).
 
 #### Handle credentials at the gateway
 
@@ -45357,15 +45113,7 @@ These diagrams show the recommended route for OpenAI inference.
 
 #### Add routing headers (optional)
 
-To route requests by configuration or tool, add headers to the same `enterprise-gateway` provider in your cloud-managed `requirements.toml`:
-
-```toml
-[model_providers.enterprise-gateway.http_headers]
-x-portkey-config = "<gateway-routing-config-id>"
-x-portkey-metadata = '{"tool_id":"codex"}'
-```
-
-Use `env_http_headers` for values supplied by the client environment. Send a test request and confirm that the gateway selects the intended route. See [Custom model providers](https://learn.chatgpt.com/docs/config-file/config-advanced#custom-model-providers) for more header options.
+Use the routing settings supplied by your administrator. Gateway operators can [distribute these settings](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#distribute-the-configuration) and check the selected route in gateway logs.
 
 Only model-provider requests use this gateway route. [Voice sessions](https://learn.chatgpt.com/docs/features/voice) use a separate route. Workspace sign-in, MCP servers, and plugins can also use other network paths.
 
@@ -45411,6 +45159,8 @@ authorize access to your tools or connected systems.
 
 #### Verify the connection
 
+Use the provider ID and model alias in your administrator's handoff. The provider identifies the configured connection; the model alias identifies a model routed through that connection. ChatGPT sign-in and gateway authentication control access and may both be required.
+
 Restart the client after changing the configuration. In the CLI, start `codex`
 and use `/status` to inspect the active model and provider. In the desktop app,
 check the selected model and configuration.
@@ -45425,12 +45175,6 @@ Expect `gateway-ok`. A response alone doesn't prove which route handled it: ask
 your administrator to confirm that the gateway recorded your user, model alias,
 and intended upstream route. Don't identify the model by asking it its name.
 
-If the gateway serves the model catalog, check that it returns a Codex-compatible `models` array. For OpenAI inference using the user's credential, verify that the gateway forwards the ChatGPT headers to the Codex backend.
-
-This verifies an initial connection. Administrators should also complete the
-[rollout checks](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#test-the-client-and-gateway)
-for streaming, tools, and follow-up turns.
-
 #### Troubleshoot the connection
 
 | Symptom                                 | What to check                                                                                                                                                                                                       |
@@ -45443,31 +45187,11 @@ for streaming, tools, and follow-up turns.
 | Streaming stalls or follow-ups fail.    | Ask the gateway owner to check proxy buffering, the terminal `response.completed` event, and [Gateway compatibility](https://learn.chatgpt.com/docs/enterprise/gateway-compatibility).                                                      |
 | A catalog or helper path fails.         | Confirm that the file exists at the configured absolute path in the environment running Codex.                                                                                                                      |
 
-When requesting help, include the error message with tokens and sensitive prompts removed.
+When requesting help, include your client version, operating system, expected provider and model alias, authentication method, and the step that failed. Include the error message and request time so the gateway owner can locate the request. Remove tokens, cookies, authorization headers, and sensitive prompts. Don't send credential files or a configuration dump containing secrets.
 
 #### Use an existing gateway deployment
 
-If your organization already uses a gateway with another coding tool, you may be
-able to reuse its network path, logging, and provider access. Work with your
-gateway team to configure and test a Codex connection:
-
-1. Identify the existing gateway URL, credential mechanism, required headers,
-   model routes, and configuration delivery method.
-2. Ask your gateway team to confirm that the gateway supports the
-   [API behavior Codex requires](https://learn.chatgpt.com/docs/enterprise/gateway-compatibility) and to
-   configure a Codex model route.
-3. Obtain the OAuth settings, scoped gateway credential, or credential helper,
-   along with the model name and any required catalog from your gateway team.
-4. [Configure Codex](#configure-the-provider) with those values.
-5. [Verify the connection](#verify-the-connection) in the CLI or desktop app you
-   plan to use. Have your gateway team complete the
-   [streaming, tool, and follow-up checks](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#test-the-client-and-gateway).
-6. After the pilot passes, follow
-   [Roll out a gateway](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway) to distribute the
-   configuration to other developers.
-
-For the administrator migration checklist and configuration mapping, see
-[Reuse an existing gateway deployment](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#reuse-an-existing-gateway-deployment).
+Ask your gateway team for the Codex provider settings and approved model alias. If the team still needs to enable a Codex route, share the [administrator migration checklist](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#reuse-an-existing-gateway-deployment).
 
 #### Related docs
 
@@ -47149,6 +46873,12 @@ For current availability, supported plans, and workspace settings, see [Manage d
 | Find, pause, resume, or delete a personal dot      | [Manage dots in your workspace](#manage-dots-in-your-workspace)                                                                   |
 | Track adoption or investigate an action            | [Monitor usage](#monitor-usage) and [Review admin activity and compliance records](#review-admin-activity-and-compliance-records) |
 | Remove access when someone changes roles or leaves | [Manage access changes](#manage-access-changes)                                                                                   |
+
+#### Enterprise preview and billing
+
+During the preview, admins in eligible ChatGPT Enterprise, Edu, and Healthcare workspaces can enable dots for selected roles. Starting November 18, 2026, members have access by default unless the workspace opts out. Each member chooses whether to create a personal dot.
+
+Eligible Enterprise workspaces can pay a flat rate based on the type of work a dot does or pay based on consumption. The preview is free. Billing for enabled dots begins November 18, 2026. Tasks a dot delegates to ChatGPT Work or Codex threads incur separate charges at the standard rates. See [Dots pricing in the Help Center](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot).
 
 #### Set up dots for work
 
@@ -49414,9 +49144,8 @@ for requirements, delivery, and precedence.
 
 Source: [Roll out a gateway](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway.md)
 
-Roll out native gateway OAuth, API keys, or credential helpers without ChatGPT
-sign-in. Configure model routes, authorize users, and distribute a verified Codex
-configuration. For a gateway that forwards ChatGPT workspace requests, see
+As the gateway administrator, configure the model routes and authorize a pilot user. Test the connection on each client you support before distributing settings to developers. Use native gateway OAuth, API keys, or credential helpers for gateway
+authentication. To combine gateway authentication with ChatGPT workspace sign-in, see
 [Sign in with ChatGPT through a gateway](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#enable-chatgpt-sign-in-recommended).
 
 To configure Codex on your own machine with values you were given, see
@@ -49476,6 +49205,8 @@ Set Codex's `model` to the gateway's model name. Configure the gateway to route 
 
 #### Use a model catalog for custom names
 
+For a local catalog, start with the [models.json example](#start-with-a-local-modelsjson-file).
+
 Supply a model catalog when your gateway uses a model name Codex does not recognize. The catalog supplies the instructions, reasoning options, context limits, and tool capabilities Codex uses for that name. Without a matching entry, a request can reach the intended upstream model while Codex uses generic settings.
 
 Host a remote catalog with `model_providers..model_catalog_url` to update model metadata centrally, or distribute a local file with `model_catalog_json`. Use a local catalog when native gateway OAuth is the only credential; OAuth alone doesn't enable remote catalog discovery. See the [configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference) for both settings.
@@ -49483,7 +49214,7 @@ Host a remote catalog with `model_providers..model_catalog_url` to update model 
 Get a catalog endpoint or file compatible with your Codex version from your cloud
 or gateway provider. Make sure it includes each approved alias and its model
 metadata. For catalog implementation, see
-[Implementing model catalogs for gateways and clouds](https://learn.chatgpt.com/docs/model-catalogs).
+[Implementing model catalogs for gateways and clouds](#model-catalog-reference).
 
 #### Serve a remote catalog
 
@@ -49579,17 +49310,24 @@ on the gateway.
 
 Before distributing anything, follow [Configure the provider](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#configure-the-provider) to configure one isolated test user with the provider block and authentication method you plan to distribute.
 
-Run the checks below from the same CLI or desktop surface developers will use:
+If the gateway serves the model catalog, confirm it returns a Codex-compatible `models` array. For OpenAI inference using the user's credential, confirm the gateway forwards the required ChatGPT headers to the Codex backend.
 
-| Check                  | Action                                                                                                       | Passing evidence                                                                                                                                                |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Connection             | Follow [Verify the connection](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#verify-the-connection).                | The expected provider and alias are active, the test prompt succeeds, and gateway logs identify the test user.                                                  |
-| Streaming              | Ask for a short multi-paragraph answer.                                                                      | The gateway forwards SSE events without buffering, text arrives incrementally, and the stream ends with `response.completed`.                                   |
-| Local tool loop        | In a disposable folder with read-only permissions, ask Codex to list the top-level files and summarize them. | Codex issues a local tool call, returns the result, and produces a final answer without edits.                                                                  |
-| Follow-up              | Ask a follow-up in the same thread.                                                                          | The answer uses the prior turn; the gateway accepts replayed input. If WebSocket or incremental transport is enabled, it also preserves `previous_response_id`. |
-| Errors and attribution | Repeat with an intentionally invalid test alias or expired test credential.                                  | The client receives a useful routing or authentication error, and valid requests remain attributed to the test user.                                            |
+Record the client version, operating system, provider ID, model alias, and authentication method for your pilot. Run the checks below from each CLI or desktop surface you plan to support. If you offer both gateway-only authentication and gateway authentication alongside ChatGPT sign-in, test each combination separately.
 
-After these checks succeed, direct developers to [Configure the provider](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#configure-the-provider) to configure and verify their own machine.
+| Check                   | Action                                                                                                       | Passing evidence                                                                                                                                                       |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Effective configuration | Inspect the configuration layers and confirm the intended provider, model, and requirements.                 | The pilot uses the distributed settings. User or profile defaults do not select a different route.                                                                     |
+| Connection              | Follow [Verify the connection](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#verify-the-connection).                | The expected provider and alias are active, the test prompt succeeds, and gateway logs identify the test user.                                                         |
+| Streaming               | Ask for a short multi-paragraph answer.                                                                      | Text arrives incrementally and the active transport emits `response.completed`. Test HTTP separately to verify that the gateway forwards SSE events without buffering. |
+| Local tool loop         | In a disposable folder with read-only permissions, ask Codex to list the top-level files and summarize them. | Codex issues a local tool call, returns the result, and produces a final answer without edits.                                                                         |
+| Follow-up               | Ask a follow-up in the same thread.                                                                          | The answer uses the prior turn; the gateway accepts replayed input. If WebSocket or incremental transport is enabled, it also preserves `previous_response_id`.        |
+| Errors and attribution  | Repeat with an intentionally invalid test alias or expired test credential.                                  | The client receives a useful routing or authentication error, and valid requests remain attributed to the test user.                                                   |
+
+If automatic approval is enabled, use a disposable test folder to trigger a tool action that requires review under your intended policy. Confirm that the gateway handles the review request and that the client applies the approval decision. A read-only tool call that needs no approval does not test this path. Record any unsupported workflow before expanding the pilot.
+
+If the rollout changes the provider for existing users, test a new conversation and a conversation created before the change on each supported client. Record whether users can view, continue, or branch the existing conversation, and give them a recovery procedure for any blocked workflow. Don't assume that changing the default provider migrates conversation history.
+
+After these checks succeed, prepare the [developer handoff](#hand-developers-the-configuration-values).
 
 #### Distribute the configuration
 
@@ -49675,9 +49413,34 @@ args = ["print-token"]
 A CLI inside WSL reads Linux paths and Linux `CODEX_HOME`; it doesn't automatically
 inherit native Windows configuration.
 
+#### Distribute routing headers
+
+If your gateway routes requests by configuration or tool, add the headers it expects to the provider in your managed `requirements.toml`. The following example supplies a routing configuration ID and identifies Codex as the client:
+
+```toml
+[model_providers.enterprise-gateway.http_headers]
+x-portkey-config = "<gateway-routing-config-id>"
+x-portkey-metadata = '{"tool_id":"codex"}'
+```
+
+Use `env_http_headers` for header values supplied by the client environment. Send a test request and confirm the selected route in gateway logs. See [Custom model providers](https://learn.chatgpt.com/docs/config-file/config-advanced#custom-model-providers) for header options.
+
 #### Hand developers the configuration values
 
-If you do not have managed distribution, give each developer the gateway URL, provider ID, model alias, OAuth configuration or credential variable or resolver, and any catalog URL or local path. Send them to [Configure the provider](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#configure-the-provider) to configure and verify their own machine.
+Give developers one setup path that matches the pilot you tested. Include the following information even when you distribute configuration centrally:
+
+| Handoff item             | What to provide                                                                                                                                                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Approved client          | The client, version, operating system, and installation or update instructions used in the pilot.                                                                                                                    |
+| Configuration delivery   | Whether settings are already managed or require local setup; identify any helper or catalog file installed separately.                                                                                               |
+| Expected connection      | The provider ID, model alias, and gateway URL, including its API path. Explain which values users may change.                                                                                                        |
+| Sign-in steps            | Whether users must sign in to a ChatGPT workspace, authenticate to the gateway, or do both. Name the required workspace and gateway authentication method.                                                           |
+| Credentials and catalogs | The OAuth registration values, credential environment variable, or installed helper configuration, plus any catalog URL or resolved local path. Deliver secrets through your approved secret-distribution mechanism. |
+| Verification and support | The [connection test](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#verify-the-connection), expected result, gateway owner, and information to include when reporting a failure.                                            |
+
+For managed machines, send developers to [Check for an existing configuration](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#check-for-an-existing-configuration). For manual setup, send them to [Configure the provider](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#configure-the-provider).
+
+Include your tested instructions for existing conversations if this rollout changes the provider. Keep the previous working configuration available to the rollout owner in case the pilot exposes a problem.
 
 Manual setup is not an enforcement channel. Project-local `.codex/config.toml` cannot override sensitive provider or authentication routing keys.
 
@@ -49685,10 +49448,13 @@ Manual setup is not an enforcement channel. Project-local `.codex/config.toml` c
 
 To confirm that the distributed settings reached a developer machine:
 
-1. Restart Codex and confirm the expected provider and model.
-2. Run the short test in [Connect to a gateway](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#verify-the-connection).
-3. Ask one follow-up to confirm continuation, then check the gateway logs for that
+1. Confirm that the approved client and any required helper or catalog files are installed. Restart Codex and complete the sign-ins in your handoff.
+2. Confirm the expected provider and model. In the CLI, use `/status`. Use [`/debug-config`](https://learn.chatgpt.com/docs/developer-commands?surface=cli#cli-inspect-config-layers-with-debug-config) to inspect configuration layers when the effective settings differ from the handoff.
+3. Run the short test in [Connect to a gateway](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#verify-the-connection).
+4. Ask one follow-up to confirm continuation, then check the gateway logs for that
    developer's request.
+
+Expand access after the pilot passes on the clients and authentication combinations you support. Keep the tested configuration and results with your rollout instructions so you can repeat the checks after client, gateway, or policy updates.
 
 #### Troubleshoot rollout failures
 
@@ -49725,9 +49491,193 @@ To migrate safely, complete these steps in order:
 1. Inventory the current Claude path: gateway URL, credential source, required headers, model aliases, Bedrock profile mappings, and managed delivery channel.
 2. Add a parallel Codex-facing Responses route and Codex model aliases.
 3. Choose [native gateway OAuth, an API key, or a credential helper](#choose-authentication) and authorize one test user. For a static credential, expose it through `env_key`; for a helper, implement and test the Codex command-backed resolver contract.
-4. Configure that developer with the [provider block](#what-to-distribute). For a managed rollout, translate the payload into the Codex paths and precedence described in [Roll out a gateway](#distribute-the-configuration).
+4. [Configure the provider](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#configure-the-provider) for that developer using the authentication method you selected in step 3. For a managed rollout, translate the payload into the Codex paths and precedence described in [Roll out a gateway](#distribute-the-configuration).
 5. Run the short connection check on the developer's actual CLI or desktop surface, then run the full streaming, continuation, tool-call, error, logging, and alias-routing checks in [Test Codex through the gateway](#test-the-client-and-gateway).
 6. After the pilot passes, [distribute the configuration](#distribute-the-configuration) to the remaining developers.
+
+#### Model catalog reference
+
+#### Start with a local models.json file
+
+First, [configure and select your gateway provider](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway#configure-the-provider) on the machine where you run Codex.
+
+Save this catalog as `models.json` on the machine running Codex. Replace
+`gateway-model` with the exact model ID your gateway accepts. The display name
+is the label users see in the model picker.
+
+```json
+{
+  "models": [
+    {
+      "slug": "gateway-model",
+      "display_name": "Gateway model",
+      "base_instructions": "Help the user with their coding tasks.",
+      "supported_reasoning_levels": [],
+      "shell_type": "shell_command",
+      "visibility": "list",
+      "supported_in_api": true,
+      "priority": 0,
+      "support_verbosity": false,
+      "truncation_policy": { "mode": "tokens", "limit": 10000 },
+      "experimental_supported_tools": []
+    }
+  ]
+}
+```
+
+For a larger example, see [Codex's model catalog](https://github.com/openai/codex/blob/main/codex-rs/models-manager/models.json).
+
+Set `model_catalog_json` in `config.toml` to the absolute path of the file.
+Restart Codex, select **Gateway model**, and send a request. Check that the
+gateway received the model ID you set in `slug`.
+
+For an alias of a bundled model, copy its full catalog entry for your Codex
+version and change its `slug` and `display_name`. If the alias has no migration target, set `upgrade` to `null`. This preserves the model's
+context window, reasoning options, and tool settings.
+
+#### Serve a catalog to clients
+
+This page is for developers implementing the Codex Models format, which defines
+the model catalog and powers the model picker. If you build an inference
+provider, such as a gateway or cloud service, use this specification to let the
+Codex desktop app and CLI discover your models and use their instructions and
+capability settings.
+
+If you administer an enterprise and want to control the model catalog, see the
+[`model_catalog_url` configuration guidance](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#serve-a-remote-catalog).
+
+To support the format, implement an authenticated catalog endpoint. Fetch your
+upstream provider's current defaults for the requesting Codex version, apply
+your overrides, and return the resulting catalog.
+
+Authenticated reads · `client_version`
+Model catalogs
+
+      OpenAI
+      Current model defaults
+      Instructions and settings
+
+      Cloud / upstream provider
+      Match deployed models
+      Account and region availability
+
+      Enterprise gateway
+      Read upstream catalogs
+      Filter and apply overrides
+
+      Codex app and CLI
+      Show available models
+      Use compatible settings
+
+      Enterprise / custom models
+      Optional reviewed definitions
+      Can originate outside OpenAI
+
+#### Implement the catalog endpoint
+
+The default catalog endpoint is `/models` under the provider's `base_url`.
+For example, with `base_url = "https://gateway.example.com/v1"`, Codex requests:
+
+```http
+GET /v1/models?client_version=0.162.1
+Authorization: Bearer <PROVIDER_ACCESS_TOKEN>
+```
+
+Default discovery supports command-backed authentication and Codex-backend
+authentication, such as ChatGPT. For a custom provider using API-key authentication
+without command-backed authentication, set `model_providers..model_catalog_url`
+explicitly to enable remote discovery. An API key alone doesn't trigger discovery
+at the default path.
+
+Use `model_catalog_url` to choose a full catalog URL, such as
+`https://gateway.example.com/codex/models`. It can also point to the default
+`/v1/models` endpoint. Codex uses this URL directly without appending `/models`.
+For API-key discovery, keep `features.api_key_model_discovery` enabled; it is on
+by default. Custom headers alone don't enable discovery.
+
+Codex sends the selected provider's authentication and configured headers, and
+appends `client_version` and any provider `query_params`. Host the catalog on a
+service authorized to receive those credentials.
+
+Authenticate the caller, fetch the corresponding upstream defaults, apply your
+overrides, and return the complete `ModelsResponse` JSON directly. Give every
+entry a unique, nonempty `slug`. For an explicit `model_catalog_url`, Codex rejects
+redirects and responses larger than 1 MiB. Continue enforcing model access on
+inference requests.
+
+Remove any effective `model_catalog_json` setting from clients using the endpoint:
+the local file takes precedence and prevents remote fetching.
+
+#### Match the client's schema
+
+Read the `client_version` query parameter on the catalog request. Codex sends its
+CLI version as `major.minor.patch`, with any prerelease suffix removed. For desktop
+clients, this is the bundled CLI version.
+
+Use the matching `rust-v` tag in the public Codex repository, or the
+exact source commit for a custom build. These links use `rust-v0.162.1`; select
+the revision matching your client:
+
+- Read the [`ModelsResponse` and `ModelInfo` response types](https://github.com/openai/codex/blob/rust-v0.162.1/codex-rs/protocol/src/openai_models.rs) for the schema.
+- Inspect the [bundled `models.json`](https://github.com/openai/codex/blob/rust-v0.162.1/codex-rs/models-manager/models.json) for a complete example. This is catalog data, not a JSON Schema document.
+
+The bundled file is a release snapshot. Fetch current defaults before producing
+your catalog.
+
+#### Fetch current upstream defaults
+
+Cloud providers serving OpenAI models fetch defaults from OpenAI. Gateways read
+their cloud or upstream provider's catalog so they retain the deployed model's
+settings and account and region availability. Pass the requesting Codex version
+at each step, and authenticate separately to each endpoint.
+
+To fetch defaults directly from OpenAI, call the Codex models endpoint with the
+same `client_version`. For example, with an OpenAI API key:
+
+```bash
+curl --fail --silent --show-error \
+  'https://chatgpt.com/backend-api/codex/models?client_version=0.162.1' \
+  -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+For a ChatGPT integration, use the caller's ChatGPT access token and
+`ChatGPT-Account-ID` header when applicable. Use credentials authorized for the
+upstream endpoint; your gateway's own API key doesn't authenticate to OpenAI.
+
+Parse the full response, including its top-level `models` array. This endpoint
+returns Codex metadata such as instructions, reasoning defaults, tool settings,
+context limits, and service tiers. The public `/v1/models` endpoint doesn't
+supply this catalog.
+
+Refresh these defaults even when the Codex version hasn't changed. Keep requests
+scoped to the intended upstream identity and honor response cache controls:
+catalogs can depend on the caller's access. Keep your overrides separate so you
+can reapply them to fresh defaults.
+
+#### Apply provider overrides
+
+Change field values while preserving the version's response structure:
+
+- Filter models to those the caller can use. Map each `slug` to a supported
+  inference route, and adjust `display_name`, `description`, or `priority`.
+  For an alias without a model migration, set `upgrade` to `null`.
+- Set reasoning options, context limits, input modalities, and service tiers to
+  values your model and route support. Keep defaults within the supported
+  choices. For a route without service tiers, clear `service_tiers` and
+  `additional_speed_tiers`, and set `default_service_tier` to `null`.
+- Preserve upstream instructions and tool settings unless you have tested a
+  replacement. Metadata doesn't add model capabilities or grant inference access.
+
+For a gateway model alias, see how to
+[supply model metadata](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway#use-a-model-catalog-for-custom-names).
+Test the resulting catalog with each supported Codex version.
+
+#### Use the public Rust types
+
+Use crates from the same public Git tag or commit as the client's schema:
+
+- Use [`codex-protocol`](https://github.com/openai/codex/tree/rust-v0.162.1/codex-rs/protocol) for `codex_protocol::openai_models::{ModelsResponse, ModelInfo}`. Parse with `serde_json::from_slice::()`, edit `catalog.models`, and serialize the whole wrapper with `serde_json::to_vec()`. The wrapper handles compatibility fields for model instructions.
+- Use [`codex-models-manager::bundled_models_response()`](https://github.com/openai/codex/blob/rust-v0.162.1/codex-rs/models-manager/src/lib.rs) to load that revision's static bundled catalog as a `ModelsResponse`. It doesn't fetch current upstream defaults.
 
 #### Related docs
 
@@ -52214,15 +52164,11 @@ Connect directly to Amazon Bedrock, configure Bedrock in GovCloud, or deploy an 
 
 - [Amazon Bedrock](https://learn.chatgpt.com/docs/amazon-bedrock): Configure supported local clients to use models available through Bedrock.
 
-- [Bedrock GovCloud configuration](https://learn.chatgpt.com/docs/enterprise/govcloud-configuration): Configure local Codex workflows with Amazon Bedrock in AWS GovCloud.
+- [GovCloud deployment](https://learn.chatgpt.com/docs/enterprise/govcloud-configuration): Configure local Codex workflows with Amazon Bedrock in AWS GovCloud.
 
 - [Connect to a gateway](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway): Connect to your organization's model gateway with or without ChatGPT sign-in.
 
 - [Roll out a gateway](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway): Configure model routes, issue credentials, and deploy Codex through your organization’s gateway.
-
-- [Gateway compatibility](https://learn.chatgpt.com/docs/enterprise/gateway-compatibility): Check the Responses API behavior required for model requests, streaming, and tool calls.
-
-- [Bedrock through LiteLLM](https://learn.chatgpt.com/docs/enterprise/bedrock-through-litellm): Configure a LiteLLM gateway to route Codex model requests to Amazon Bedrock.
 
 #### ChatGPT EDU
 
@@ -53009,8 +52955,8 @@ This page covers direct access to Bedrock. If your organization already
 provides a model gateway, follow [Connect to a gateway without ChatGPT
 sign-in](https://learn.chatgpt.com/docs/enterprise/connect-to-a-gateway). That path supports native
 gateway OAuth with your organization's identity provider; the gateway manages
-the Bedrock credentials. To configure a gateway backed by Bedrock, see
-[Bedrock through LiteLLM](https://learn.chatgpt.com/docs/enterprise/bedrock-through-litellm).
+the Bedrock credentials. For deployment guidance, see [Roll out a
+gateway](https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway).
 
 #### How it works
 
@@ -53035,9 +52981,25 @@ Make sure you have:
 Check the model-specific IAM requirements. For example, GPT-6 Sol through Runtime
 also requires `bedrock:InvokeModel` on the account's default project. See AWS's [GPT-6 Sol setup instructions](https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-sol.html).
 
-#### Configure the provider
+#### Set up Codex with Amazon Bedrock
 
-Codex allows you to configure the provider by setting `model_provider` in `~/.codex/config.toml`. The ChatGPT desktop app, Codex CLI, IDE extension, and SDK read the same local configuration layers.
+#### Choose Amazon Bedrock as your provider
+
+If Codex already uses your AWS credentials for Bedrock, [verify your connection](#verify-your-connection). For first-time setup or a signed-out CLI session:
+
+1. Start `codex`. On the sign-in screen, choose **Use Amazon Bedrock**.
+2. Choose a detected AWS profile or credentials, or select a credential method. If Codex finds no credentials, choose **AWS profile**, **AWS access keys**, **Environment variables**, or **Bedrock API key**.
+3. Follow the prompts for your credential method. Enter the AWS Region when prompted. If you choose environment variables, set them in your shell and restart Codex.
+
+4. On **Sign in another way**, select **Use Amazon Bedrock**.
+
+5. On **Set up Amazon Bedrock**, open **Choose sign-in method**. Choose **AWS profile**, **AWS access keys**, or **Bedrock API key**. For an AWS profile, enter the profile name and AWS Region, then select **Continue**.
+
+6. Open a new task and [verify setup](#verify-setup). If your organization supplies a configuration file, follow the [manual configuration steps](#configure-bedrock-manually).
+
+#### Configure Bedrock manually
+
+The ChatGPT desktop app, Codex CLI, IDE extension, and SDK read the same local configuration layers. To configure the provider manually or change endpoints, edit `~/.codex/config.toml`.
 
 Choose the provider for the Amazon Bedrock endpoint you want to use: Bedrock
 Runtime for cross-Region inference (CRIS), or Bedrock Mantle for in-Region inference.
@@ -53056,29 +53018,7 @@ Hosted web search isn't available on Bedrock Runtime. If you need it, use
 [Bedrock Mantle](#use-mantle-for-hosted-web-search). The `amazon-bedrock`
 provider selects Mantle; `amazon-bedrock-runtime` selects Runtime.
 
-#### Use Mantle for hosted web search
-
-For the Bedrock Mantle endpoint:
-
-```toml
-model_provider = "amazon-bedrock"
-web_search = "cached"
-```
-
-#### Choose a model
-
-Codex uses the configured `model_provider` to choose which models appear in the
-model picker: models supported through the Bedrock Runtime endpoint for
-`amazon-bedrock-runtime`, or through the Bedrock Mantle endpoint for
-`amazon-bedrock`.
-
-You can optionally specify a [supported model](#supported-models) in the
-configuration file. The built-in provider supplies its own model catalog.
-When switching endpoints, change the provider and any explicit model ID together.
-
-Model availability varies by AWS Region. Refer to AWS [Regional availability by models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-region-compatibility.html#model-regions-openai).
-
-#### Authentication options
+#### Configure AWS credentials
 
 Local ChatGPT Work and Codex surfaces support two Bedrock authentication paths.
 They check them in this order:
@@ -53086,13 +53026,13 @@ They check them in this order:
 1. Bedrock API key.
 2. AWS SDK credential chain.
 
-#### Option 1: Bedrock API key
+#### Bedrock API key
 
 Set the Bedrock API key in the environment the local client reads. You must
 specify a Region when using API-key authentication.
 
 ```shell
-export AWS_BEARER_TOKEN_BEDROCK=<your-bedrock-api-key>
+export AWS_BEARER_TOKEN_BEDROCK="<your-bedrock-api-key>"
 export AWS_REGION=us-east-2
 ```
 
@@ -53103,12 +53043,6 @@ $env:AWS_BEARER_TOKEN_BEDROCK = "<your-bedrock-api-key>"
 $env:AWS_REGION = "us-east-2"
 ```
 
-#### Option 2: AWS SDK credentials
-
-Use this path when your organization manages Bedrock access through the AWS SDK
-credential chain. The local client can use these standard AWS SDK credential
-sources:
-
 #### Shared AWS configuration files
 
 Configure the shared AWS `config` and `credentials` files:
@@ -53117,14 +53051,19 @@ Configure the shared AWS `config` and `credentials` files:
 aws configure
 ```
 
-#### Environment variables
+#### AWS access keys
 
-Set the standard AWS SDK credential environment variables:
+Set your AWS access keys as environment variables:
 
 ```shell
-export AWS_ACCESS_KEY_ID=<your-access-key-id>
-export AWS_SECRET_ACCESS_KEY=<your-secret-access-key>
-export AWS_SESSION_TOKEN=<your-session-token>
+export AWS_ACCESS_KEY_ID="<your-access-key-id>"
+export AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
+```
+
+For temporary credentials, also set the session token:
+
+```shell
+export AWS_SESSION_TOKEN="<your-session-token>"
 ```
 
 #### AWS Management Console credentials
@@ -53158,11 +53097,24 @@ shell. Put required values in `~/.codex/.env`, then restart the app or
 extension. On Windows, the default path is `%USERPROFILE%\.codex\.env`.
 
 ```shell
-export AWS_BEARER_TOKEN_BEDROCK=<your-bedrock-api-key>
+export AWS_BEARER_TOKEN_BEDROCK="<your-bedrock-api-key>"
 export AWS_REGION=us-east-2
 ```
 
-#### Verify setup
+#### Choose a model
+
+Codex uses the configured `model_provider` to choose which models appear in the
+model picker: models supported through the Bedrock Runtime endpoint for
+`amazon-bedrock-runtime`, or through the Bedrock Mantle endpoint for
+`amazon-bedrock`.
+
+You can optionally specify a [supported model](#supported-models) in the
+configuration file. The built-in provider supplies its own model catalog.
+When switching endpoints, change the provider and any explicit model ID together.
+
+Model availability varies by AWS Region. Refer to AWS [Regional availability by models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-region-compatibility.html#model-regions-openai).
+
+#### Verify your connection
 
 - In Codex CLI, open `/status` and confirm the model provider matches your
   endpoint: `amazon-bedrock` for Mantle in-Region inference, or
@@ -53304,6 +53256,15 @@ inference only.
   require ChatGPT authentication, including Codex Security, are available.
   Plugins that require ChatGPT authentication, connectors, or cloud-hosted
   sharing aren't available.
+
+#### Use Mantle for hosted web search
+
+For the Bedrock Mantle endpoint:
+
+```toml
+model_provider = "amazon-bedrock"
+web_search = "cached"
+```
 
 #### Troubleshooting
 
