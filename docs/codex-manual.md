@@ -820,6 +820,12 @@ Source: [What's new](https://learn.chatgpt.com/docs/whats-new.md)
 
 For every versioned update, bug fix, and minor improvement, see the [ChatGPT and Codex changelog](https://learn.chatgpt.com/docs/changelog) and [API changelog](https://developers.openai.com/api/docs/changelog).
 
+#### November 9–13, 2026
+
+#### Set custom instructions for your dot
+
+Tell your dot how you’d like it to respond and work with you. You can ask it to update your instructions in conversation or edit them in **Customize → Behavior**. [Learn how to set custom instructions](https://learn.chatgpt.com/docs/dots/controls).
+
 #### [November 2–6, 2026](https://learn.chatgpt.com/docs/whats-new/november-2-6-2026)
 
 #### Reply to your dot from an iOS notification
@@ -3727,6 +3733,33 @@ ways to help. The tools it uses for that research can't send messages, change
 app content, or control your browser or computer. Any follow-up action is
 subject to the same permissions and safety requirements.
 
+#### Set custom instructions
+
+Custom instructions are specific to your dot. Use them to set how your dot
+works, such as your preferred writing style, how often it checks in, or when it
+asks before taking an action. Your dot's instructions are separate from your
+ChatGPT custom instructions.
+
+Tell your dot in chat what you'd like it to remember as an ongoing instruction.
+For example, “When you finish a task, link to the result and tell me what needs
+my attention.” You can also ask your dot to update an instruction later.
+
+On mobile, when **Behavior** is available, you can review your dot's
+instructions in **Customize** and edit them if editing is enabled:
+
+1. Open the sidebar and select **Customize** > **Behavior**.
+2. If you see tabs for ChatGPT and your dot, select your dot's name.
+3. Enter your preferences under **How [your dot's name] handles tasks**.
+4. Select the checkmark (**Save**).
+
+Return to **Customize** > **Behavior** to edit your instructions and save your
+changes. If your mobile app
+doesn't show **Behavior**, update the app or use your dot's chat on desktop or
+web.
+
+Custom rules, where available, let you choose how your dot handles specific
+actions and approvals. See [Set custom rules](#set-custom-rules).
+
 #### Set custom rules
 
 Custom rules are optional controls for specific ongoing boundaries. Start with
@@ -3738,6 +3771,7 @@ After setting up your dot, open custom rules for your app:
 - **Desktop and web:** Open **Settings** > **Personalization** and select
   **Custom rules** under **Permissions**.
 - **iOS and Android:** Open the sidebar, then select **Customize** > **Custom rules**.
+  This option appears when **Behavior** is unavailable.
 
 Select **Add**, describe the action, choose how your dot should handle it,
 and select **Add rule**. The choices are:
@@ -3751,7 +3785,8 @@ and select **Add rule**. The choices are:
 
 For example, you could choose **Ask before taking action** for sending messages
 to customers, or **Hand off to you** for deleting shared project files. Use your
-conversation for preferences such as writing style or how you like updates;
+conversation or [custom instructions](#set-custom-instructions) for preferences
+such as writing style or how you like updates;
 custom rules control when your dot can take an action.
 
 Saved custom rules apply to your dot in the same account. They can give your
@@ -25477,6 +25512,21 @@ People can select part of a page, add a comment, and send it in Context to Codex
 As a developer, you can use the Browser Annotation API to provide context or controls specific to your application. For
 example, you can attach previews for component variants in a design system preview for developers to know how to update the components on a website.
 
+The examples use TypeScript. Save a copied example as `annotations.ts` and compile it for the browser:
+
+```bash
+npm install --save-dev esbuild
+npx esbuild annotations.ts --format=esm --outfile=annotations.js
+```
+
+Load the compiled module after adding the example's HTML elements to your page:
+
+```html snippet=setup reason="Load the compiled example module on a page with the documented HTML elements."
+<script type="module" src="./annotations.js"></script>
+```
+
+If your application already builds TypeScript, include the example in that build instead.
+
 To get help understanding the Browser Annotation API or adding annotation support to your website, install the Annotations Extensibility plugin.
 
 Install the Annotations Extensibility plugin
@@ -25651,13 +25701,9 @@ Run the script after both elements exist:
 <button id="discuss-delivery" type="button" hidden>Explain more</button>
 ```
 
-```javascript
-const summary = /** @type {HTMLElement} */ (
-  document.getElementById("delivery-summary")
-);
-const button = /** @type {HTMLButtonElement} */ (
-  document.getElementById("discuss-delivery")
-);
+```typescript
+const summary = document.getElementById("delivery-summary") as HTMLElement;
+const button = document.getElementById("discuss-delivery") as HTMLButtonElement;
 
 button.hidden = typeof document.oai?.annotation?.request !== "function";
 
@@ -25721,13 +25767,9 @@ an `oai-annotation-container-text` attribute:
 
 Run this script after both elements exist:
 
-```javascript
-const passage = /** @type {HTMLElement} */ (
-  document.getElementById("draft-passage")
-);
-const button = /** @type {HTMLButtonElement} */ (
-  document.getElementById("discuss-passage")
-);
+```typescript
+const passage = document.getElementById("draft-passage") as HTMLElement;
+const button = document.getElementById("discuss-passage") as HTMLButtonElement;
 
 button.hidden = typeof document.oai?.annotation?.request !== "function";
 
@@ -25814,22 +25856,20 @@ the cards directly; selection attributes aren't required:
 
 Run this script after creating the preview:
 
-```javascript
-const preview = /** @type {HTMLElement} */ (
-  document.getElementById("component-preview")
-);
+```typescript
+const preview = document.getElementById("component-preview") as HTMLElement;
 const annotation = document.oai?.annotation;
 
-/** @param {CustomEvent<{ callback: string; value: number | string }>} event */
-function previewSpacing(event) {
-  const { callback, value } = event.detail;
+function previewSpacing(event: Event) {
+  const { callback, value } = (
+    event as CustomEvent<{ callback: string; value: number | string }>
+  ).detail;
   if (callback === "setCardPadding") {
     preview.style.setProperty("--card-padding", `${value}px`);
   }
 }
 
-/** @type {{ dispose(): void } | undefined} */
-let registration;
+let registration: { dispose(): void } | undefined;
 if (typeof annotation?.registerControls === "function") {
   preview.addEventListener("oaiannotationcontrolchange", previewSpacing);
   registration = annotation.registerControls({
@@ -25884,10 +25924,8 @@ selection attributes or metadata. Run the script after the paragraph exists:
 <p id="email-draft">Draft a follow-up email about the project timeline.</p>
 ```
 
-```javascript
-const draft = /** @type {HTMLElement} */ (
-  document.getElementById("email-draft")
-);
+```typescript
+const draft = document.getElementById("email-draft") as HTMLElement;
 const registration = document.oai?.annotation?.registerControls?.({
   targets: draft,
   controlsHeading: "Email options",
@@ -26069,13 +26107,9 @@ and a stable object ID. Put the script after the canvas:
 </canvas>
 ```
 
-```javascript
-const canvas = /** @type {HTMLCanvasElement} */ (
-  document.getElementById("revenue-canvas")
-);
-const context = /** @type {CanvasRenderingContext2D} */ (
-  canvas.getContext("2d")
-);
+```typescript
+const canvas = document.getElementById("revenue-canvas") as HTMLCanvasElement;
+const context = canvas.getContext("2d") as CanvasRenderingContext2D;
 const bar = { x: 40, y: 60, width: 320, height: 100 };
 
 context.fillStyle = "#2563eb";
@@ -26167,9 +26201,14 @@ selection feedback. It doesn't require the optional context fields.
 For the canvas above, define this function and add
 `renderSelection: renderRevenueSelection` to the `registerSurface()` options:
 
-```javascript
-/** @param {{ hoveredId: string | null; selectedId: string | null }} selection */
-function renderRevenueSelection({ hoveredId, selectedId }) {
+```typescript
+function renderRevenueSelection({
+  hoveredId,
+  selectedId,
+}: {
+  hoveredId: string | null;
+  selectedId: string | null;
+}) {
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.fillStyle = "#2563eb";
   context.fillRect(bar.x, bar.y, bar.width, bar.height);
@@ -26218,21 +26257,20 @@ then run the script after it exists:
 </button>
 ```
 
-```javascript
-const button = /** @type {HTMLButtonElement} */ (
-  document.getElementById("toggle-annotations")
-);
+```typescript
+const button = document.getElementById(
+  "toggle-annotations"
+) as HTMLButtonElement;
 const annotation = document.oai?.annotation;
 
-/** @param {boolean} active */
-function renderMode(active) {
+function renderMode(active: boolean) {
   button.textContent = active
     ? "Exit annotation mode"
     : "Enter annotation mode";
 }
 
-/** @param {CustomEvent<{ active: boolean }>} event */
-const onModeChange = (event) => renderMode(event.detail.active);
+const onModeChange = (event: Event) =>
+  renderMode((event as CustomEvent<{ active: boolean }>).detail.active);
 const onClick = () => annotation?.toggle(!annotation.isActive());
 
 if (
@@ -26798,10 +26836,10 @@ Alex — Moonwaffle work:     prf_8d7e4b19
 
 These example IDs do not encode profile labels or internal relationships. They are persisted once per profile and reused across reconnection, token refresh, and changes to email or display name.
 
-**Build the response from the authenticated profile.** This JavaScript example shows handler logic you can connect to your MCP SDK. `loadAuthenticatedProfile` is your application’s integration code: it validates the request credentials, enforces their permissions, and retrieves the corresponding profile’s persisted ID and display metadata. `requestContext` comes from your server’s request handling; it is not a model-supplied tool argument.
+**Build the response from the authenticated profile.** This TypeScript example shows handler logic you can connect to your MCP SDK. `loadAuthenticatedProfile` is your application’s integration code: it validates the request credentials, enforces their permissions, and retrieves the corresponding profile’s persisted ID and display metadata. `requestContext` comes from your server’s request handling; it is not a model-supplied tool argument.
 
-```javascript
-async function getProfile(requestContext) {
+```typescript
+async function getProfile(requestContext: { token: string }) {
   // Your auth/provider integration validates credentials and loads
   // the existing profile. Auth failures use normal MCP auth handling.
   const account = await loadAuthenticatedProfile(requestContext);
@@ -30253,10 +30291,14 @@ npm install standardwebhooks
 
 Pass a `webhookFetch` function with the same interface as `fetch` that validates callback addresses on each connection and blocks redirects.
 
-```javascript
+```typescript
 import { Webhook } from "standardwebhooks";
 
-export async function sendEvent(subscription, event, webhookFetch) {
+export async function sendEvent(
+  subscription: { id: string; url: string; secret: string },
+  event: { eventId: string },
+  webhookFetch: typeof fetch
+) {
   const body = JSON.stringify(event);
   if (Buffer.byteLength(body, "utf8") > 256 * 1024) {
     throw new Error("Event payload exceeds 256 KiB");
@@ -30770,13 +30812,13 @@ server](https://developers.openai.com/plugins/build/chatgpt-ui#layer-on-chatgpt-
 
 #### Build an MCP server
 
-Install the official Python or Node MCP SDK to create a server and expose a `/mcp` endpoint.
+Install the official Python or TypeScript MCP SDK to create a server and expose a `/mcp` endpoint.
 
-In this quickstart, we'll use the [Node SDK](https://github.com/modelcontextprotocol/typescript-sdk).
+In this quickstart, we'll use the [TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk).
 
 If you're using Python, refer to our [examples repository on GitHub](https://github.com/openai/openai-apps-sdk-examples) to see an example MCP server with the Python SDK.
 
-Install the Node SDK, MCP Apps helpers, and the `zod` package with:
+Use Node.js 22.6 or later. Install the TypeScript SDK, MCP Apps helpers, and the `zod` package with:
 
 ```bash
 npm install @modelcontextprotocol/sdk @modelcontextprotocol/ext-apps zod
@@ -30786,9 +30828,9 @@ npm install @modelcontextprotocol/sdk @modelcontextprotocol/ext-apps zod
 
 Register a resource for your component bundle and the tools the model can call (for example, `add_todo` and `complete_todo`) so ChatGPT can drive the UI.
 
-Create a file named `server.js` and paste the following example that uses the Node SDK:
+Create a file named `server.ts` and paste the following example that uses the TypeScript SDK:
 
-```javascript
+```typescript
 import { createServer } from "node:http";
 import { readFileSync } from "node:fs";
 import {
@@ -30820,11 +30862,11 @@ const todoOutputSchema = {
   ),
 };
 
-let todos = [];
+let todos: { id: string; title: string; completed: boolean }[] = [];
 let nextId = 1;
 
-const replyWithTodos = (message) => ({
-  content: message ? [{ type: "text", text: message }] : [],
+const replyWithTodos = (message: string) => ({
+  content: message ? [{ type: "text" as const, text: message }] : [],
   structuredContent: { tasks: todos },
 });
 
@@ -30976,7 +31018,7 @@ Usually, you can run a build command such as `npm run build` to produce a `dist`
 
 In this quickstart, since we're using vanilla HTML, no build step is required.
 
-Start the MCP server on `http://localhost:/mcp` from the directory that contains `server.js` (or `server.ts`).
+Start the MCP server on `http://localhost:/mcp` from the directory that contains `server.ts`.
 
 Make sure you have `"type": "module"` in your `package.json` file:
 
@@ -30994,7 +31036,7 @@ Make sure you have `"type": "module"` in your `package.json` file:
 Then run the server with the following command:
 
 ```bash
-node server.js
+node --experimental-strip-types server.ts
 ```
 
 The server should print `Todo MCP server listening on http://localhost:8787/mcp` once it is ready.
@@ -50159,6 +50201,12 @@ We’re developing additional rules in Agent Security so admins can choose which
 | **Zero data retention**                                                                                                                                                    | Neither dots nor Work with local computer access provides strict zero data retention.                                                                                                                                                                   |
 | **FedRAMP**                                                                                                                                                                | Dots are unavailable in FedRAMP workspaces.                                                                                                                                                                                                             |
 
+#### EKM coverage for the dot’s cloud computer
+
+For eligible workspaces with EKM enabled, your workspace’s customer-managed key protects saved cloud computer snapshots and saved browser cookies at rest. Browser cookies are stored separately from snapshots.
+
+The same access controls that protect other OpenAI services handling customer data also apply to the running cloud computer.
+
 #### Manage who can use and direct a dot
 
 - **Workspace access:** During the admin preview, access to dots is off by default. To enable it for a group, grant Use dots on the group’s custom role.
@@ -50306,7 +50354,7 @@ The cloud browser keeps its own cookies, separate from the browser on your devic
 | Space files                                            | Saved files follow the Enterprise workspace retention policy. Opening, downloading or reattaching an existing Space file [does not restart its retention period](https://help.openai.com/en/articles/20001052-using-library-to-manage-files-in-chatgpt).                                                                            | The member deletes the file in Space. Compliance admins can delete it through the Space API. The file can also expire under workspace policy.                                                                                                                                                                                                                                         | The Space file survives dot deletion. After Space deletion, permanent removal is scheduled within 30 days, with exceptions for data already de-identified and disassociated, or retained for security or legal obligations. See Backups below.                                                                                                                                                                                                              |
 | Cached files and Outputs                               | The dot chat can keep a separate copy of a Space file. Space’s retention and deletion controls apply to the Space copy.                                                                                                                                                                                                             | Deleting the Space file, even from Trash, does not trigger deletion of the dot-chat cache. No separate self-service removal procedure is confirmed.                                                                                                                                                                                                                                   | A file may remain listed in Outputs after the Space copy is deleted. The dot-owned cached copy is deleted within 30 days of dot deletion. A separate way to clear the listing remains unconfirmed.                                                                                                                                                                                                                                                          |
 | Cloud computer files and browser state                 | The dot’s cloud disk can retain files and browser state. Snapshot expiry depends on workspace configuration.                                                                                                                                                                                                                        | Deleting a dot deletes its cloud browser and computer.                                                                                                                                                                                                                                                                                                                                | The dot’s cloud-computer data, disk, browser state, snapshots, and backups are deleted within 30 days of dot deletion. Copies saved elsewhere follow their destination’s policy.                                                                                                                                                                                                                                                                            |
-| VM snapshots                                           | For eligible workspaces with data residency, Enterprise Key Management (EKM), or both, the enabled control wipes snapshots on a five-day cycle, with a seven-day maximum.                                                                                                                                                           | The platform expires snapshots automatically. Deleting the dot separately starts the cloud-computer deletion process.                                                                                                                                                                                                                                                                 | For workspaces without data residency or EKM, there is no maximum age for an active dot’s snapshots. They may remain for as long as the dot exists, and customers cannot currently request an early purge. Snapshots are deleted within 30 days after the dot is deleted.                                                                                                                                                                                   |
+| Cloud computer snapshots                               | For eligible workspaces with data residency, Enterprise Key Management (EKM), or both, the enabled control wipes snapshots on a five-day cycle, with a seven-day maximum.                                                                                                                                                           | The platform expires snapshots automatically. Deleting the dot separately starts the cloud-computer deletion process.                                                                                                                                                                                                                                                                 | For workspaces without data residency or EKM, there is no maximum age for an active dot’s snapshots. They may remain for as long as the dot exists, and customers cannot currently request an early purge. Snapshots are deleted within 30 days after the dot is deleted.                                                                                                                                                                                   |
 | Backups                                                | Space backups have a separate documented window. Dot-owned backups are deleted within 30 days of dot deletion.                                                                                                                                                                                                                      | When a Space file is deleted, expires or becomes inactive, the active Compliance API stops returning it. The platform manages backup expiry.                                                                                                                                                                                                                                          | A Space backup may remain for up to 30 additional days, or longer for security or legal obligations. Dot-owned backups are deleted within 30 days of dot deletion.                                                                                                                                                                                                                                                                                          |
 | Delegated Work and Codex threads                       | Hosted [Work](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security#data-handling-and-retention) and [Codex](https://learn.chatgpt.com/docs/auth#openai-authentication) threads follow the workspace’s retention policy. [Device-only records](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-local-security#data-handling-and-retention) follow local storage and backup policies. | The workspace policy governs when hosted threads expire. For Codex Cloud, see the [workspace retention guidance](https://learn.chatgpt.com/docs/auth#openai-authentication). Deleting a dot leaves its delegated Codex and Work threads intact.                                                                                                                                                               | When a Codex chat is deleted in the desktop app, OpenAI schedules it for permanent deletion from its systems within 30 days, subject to [published exceptions](https://help.openai.com/en/articles/20001333-archiving-and-deleting-codex-chats-in-the-chatgpt-app). Work Cloud schedules deleted chats for permanent deletion within 30 days, subject to [published exceptions](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security#data-handling-and-retention). |
 | Pages in Spaces                                        | Space pages persist until someone deletes them; the workspace chat retention period does not expire them.                                                                                                                                                                                                                           | A page’s [creator or owner](https://help.openai.com/en/articles/20001544-chatgpt-space-sharing-data-and-controls) can move it and its subpages to Trash. Delete separately saved attachments in their own location. Members can delete their own saved Space files. Compliance admins with the [required API permissions](https://learn.chatgpt.com/docs/enterprise/chatgpt-space) can delete eligible files. | Space purges a page on permanent deletion or after 30 days in Trash. Pages trashed before the October 1 rollout require manual deletion. Deleting the page leaves separately stored attachments in place.                                                                                                                                                                                                                                                   |
@@ -53642,7 +53690,7 @@ model = "openai.gpt-daybreak-blue-5.6-sol"
 region = "us-east-2"
 ```
 
-For approved Daybreak Red access to GPT-5.6-Cyber, replace the model ID with
+For approved Daybreak Red access to GPT-5.6 Cyber, replace the model ID with
 `openai.gpt-5.6-cyber` and keep the same provider and Region. Keep your
 [AWS authentication](#authentication-options) configured, then
 [verify the selected provider and model](#verify-setup).
