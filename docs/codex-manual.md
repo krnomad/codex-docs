@@ -4430,7 +4430,7 @@ Access depends on your plan, region, and workspace settings. Dots are rolling ou
 
 - **Pro 100, Pro 200, and Pro 500:** For users aged 18 and older outside the European Economic Area, United Kingdom, and Switzerland.
 - **Business Premium:** Available in supported ChatGPT regions, subject to workspace eligibility.
-- **Enterprise, Edu, and Healthcare:** Generally available in eligible workspaces. Workspaces with UAE data or inference residency are ineligible. During the admin preview, your admin can enable access for your role. Starting November 18, 2026, access is on by default unless your workspace opts out.
+- **Enterprise, Edu, and Healthcare:** Generally available in eligible workspaces. For current workspace eligibility and regional availability, see [Getting started with your dot](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot) and [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt). During the admin preview, your admin can enable access for your role. Starting November 18, 2026, access is on by default unless your workspace opts out.
 
 For Pro and Business Premium, conversations with your dot don’t count toward your ChatGPT usage limits. Tasks your dot starts or manages in Work or Codex count toward those products’ usage limits as usual. Your plan includes an allowance for deeper work, with extended limits for the first month after launch. For Enterprise pricing and delegated task charges, see [Enterprise preview and billing](https://learn.chatgpt.com/docs/enterprise/dots-admin-guide#enterprise-preview-and-billing).
 
@@ -5793,14 +5793,10 @@ can show how findings changed, but a missing finding alone doesn't verify a fix.
 
 #### What does incomplete coverage mean
 
-In `scan-manifest.json`, check `scan.status` to see whether the scan finished.
-`scan.scope` records the configured scope. `scan.review.excludedPaths` lists
-path patterns the scan excluded from review. Check `scan.scope.limitations` for recorded
-gaps, such as a deep scan reaching its deadline before any review finished.
-
-Coverage gaps don't change a completed scan's exit code. Exit `0` doesn't mean
-every file was reviewed. A later scan can't establish that an earlier finding
-no longer exists when it doesn't cover that finding's original path.
+A scan can exit with code `0` without reviewing every file. Check
+`scan.scope.limitations` in `scan-manifest.json` for recorded coverage gaps.
+If you're checking an earlier finding, make sure the new scan covers its
+original path.
 
 #### Automation and cost
 
@@ -6162,6 +6158,7 @@ usage: codex-security scan [-h] [--auth {auto,chatgpt,api-key}]
                            [--cyber-access-program PROGRAM]
                            [--provider {openai,openrouter,fireworks,amazon-bedrock}]
                            [--path PATH | --diff BASE | --working-tree]
+                           [--exclude-path PATH]
                            [--head HEAD] [--base BASE]
                            [--knowledge-base PATH] [--scan-prompt-file FILE]
                            [--validation-prompt-file FILE] [--rubric FILE]
@@ -6332,6 +6329,7 @@ Choose one target type for each scan.
 | Argument                 | Description                                                                     |
 | ------------------------ | ------------------------------------------------------------------------------- |
 | `--path PATH`            | Scan a path relative to the repository. Repeat the flag for more paths.         |
+| `--exclude-path PATH`    | Exclude a literal repository-relative file or directory. Repeat for more paths. |
 | `--diff BASE`            | Scan committed changes from `BASE` to `--head`. The head defaults to `HEAD`.    |
 | `--head HEAD`            | Set the head revision for `--diff`.                                             |
 | `--working-tree`         | Scan staged and unstaged changes against `--base`. The base defaults to `HEAD`. |
@@ -6341,6 +6339,10 @@ Choose one target type for each scan.
 `--path`, `--diff`, and `--working-tree` are mutually exclusive. `--head`
 requires `--diff`, and `--base` requires `--working-tree`. Deep mode supports
 repository and path targets.
+
+To skip a directory, pass `--exclude-path examples/`. In a project config, add
+`exclude_paths: [examples/]` under `scan`. CLI exclusions replace the configured
+list.
 
 Diff and working-tree scans require the repository argument to be the Git
 worktree root. The selected refs must exist in that checkout.
@@ -8511,6 +8513,9 @@ directory.
 
 The SDK supports repository, path, committed-diff, and working-tree targets.
 The default target is the complete repository.
+
+To skip files or directories, set `excludePaths: ["examples/"]` in the scan
+options.
 
 #### Scan selected paths
 
@@ -41587,7 +41592,7 @@ Check compatibility before enabling sync:
 
 - **Enterprise hooks.** If your rollout depends on hooks, check [which handlers run with cloud orchestration](https://learn.chatgpt.com/docs/hooks#hooks-with-cloud-orchestration). Test the events and failure cases you rely on before enabling access. Review [audit coverage](https://learn.chatgpt.com/docs/enterprise/compliance-api#audit-records-for-local-computer-access-with-work-cloud) separately.
 
-- Data requirements. Local computer access with Work Cloud does not provide strict zero data retention. Data residency and inference residency cover only eligible content and supported workloads, regions, and configurations. Enterprise Key Management (EKM) covers supported stored content in eligible workspaces. Work is not supported with UAE inference residency. If `enforce_residency` is enabled in any cloud policy, **Allow local computer access** is disabled for both Work and dots. This safeguard does not configure workspace residency or, by itself, disable Work Cloud or dots. If your organization requires ZDR, do not enable this feature.
+- Data requirements. Local computer access with Work Cloud does not provide strict zero data retention. For current regional availability and coverage requirements, consult the Help Center’s [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt). If `enforce_residency` is enabled in any cloud policy, **Allow local computer access** is disabled for both Work and dots. This safeguard does not configure workspace residency or, by itself, disable Work Cloud or dots. If your organization requires ZDR, do not enable this feature.
 
 As a workspace owner, review Work permissions for the intended users or groups. Enable Work Cloud, then turn on **Allow local computer access**. Use supported role assignments to grant access. See [Roles and workspace permissions](https://learn.chatgpt.com/docs/enterprise/roles-and-workspace-permissions).
 
@@ -42434,7 +42439,7 @@ No. Local computer access with Work Cloud does not change Codex's existing confi
 
 #### Is sync suitable for a ZDR deployment?
 
-No. Local computer access with Work Cloud does not provide strict zero data retention. Data residency and inference residency cover only eligible content and supported workloads, regions, and configurations. Enterprise Key Management (EKM) covers supported stored content in eligible workspaces. Work is not supported with UAE inference residency. Running a step on a connected computer does not make the workflow a ZDR deployment.
+No. Local computer access with Work Cloud does not provide strict zero data retention. For current regional availability and coverage requirements, consult the Help Center’s [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt). Running a step on a connected computer does not make the workflow a ZDR deployment.
 
 #### Overview
 
@@ -42585,7 +42590,7 @@ permissions and security controls.
 
 ChatGPT Work uses the privacy, security, and data commitments applicable to the customer's ChatGPT workspace, subject to plan, configuration, surface, feature, and region. For ChatGPT Enterprise, this includes [no training on business data by default](https://help.openai.com/en/articles/8983130-what-if-i-want-to-keep-my-history-on-but-disable-model-training), encryption in transit and at rest, workspace-level access controls, and supported audit logging.
 
-For Work with local access, residency applies only to eligible content and supported workloads, regions, and configurations; EKM covers supported stored content in eligible workspaces. Work is not supported with UAE inference residency. This experience does not provide strict zero data retention. Dots have separate beta exclusions and do not support data or inference residency. See [compatibility and data requirements](https://learn.chatgpt.com/docs/enterprise/cloud-local-access#check-compatibility-and-data-requirements). HIPAA and Business Associate Agreement coverage depend on the features and agreement in use.
+For current regional availability and data requirements, use the Help Center as the source of truth: [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt) and [Getting started with your dot](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot). Work with local access does not provide strict zero data retention. Review [compatibility and data requirements](https://learn.chatgpt.com/docs/enterprise/cloud-local-access#check-compatibility-and-data-requirements) before enabling local access. Confirm that the features and agreement in use meet your organization’s requirements.
 
 Connected services have their own retention, logging, access, residency, and compliance requirements. When ChatGPT Work uses plugins, repositories, or third-party systems, evaluate both the ChatGPT workspace controls and the connected system's controls.
 
@@ -43044,7 +43049,7 @@ See [Code and shell sandboxing](https://learn.chatgpt.com/docs/sandboxing?surfac
 
 A conversation using Local computer access with Work Cloud uses cloud coordination even when a tool runs on a connected computer. Review the data sent to the orchestrating service separately from files remaining on the device. Confirm the applicable storage, retention, residency, and audit coverage for the workflow before rollout.
 
-Local computer access with Work Cloud does not provide strict zero data retention. Data residency and inference residency cover only eligible content and supported workloads, regions, and configurations. Enterprise Key Management (EKM) covers supported stored content in eligible workspaces. Work is not supported with UAE inference residency. If your organization requires ZDR, do not enable this feature.
+Local computer access with Work Cloud does not provide strict zero data retention. For current regional availability and coverage requirements, consult the Help Center’s [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt). If your organization requires ZDR, do not enable this feature.
 
 Work Cloud follows the applicable ChatGPT workspace privacy and security protections. See [Enterprise privacy](https://openai.com/enterprise-privacy/).
 
@@ -43068,7 +43073,7 @@ Retained conversation and execution context can help Work resume interrupted tas
 
 Eligible Enterprise and Edu workspaces can use Enterprise Key Management for supported stored content, including supported hosted execution snapshots when customer-managed encryption is required. Coverage varies by data category and deployment. Rotating a key doesn't delete existing data or, by itself, deny access to earlier encrypted content. Revoking or disabling key access is a separate action that can disrupt supported workflows. Neither replaces a retention or deletion policy.
 
-Data residency and inference residency apply only to eligible content and supported workloads, subject to the organization's agreement, region, and configuration. Connected apps, external providers, and some processing or synced indexes can follow separate location rules. Verify support for the product, integration, and region. See [Data residency and inference residency](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt).
+For current regional availability, supported content, and processing coverage, consult the Help Center’s [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt). Review connected services separately before rollout.
 
 OpenAI API [Zero Data Retention](https://developers.openai.com/api/docs/guides/your-data#zero-data-retention) is an API-specific control and doesn't define retention for ChatGPT Work.
 
@@ -43283,7 +43288,7 @@ Review the connection, signed-in account, destination, and action required by th
 
 For Local computer access with Work Cloud, cloud coordination is part of the workflow even when a step runs on the computer. Review conversation data and task context separately from the local files used by a tool. Do not infer that local execution means device-only storage or that every file in a folder is uploaded.
 
-Local computer access with Work Cloud does not provide strict zero data retention. Data residency and inference residency cover only eligible content and supported workloads, regions, and configurations. Enterprise Key Management (EKM) covers supported stored content in eligible workspaces. Work is not supported with UAE inference residency. Confirm the workspace's storage, retention, and audit coverage before rollout. If your organization requires ZDR, do not enable this feature. If `enforce_residency` is enabled in any cloud policy, **Allow local computer access** is disabled for both Work and dots. This safeguard does not configure workspace residency or, by itself, disable Work Cloud or dots.
+Local computer access with Work Cloud does not provide strict zero data retention. For current regional availability and coverage requirements, consult the Help Center’s [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt). Confirm the workspace's storage, retention, and audit coverage before rollout. If your organization requires ZDR, do not enable this feature. If `enforce_residency` is enabled in any cloud policy, **Allow local computer access** is disabled for both Work and dots. This safeguard does not configure workspace residency or, by itself, disable Work Cloud or dots.
 
 Apply your organization's endpoint, file-access, proxy, and data-loss-prevention controls to the specific device and workflow. Confirm whether those controls can prevent sensitive information from entering the task before processing. Audit logs and compliance exports help with monitoring and investigation but do not block processing on their own.
 
@@ -43500,7 +43505,7 @@ See
 
 #### Privacy and data handling
 
-ChatGPT Work follows the privacy, security, and data-handling policies applicable to your ChatGPT workspace. Local computer access with Work Cloud does not provide strict zero data retention. Data residency and inference residency cover only eligible content and supported workloads, regions, and configurations. Enterprise Key Management (EKM) covers supported stored content in eligible workspaces. Work is not supported with UAE inference residency. Conversations, uploaded files, generated files, connected applications, and browser data can have different retention and deletion rules. If `enforce_residency` is enabled in any cloud policy, **Allow local computer access** is disabled for both Work and dots. This safeguard does not configure workspace residency or, by itself, disable Work Cloud or dots.
+ChatGPT Work follows the privacy, security, and data-handling policies applicable to your ChatGPT workspace. Local computer access with Work Cloud does not provide strict zero data retention. For current regional availability and coverage requirements, consult the Help Center’s [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt). Conversations, uploaded files, generated files, connected applications, and browser data can have different retention and deletion rules. If `enforce_residency` is enabled in any cloud policy, **Allow local computer access** is disabled for both Work and dots. This safeguard does not configure workspace residency or, by itself, disable Work Cloud or dots.
 
 For details, see [Enterprise privacy](https://openai.com/enterprise-privacy/),
 [Chat and file retention policies](https://help.openai.com/en/articles/8983778-chat-and-file-retention-policies-in-chatgpt),
@@ -47098,17 +47103,18 @@ Review eligibility, data coverage, and the controls your organization relies on 
 
 #### Review Work and dots eligibility
 
-- **Work:** Residency applies only to eligible content and supported workloads, regions, and configurations. EKM covers supported stored content in eligible workspaces. Confirm coverage for your workflow rather than assuming every local-access step or connected integration is covered. Work is not supported with UAE inference residency. See [Data residency and inference residency](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt) and [Work cloud security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security#data-handling-and-retention).
+Use the Help Center as the source of truth for current eligibility, regional availability, and data requirements:
 
-- **Dots residency:** During the Enterprise beta, dots do not support data residency or inference residency. Eligible workspaces can opt in after acknowledging those limitations; enabling dots does not make their data or processing residency-compliant.
+- **Work:** Review [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt) and [Work cloud security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security#data-handling-and-retention).
+- **Dots:** Review [Getting started with your dot](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot) and [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt), along with the workspace notices shown during setup.
 
-- **Dots exclusions:** Dots are unavailable for FedRAMP workspaces, workspaces with EKM, and workspaces with inference residency set to AE (UAE). HIPAA workspaces can participate if they meet the other eligibility requirements.
+Confirm that your workspace configuration, agreement, and intended workflow meet your organization’s requirements before enabling access.
 
 #### Check data handling and the local-access safeguard
 
 - **Cloud processing:** Work with local access and dots still use cloud coordination. Conversations, tool results, and other task context do not stay exclusively on the connected computer.
 
-- **Residency safeguard:** If any cloud policy enables `enforce_residency`, **Allow local computer access** is unavailable for both Work and dots. This safeguard does not set workspace residency or, by itself, disable Work Cloud or dots. Eligible workspaces can still opt in to dots after acknowledging the beta residency limitations; local access remains blocked.
+- **Residency safeguard:** If any cloud policy enables `enforce_residency`, **Allow local computer access** is unavailable for both Work and dots. This safeguard does not set workspace residency or, by itself, disable Work Cloud or dots.
 
 - **Retention and access to data:** Neither experience provides strict zero data retention. API Zero Data Retention is a separate API control. “Eyes-off” commitments and abuse-monitoring controls are also distinct from zero retention. If a workflow requires no retained data, do not enable it for these experiences.
 
@@ -47547,7 +47553,7 @@ For cloud-browser site rules and controls still in development, see [browser, ne
 
 #### Review availability and data requirements
 
-Before enabling dots, review current availability in [Getting started with your dot](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot) and the workspace notices shown during setup. Review the security guide's [eligibility and data requirements](https://learn.chatgpt.com/docs/enterprise/dots-security#confirm-eligibility-and-data-requirements) for regional, residency, Enterprise Key Management, and HIPAA coverage. Confirm that your workspace configuration, any applicable business associate agreement (BAA), and the intended workflow meet your organization's requirements before enabling access.
+Before enabling dots, review current availability in [Getting started with your dot](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot) and the workspace notices shown during setup. Use the Help Center’s [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt) for current regional availability and coverage; review the security guide’s [eligibility and data requirements](https://learn.chatgpt.com/docs/enterprise/dots-security#confirm-eligibility-and-data-requirements) for additional rollout considerations. Confirm that your workspace configuration, any applicable business associate agreement (BAA), and the intended workflow meet your organization's requirements before enabling access.
 
 Check requirements for the dot itself, tasks it delegates to Work or Codex, and any connected computer. For cloud browser, network, and computer use, see [cloud security](https://learn.chatgpt.com/docs/enterprise/chatgpt-work-cloud-security). For work on employee devices, see [local computer access](https://learn.chatgpt.com/docs/enterprise/cloud-local-access).
 
