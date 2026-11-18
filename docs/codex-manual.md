@@ -3971,6 +3971,8 @@ and when. Asking your dot to draft replies doesn't give it permission to send
 them. A specific instruction can cover future actions within that scope; an
 action outside it needs another decision.
 
+If you use Wallet, you’ll review and approve each payment using biometrics.
+
 Your dot can also research information from apps you've connected to look for
 ways to help. The tools it uses for that research can't send messages, change
 app content, or control your browser or computer. Any follow-up action is
@@ -48619,7 +48621,9 @@ For role creation, assignment, and access checks, see the [role-based access con
 
 5. Under Workspace capabilities, set Use password manager according to your workspace policy.
 
-6. Save, then check access for an intended member.
+6. Wallet is off by default for Enterprise workspaces. Once the setting is available, go to **Admin Console → Permissions → Workspace capabilities → Use Wallet** to give eligible members access. Members must review and approve each Wallet payment using biometrics.
+
+7. Save, then check access for an intended member.
 
 When you enable dots, you may be asked to turn on cloud computer capabilities that are still off. Dots, Work Cloud, and team automations share these permissions. Choose the capabilities your organization's policies allow.
 
@@ -48677,6 +48681,7 @@ Compare the result with the requirements approved by your security team. Resolve
 | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | Access to dots                      | Grant or revoke dots access through workspace permissions.                                                             |
 | Cloud and connected local computers | Control Use a browser, Allow network access, Allow computer use, Use password manager, and local-computer access.      |
+| Wallet                              | Give eligible members access to Wallet. Off by default for Enterprise workspaces.                                      |
 | Messaging and participation         | Enable or disable Slack participation.                                                                                 |
 | Connected apps                      | Set available apps and allowed actions through [Plugin controls](https://learn.chatgpt.com/docs/enterprise/apps-and-connectors).               |
 | Custom dot rules                    | When disabled, members cannot add or edit custom rules, and saved rules do not apply.                                  |
@@ -51490,6 +51495,8 @@ When authorizing a recurring task, name the action, recipients, trigger, and sch
 | Distinguish member-editable rules from enterprise requirements in [Agent Security](https://learn.chatgpt.com/docs/enterprise/agent-security) and from the permissions enforced by the connected service. See [Manage dots in ChatGPT workspaces](https://help.openai.com/en/articles/20001554-manage-dots-in-chatgpt-workspaces) for custom-rule settings. |
 
 - **Delegated work on a local computer.** The delegated thread uses the member’s connected computer. When Computer Use is enabled and the app is approved, selecting “Always allow” lets ChatGPT use the app without asking for access again.
+
+- **Wallet payments.** Even when an admin enables Wallet and a member gives their dot an ongoing instruction, the member must review and approve each Wallet payment using biometrics.
 
 #### Example: Sending the same external email through three routes
 
