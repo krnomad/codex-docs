@@ -4640,13 +4640,15 @@ Give your dot access to the relevant sources and tell it what to keep track of. 
 
 **For workspace admins:** See [Set up dots for work](https://learn.chatgpt.com/docs/enterprise/dots-admin-guide) for workspace setup, permissions, and security and governance guidance.
 
-Access depends on your plan, region, and workspace settings. Dots are rolling out gradually to eligible Pro and Business Premium accounts.
+Access depends on your plan, region, and workspace settings. Dots are rolling out gradually to select Plus users and Business Premium accounts.
 
-- **Pro 100, Pro 200, and Pro 500:** For users aged 18 and older outside the European Economic Area, United Kingdom, and Switzerland.
+- **Pro 100, Pro 200, and Pro 500:** Available to users aged 18 and older outside the European Economic Area, United Kingdom, and Switzerland.
+- **Plus:** Rolling out to select users aged 18 and older outside the European Economic Area, United Kingdom, and Switzerland.
 - **Business Premium:** Available in supported ChatGPT regions, subject to workspace eligibility.
+- **Business Standard:** Dots are available to eligible ChatGPT Business Standard members in supported regions. Each member can create one personal dot in their Business workspace. Usage limits apply.
 - **Enterprise, Edu, and Healthcare:** Generally available in eligible workspaces. For current workspace eligibility and regional availability, see [Getting started with your dot](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot) and [Data residency and inference residency for ChatGPT](https://help.openai.com/en/articles/9903489-data-residency-and-inference-residency-for-chatgpt). During the admin preview, your admin can enable access for your role. Starting November 18, 2026, access is on by default unless your workspace opts out.
 
-For Pro and Business Premium, conversations with your dot don’t count toward your ChatGPT usage limits. Tasks your dot starts or manages in Work or Codex count toward those products’ usage limits as usual. Your plan includes an allowance for deeper work, with extended limits for the first month after launch. For Enterprise pricing and delegated task charges, see [Enterprise preview and billing](https://learn.chatgpt.com/docs/enterprise/dots-admin-guide#enterprise-preview-and-billing).
+For Pro and Business Premium, conversations with your dot don’t count toward your ChatGPT usage limits. Tasks your dot starts or manages in Work or Codex count toward those products’ usage limits as usual. Your plan includes an allowance for deeper work. For Enterprise pricing and delegated task charges, see [Enterprise preview and billing](https://learn.chatgpt.com/docs/enterprise/dots-admin-guide#enterprise-preview-and-billing).
 
 You can create your dot in the ChatGPT mobile app, desktop app, or a desktop browser. Use the latest version of the mobile app for mobile setup. Mobile web is not supported.
 
@@ -14194,6 +14196,8 @@ Set `model` to one available to your signed-in account or workspace. See
 | `otel.exporter..tls.ca-certificate`                           | `string`                                                                                                                                                      |         | CA certificate path for OTEL exporter TLS.                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `otel.exporter..tls.client-certificate`                       | `string`                                                                                                                                                      |         | Client certificate path for OTEL exporter TLS.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `otel.exporter..tls.client-private-key`                       | `string`                                                                                                                                                      |         | Client private key path for OTEL exporter TLS.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `otel.headers_helper`                                         | `string`                                                                                                                                                      |         | Command that returns OTLP/HTTP headers as JSON. Project settings and managed exporters can't use this user setting.                                                                                                                                                                                                                                                                                                                                                                         |
+| `otel.headers_helper_refresh_interval_ms`                     | `integer (positive)`                                                                                                                                          |         | Header helper refresh interval in milliseconds. Defaults to 1740000 (29 minutes).                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `otel.log_agent_responses`                                    | `boolean`                                                                                                                                                     |         | Export final response text from the main agent and spawned subagents to the configured OTLP log exporter. Defaults to `false`. Response text can contain sensitive data and is capped at 64 KiB per response.                                                                                                                                                                                                                                                                               |
 | `otel.log_guardian_assessments`                               | `boolean`                                                                                                                                                     |         | Export completed automatic approval reviews to the configured OTLP log exporter. Defaults to `false`. Review rationales can contain sensitive data and are capped at 64 KiB each.                                                                                                                                                                                                                                                                                                           |
 | `otel.log_sse_deltas`                                         | `boolean`                                                                                                                                                     |         | Log successful server-sent events whose names end in `.delta`. Defaults to `true`. Set to `false` to skip those log entries. Codex still records errors, completion events, and metrics.                                                                                                                                                                                                                                                                                                    |
@@ -14530,6 +14534,8 @@ from either one wins.
 | `otel`                                                       | `table`                                     |         | Enforce the specified OpenTelemetry settings. Each exporter replaces the entire corresponding exporter definition. Span attributes and tracestate fields override only matching entries.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `otel.environment`                                           | `string`                                    |         | Enforce the environment label on telemetry.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `otel.exporter`                                              | `none \| otlp-http \| otlp-grpc`            |         | Enforce the log exporter, including its endpoint, headers, and TLS settings.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `otel.headers_helper`                                        | `string`                                    |         | Absolute path to an OTLP/HTTP header helper in system requirements or MDM. Configure its exporters in the same requirements layer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `otel.headers_helper_refresh_interval_ms`                    | `integer (positive)`                        |         | Managed header helper refresh interval in milliseconds. Defaults to 1740000 (29 minutes).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `otel.log_agent_responses`                                   | `boolean`                                   |         | Control whether OTLP logs include final response text from the main agent and spawned subagents.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `otel.log_guardian_assessments`                              | `boolean`                                   |         | Control whether OTLP logs include completed automatic approval assessments and their rationales.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `otel.log_sse_deltas`                                        | `boolean`                                   |         | Control whether logs include successful server-sent events whose names end in `.delta`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
@@ -15149,6 +15155,30 @@ exporter = { otlp-grpc = {
 ```
 
 If `exporter = "none"` Codex records events but sends nothing. Exporters batch asynchronously and flush on shutdown. Event metadata includes service name, CLI version, env tag, conversation id, model, sandbox/approval settings, and per-event fields (see [Config Reference](https://learn.chatgpt.com/docs/config-file/config-reference)).
+
+#### Refresh collector credentials
+
+To refresh OTLP/HTTP collector credentials, configure a helper command in
+`~/.codex/config.toml`.
+
+```toml
+[otel]
+exporter = { otlp-http = { endpoint = "https://otel.example.com/v1/logs", protocol = "binary" } }
+headers_helper = "/opt/company/bin/otel-auth"
+```
+
+The helper must print a JSON object of string header names and values to standard
+output, such as `{"Authorization":"Bearer example-token"}`.
+
+Codex runs the helper at startup and every 29 minutes. To change the refresh
+interval, set `headers_helper_refresh_interval_ms` to a positive number of
+milliseconds. Helper headers override matching static headers. If a refresh fails or the helper returns invalid headers, affected exports
+pause until the helper succeeds.
+
+The helper supports OTLP/HTTP logs, traces, and metrics. It can't be set in
+project configuration or modify managed exporters. See
+[Managed collector credentials](https://learn.chatgpt.com/docs/enterprise/managed-configuration#managed-collector-credentials)
+for system and MDM deployment.
 
 #### What gets emitted
 
@@ -18701,18 +18731,40 @@ before sharing sensitive information or allowing ChatGPT to act.
 
 #### Inspect a web app in Codex Cloud
 
-When a [Codex Cloud](https://learn.chatgpt.com/docs/cloud) task has browser access, Codex can use a
-browser inside the cloud task to inspect your web app, reproduce a bug, or
-verify a fix. Give Codex the command to start the app in the task, the port,
-and the behavior you want it to check.
+#### Use the cloud browser or computer
 
-For example, ask Codex to open your app's settings page, change and save a
-preference, and reload the page to check whether the change persists. Ask it
-to report what happened and include a screenshot if it helps show the result.
+In a [Codex Cloud](https://learn.chatgpt.com/docs/cloud) task with Browser Use access, ask Codex to
+open a URL, interact with the page, and check the result in the cloud browser.
+If Computer Use is available to the task, you can ask Codex to interact with
+apps on the cloud computer. Both tools run in the cloud. You don't need to
+install Playwright to use either one.
 
-Install the app's dependencies when you [prepare the Cloud environment](https://learn.chatgpt.com/docs/environments/cloud-environments).
-If the page needs an external service, check the environment's network settings
+For example, ask Codex to start your app on port 3000, open
+`http://localhost:3000`, turn on email reminders, and reload the page to
+check that the setting persists. Here, `localhost` refers to the task's
+cloud computer.
+
+If **Desktop** appears in the task's side panel, open it to watch Codex
+work. Select **Take over** to use the mouse and keyboard yourself, then
+**Return control** when you're done. To open just the app in your own
+browser, use a [private HTTP preview](https://learn.chatgpt.com/docs/environments/cloud-environments#preview-an-app-or-connect-over-ssh).
+
+In Enterprise workspaces, Browser Use and Computer Use in Codex Cloud inherit the applicable Global Agent Security requirements. Admins can customize supported execution requirements for Codex Cloud in the policy's `requirements.toml` under **Admin Console** > **Agent Security** > **Codex Cloud** without changing the Global baseline. See [Where Agent Security settings apply](https://learn.chatgpt.com/docs/enterprise/agent-security#where-settings-apply).
+
+#### Run Playwright tests
+
+For repeatable browser tests, you can also ask Codex to run Playwright in
+headless mode. These tests run without opening an interactive browser window
+and don't use Browser Use or Computer Use.
+
+If you choose Playwright, install it in the cloud environment along with its
+browser binaries, system dependencies, and your app's dependencies. If the script needs an external
+service, [check the environment's network settings](https://learn.chatgpt.com/docs/environments/cloud-environments#connect-to-services)
 or use local test data.
+
+Give Codex the command to start the app, the port it listens on, and the test
+command or behavior to verify. For example, ask Codex to run a Playwright test
+that changes a setting, reloads the page, and checks that the change persists.
 
 #### Use the desktop browser
 
@@ -19652,7 +19704,7 @@ environments for these workflows.
 #### Start a task in Codex Cloud
 
 On the web or in the [desktop app](https://learn.chatgpt.com/docs/app), choose **Work in** > **Cloud**.
-On mobile, open **Codex**. If the default environment appears in the picker,
+On mobile, open **Codex**. If **Default environment** appears in the picker,
 select it and describe your task.
 
 - **Without a project**, you can start without a repository. For example, ask
@@ -19672,6 +19724,19 @@ on the web or in the desktop app.
 To use a setup you've already prepared or one shared with you, select the
 published environment instead. In Enterprise workspaces, use a published
 environment you have access to. Admins can [review workspace access](https://learn.chatgpt.com/docs/enterprise/admin-setup#step-5-configure-codex-cloud).
+
+#### Reuse settings from a running task
+
+If **Edit** appears next to **Cloud** under **Environment** in the desktop
+app, you can configure the task without leaving the chat.
+
+1. Select **Edit** and review the repositories, scripts, and access settings.
+2. Select **Apply to this chat** to use your changes in the current task.
+3. To reuse the settings from **Default environment**, select **Save for future
+   chats**, enter a name, and select **Save environment**.
+
+Choose the named environment when you start another task. Reopen the original
+chat to continue working with that task's files.
 
 #### Create and publish an environment
 
@@ -19710,6 +19775,14 @@ Codex can record the tested setup in two fields:
 
 - **Install script:** commands to install dependencies and prepare development assets.
 - **Start skill:** instructions to start services and check that they're ready.
+
+When [Browser Use or Computer Use](https://learn.chatgpt.com/docs/browser#use-the-cloud-browser-or-computer)
+is available, ask Codex to interact with websites or apps on the cloud computer.
+Neither tool requires you to install Playwright.
+
+For repeatable browser tests, you can also [run Playwright tests](https://learn.chatgpt.com/docs/browser#run-playwright-tests).
+If you choose Playwright, install it along with its browser binaries, system
+dependencies, and your app's dependencies.
 
 #### Reuse and update saved state
 
@@ -19984,6 +20057,26 @@ on the web or in the desktop app.
 Reopen the same task to continue its work across devices. Each new task starts in its own workspace. Tasks in Codex Cloud can keep working while
 your computer is asleep.
 
+#### Preview an app or connect over SSH
+
+The controls you see depend on your app version, workspace, and environment.
+To [watch Codex interact with an app](https://learn.chatgpt.com/docs/browser#use-the-cloud-browser-or-computer),
+open **Desktop**. To try the app in your own browser, use **HTTP Previews**
+if available:
+
+1. Ask Codex to start the server and tell you which port it uses.
+2. If the port isn't listed, edit the task's environment. Under **HTTP
+   Previews**, add the port, press Enter, select **Apply**, then select
+   **Apply to this chat**.
+3. Open the port under **HTTP Previews** in the task. Only you can access
+   the private HTTPS link. Remove the port to block new requests to the link.
+
+To connect from a local terminal or editor when **SSH access** is enabled,
+select **Set up SSH** next to **SSH** in the desktop app. Choose a profile
+name and select **Create and copy command**. Codex adds a profile to your
+local SSH configuration. Run the copied command in your terminal or select
+the profile in your editor. Turning off SSH access may leave existing connections active.
+
 #### Start tasks from Slack or Microsoft Teams
 
 In an Enterprise workspace with Cloud delegation enabled, ask `@ChatGPT` in
@@ -20023,11 +20116,11 @@ OpenAI account team for available configurations and pricing.
 
 #### Current limitations
 
-The following capabilities aren't currently supported in cloud environments
-and are on our roadmap:
+[Browser Use and Computer Use](https://learn.chatgpt.com/docs/browser#use-the-cloud-browser-or-computer)
+aren't available in every cloud task. Access to the **Desktop** viewer can
+also vary by app version and workspace.
 
-- Computer use
-- Self-hosted GitHub Enterprise Server
+Cloud environments don't support self-hosted GitHub Enterprise Server.
 
 Skills stored in your repository are available in cloud tasks. Personal skills
 from your local computer aren't synced to cloud environments.
@@ -38791,7 +38884,7 @@ These fields describe the package itself. Keep them at the root of either manife
 | `homepage`    | Optional                                            | Optional HTTPS project homepage, at most 2048 characters. Set the listing’s `interface.websiteURL` separately.                                                                                                                                     |
 | `repository`  | Optional                                            | Optional source repository URL.                                                                                                                                                                                                                    |
 | `license`     | Optional                                            | Optional license identifier, such as MIT.                                                                                                                                                                                                          |
-| `keywords`    | Optional                                            | Optional array of discovery terms.                                                                                                                                                                                                                 |
+| `keywords`    | Optional                                            | Array of discovery terms. Include at most 25 keywords when submitting a plugin or an update for public distribution.                                                                                                                               |
 | `extensions`  | Optional                                            | Settings grouped by namespace. Put OpenAI-specific settings under `com.openai`.                                                                                                                                                                    |
 | `skills`      | For Codex packages with skills                      | Codex only: a relative directory path or array of paths containing skills, such as `"./skills/"`. Portable packages discover `skills/` automatically.                                                                                              |
 | `mcpServers`  | For Codex packages with MCP servers                 | Codex only: `"./.mcp.json"` for bundled MCP server configuration. Portable packages discover root `mcp.json` automatically.                                                                                                                        |
@@ -51361,6 +51454,28 @@ and field name. Higher-priority values win for matching entries. Other
 entries remain available, and an empty metadata table doesn't clear them.
 See [Observability and telemetry](https://learn.chatgpt.com/docs/config-file/config-advanced#observability-and-telemetry)
 for exporter options and log contents.
+
+#### Managed collector credentials
+
+Use a managed header helper to refresh OTLP/HTTP collector credentials.
+
+Install the helper in an administrator-controlled directory and grant Codex
+users permission to execute it. Codex runs it directly from that directory.
+Set its absolute path and the exporters that use it in the same requirements
+layer, either system `requirements.toml` or macOS MDM.
+
+```toml
+[otel]
+headers_helper = "/opt/company/bin/otel-auth"
+exporter = { otlp-http = { endpoint = "https://otel.example.com/v1/logs", protocol = "binary" } }
+```
+
+The helper can supply headers for `exporter`, `trace_exporter`, and
+`metrics_exporter`. If another layer replaces an exporter, the replacement
+uses its own headers. OTLP/gRPC exporters don't use the helper.
+
+See [Refresh collector credentials](https://learn.chatgpt.com/docs/config-file/config-advanced#refresh-collector-credentials)
+for the helper's output format, refresh interval, and failure behavior.
 
 #### Migrate SQLite databases on NFS
 
