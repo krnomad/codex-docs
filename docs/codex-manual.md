@@ -2409,7 +2409,17 @@ sales](https://chatgpt.com/contact-sales?utm_internal_source=openai_developers_c
         0.5 credits
         30 credits
 
-        GPT-Rosalind-Research
+        GPT-6 Rosalind Research *
+        250 credits
+        25 credits
+        1,250 credits
+
+        GPT-5.5 Rosalind Research
+        125 credits
+        12.5 credits
+        625 credits
+
+        GPT-5.5 Rosalind Discovery
         125 credits
         12.5 credits
         625 credits
@@ -2437,6 +2447,8 @@ sales](https://chatgpt.com/contact-sales?utm_internal_source=openai_developers_c
           Cyber](https://learn.chatgpt.com/docs/cyber-safety#trusted-access-for-cyber) approval.
           Daybreak Blue uses GPT-5.6 Sol credit rates. Daybreak Red requires
           separate approval and provisioning.
+
+\* GPT‑6 Rosalind Research promotional pricing is available at least through December 31, 2026.
 
 _GPT-5.6 Sol’s promotional pricing is available at least through November 21, 2026._
 
@@ -2468,7 +2480,11 @@ invitation.
 
 #### How much does Sites cost?
 
-Sites is available in public beta on eligible plans. Availability depends on your region and workspace settings. Hosting is free through December 31, 2026. See [Sites usage and cost](https://learn.chatgpt.com/docs/sites/usage-and-cost) for plan allowances, hosting rates, and a monthly cost estimate.
+Sites is available in public beta on eligible plans. Availability depends on your region and workspace settings.
+
+We plan to show your Sites hosting usage in the app starting January 1, 2027. Hosting is free through January 31, 2027. We plan to start charging Plus, Pro, and Business customers for hosting usage above their monthly allowance on February 1, 2027. Enterprise billing follows your organization’s agreement.
+
+See [Sites usage and cost](https://learn.chatgpt.com/docs/sites/usage-and-cost) for plan allowances, hosting rates, and a monthly cost estimate.
 
 #### How much does Voice cost?
 
@@ -24615,7 +24631,7 @@ For availability and usage limits, see [Creating and managing ChatGPT sites](htt
 
 Source: [Usage and cost](https://learn.chatgpt.com/docs/sites/usage-and-cost.md)
 
-Hosting is free through **December 31, 2026**. Starting **January 1, 2027**, Plus, Pro, and Business customers pay for hosting usage above their monthly allowance. Enterprise billing follows your organization’s agreement.
+We plan to show your Sites hosting usage in the app starting **January 1, 2027**. Hosting is free through **January 31, 2027**. We plan to start charging Plus, Pro, and Business customers for hosting usage above their monthly allowance on **February 1, 2027**. Enterprise billing follows your organization’s agreement.
 
 You can create as many sites as you want. Building and editing them count toward your plan’s [Codex usage](https://learn.chatgpt.com/docs/pricing). Hosting covers the traffic your sites receive and the storage they use.
 
@@ -24634,7 +24650,7 @@ If your Enterprise agreement uses a dollar commitment, Codex tokens and Sites ho
 
 #### Hosting usage rates
 
-Use these approximate credit rates to estimate hosting costs starting January 1, 2027.
+Use these approximate credit rates to estimate hosting costs.
 
 | What you use                                                       | Billing unit             | Approx. credits |
 | ------------------------------------------------------------------ | ------------------------ | --------------- |
@@ -35258,6 +35274,24 @@ function partSelectionSchema(parts: OpenAIFormOption[]): OpenAIForm {
     required: ["part"],
   };
 }
+```
+
+```python
+def part_selection_schema(parts: list[dict[str, str]]) -> dict:
+    return {
+        "type": "object",
+        "properties": {
+            "part": {
+                "type": "string",
+                "title": "Part",
+                "oneOf": parts,
+            },
+        },
+        "required": ["part"],
+    }
+
+
+form = part_selection_schema([{"const": "gear", "title": "Gear"}])
 ```
 
 ```go
