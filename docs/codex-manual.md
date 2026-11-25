@@ -4545,7 +4545,7 @@ You reach the same dot in ChatGPT, Slack, or a call. Changing where you talk to 
 
 Tell your dot where to send different kinds of updates. For example, ask it to keep routine progress in ChatGPT and bring decisions to you in Slack. Explain which changes need your attention, such as a deadline at risk.
 
-Open your dot's profile and select **Add** to connect an available contact method. Texting is rolling out in beta to ChatGPT Pro users in the U.S. See how to [set up texting](https://learn.chatgpt.com/docs/dots/channels#texting) with iMessage or RCS on Android. See [Message your dot](https://learn.chatgpt.com/docs/dots/channels) for other ways to reach it.
+Open your dot's profile and select **Add** to connect an available contact method. Texting is rolling out in beta to ChatGPT Pro users in the U.S., Canada, and Mexico. See how to [set up texting](https://learn.chatgpt.com/docs/dots/channels#texting) with iMessage or RCS on Android. See [Message your dot](https://learn.chatgpt.com/docs/dots/channels) for other ways to reach it.
 
 In Slack, you can DM your dot or mention it in a channel you’ve added it to. By default, it responds to you; you can instruct it to engage with others. Existing permissions and safeguards still apply to what it shares and does. Tell it which channels and events to watch for. Adding it to a channel alone doesn’t start monitoring. See [Message your dot in Slack](https://learn.chatgpt.com/docs/dots/channels#slack) for setup instructions.
 
@@ -4749,7 +4749,7 @@ The action opens ChatGPT and requires authentication. If you switch accounts and
 
 #### Texting
 
-Reach your dot through iMessage or RCS on Android. Texting supports one-to-one conversations. It’s rolling out in beta to ChatGPT Pro users in the U.S.
+Reach your dot through iMessage or RCS on Android. Texting supports one-to-one conversations. It’s rolling out in beta to ChatGPT Pro users in the U.S., Canada, and Mexico.
 
 Your dot can use relevant context from your conversations in ChatGPT and other connected channels, along with the plugins you’ve connected.
 
@@ -36830,6 +36830,61 @@ server.registerTool(
 );
 ```
 
+```python
+import json
+
+from mcp import types
+from mcp.server.lowlevel import Server
+
+server = Server("docs-example", version="1.0.0")
+
+
+@server.list_tools()
+async def list_tools() -> list[types.Tool]:
+    return [
+        types.Tool(
+            name="list_saved_recipes",
+            title="List saved recipes",
+            description="Returns the user's saved recipes without modifying them.",
+            inputSchema={
+                "type": "object",
+                "properties": {},
+                "additionalProperties": False,
+            },
+            outputSchema={
+                "type": "object",
+                "properties": {
+                    "recipes": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": "string"},
+                                "title": {"type": "string"},
+                            },
+                            "required": ["id", "title"],
+                        },
+                    }
+                },
+                "required": ["recipes"],
+            },
+            annotations=types.ToolAnnotations(readOnlyHint=True),
+        )
+    ]
+
+
+@server.call_tool()
+async def call_tool(name: str, arguments: dict) -> types.CallToolResult:
+    if name != "list_saved_recipes":
+        raise ValueError(f"Unknown tool: {name}")
+    # Local example data; replace with your application's saved recipes.
+    output = {"recipes": [{"id": "pasta", "title": "Tomato pasta"}]}
+    return types.CallToolResult(
+        content=[types.TextContent(type="text", text=json.dumps(output))],
+        structuredContent=output,
+    )
+```
+
 ```go
 package main
 
@@ -37236,6 +37291,73 @@ server.registerTool(
     };
   }
 );
+```
+
+```python
+from mcp import types
+from mcp.server.lowlevel import Server
+
+server = Server("docs-example", version="1.0.0")
+
+
+@server.list_tools()
+async def list_tools() -> list[types.Tool]:
+    return [
+        types.Tool(
+            name="recommend_cafe",
+            title="Recommend a cafe",
+            inputSchema={
+                "type": "object",
+                "properties": {},
+                "additionalProperties": False,
+            },
+            outputSchema={
+                "type": "object",
+                "properties": {
+                    "cafes": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {"type": "string"},
+                                "address": {"type": "string"},
+                            },
+                            "required": ["name", "address"],
+                        },
+                    }
+                },
+                "required": ["cafes"],
+            },
+        )
+    ]
+
+
+def recommend_cafe(meta: dict) -> types.CallToolResult:
+    # Client metadata is only a hint. Never use locale or location for authorization.
+    locale = meta.get("openai/locale")
+    location = meta.get("openai/userLocation")
+    city = location.get("city") if isinstance(location, dict) else None
+    if not isinstance(city, str) or not city.strip():
+        city = "your area"
+    cafes = []
+    # Local example data; replace with your application's cafe search.
+    if city == "San Francisco":
+        cafes.append(
+            {"name": "Example Cafe", "address": "123 Example Street, San Francisco"}
+        )
+    prefix = "Cafés en " if locale == "es" else "Cafes in "
+    return types.CallToolResult(
+        content=[types.TextContent(type="text", text=prefix + city)],
+        structuredContent={"cafes": cafes},
+    )
+
+
+@server.call_tool()
+async def call_tool(name: str, arguments: dict) -> types.CallToolResult:
+    if name != "recommend_cafe":
+        raise ValueError(f"Unknown tool: {name}")
+    meta = server.request_context.meta
+    return recommend_cafe(meta.model_dump() if meta is not None else {})
 ```
 
 ```go
