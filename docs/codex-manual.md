@@ -25622,6 +25622,175 @@ func main() {
 }
 ```
 
+```java
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.modelcontextprotocol.json.jackson2.JacksonMcpJsonMapper;
+import io.modelcontextprotocol.server.McpServer;
+import io.modelcontextprotocol.server.McpStatelessServerFeatures;
+import io.modelcontextprotocol.server.transport.DefaultServerTransportSecurityValidator;
+import io.modelcontextprotocol.server.transport.HttpServletStatelessServerTransport;
+import io.modelcontextprotocol.spec.McpSchema;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+
+// UI asset build from src/content/platform/java-examples:
+// ../typescript-examples/node_modules/.bin/esbuild \
+//   ../typescript-examples/apps-sdk-chatgpt-ui/dice-widget.ts \
+//   --bundle --format=esm --outfile=dice-widget.js
+public final class AppsSdkDecoupledDice {
+  public static void main(String[] args) throws Exception {
+    var mapper = new JacksonMcpJsonMapper(JsonMapper.builder().build());
+    // Build the existing TypeScript component first; run from the asset directory.
+    String script = Files.readString(Path.of("dice-widget.js"));
+    script =
+        script.replaceAll("(?i)</script", java.util.regex.Matcher.quoteReplacement("<\\/script"));
+    String html =
+        "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\">"
+            + "<title>Dice</title><body><div id=\"root\"></div><script type=\"module\">"
+            + script
+            + "</script></body></html>";
+    var transport =
+        HttpServletStatelessServerTransport.builder()
+            .jsonMapper(mapper)
+            .messageEndpoint("/mcp")
+            .securityValidator(
+                DefaultServerTransportSecurityValidator.builder()
+                    .allowedHosts(List.of("localhost:*", "127.0.0.1:*"))
+                    .allowedOrigins(List.of("http://localhost:6274", "http://127.0.0.1:6274"))
+                    .build())
+            .build();
+    var resource =
+        McpSchema.Resource.builder()
+            .name("widget")
+            .uri("ui://widget/dice.html")
+            .mimeType("text/html;profile=mcp-app")
+            .build();
+    var builder =
+        McpServer.sync(transport)
+            .serverInfo("Decoupled dice", "1.0.0")
+            .capabilities(
+                McpSchema.ServerCapabilities.builder().tools(false).resources(false, false).build())
+            .resources(
+                new McpStatelessServerFeatures.SyncResourceSpecification(
+                    resource,
+                    (exchange, request) ->
+                        new McpSchema.ReadResourceResult(
+                            List.of(
+                                new McpSchema.TextResourceContents(
+                                    resource.uri(), resource.mimeType(), html)))));
+    String rollSchema =
+"""
+{
+  "type": "object",
+  "properties": {
+    "sides": {
+      "type": "integer",
+      "minimum": 2,
+      "maximum": 2147483647
+    }
+  },
+  "required": [
+    "sides"
+  ]
+}
+""";
+    String renderSchema =
+"""
+{
+  "type": "object",
+  "properties": {
+    "sides": {
+      "type": "integer",
+      "minimum": 2,
+      "maximum": 2147483647
+    },
+    "value": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "required": [
+    "sides",
+    "value"
+  ]
+}
+""";
+    builder.toolCall(
+        McpSchema.Tool.builder()
+            .name("roll_dice")
+            .description("Roll a die without opening a widget.")
+            .inputSchema(mapper, rollSchema)
+            .build(),
+        (exchange, request) -> diceResult(request.arguments(), false));
+    builder.toolCall(
+        McpSchema.Tool.builder()
+            .name("render_dice_widget")
+            .description("Show a previously rolled die.")
+            .inputSchema(mapper, renderSchema)
+            .meta(Map.of("ui", Map.of("resourceUri", resource.uri())))
+            .build(),
+        (exchange, request) -> diceResult(request.arguments(), true));
+    var server = builder.build();
+    var httpServer = new org.eclipse.jetty.server.Server();
+    var connector = new org.eclipse.jetty.server.ServerConnector(httpServer);
+    connector.setHost("127.0.0.1");
+    connector.setPort(3000);
+    httpServer.addConnector(connector);
+    var context = new org.eclipse.jetty.ee10.servlet.ServletContextHandler();
+    context.setContextPath("/");
+    context.addServlet(new org.eclipse.jetty.ee10.servlet.ServletHolder(transport), "/mcp");
+    httpServer.setHandler(context);
+    try {
+      httpServer.start();
+      httpServer.join();
+    } finally {
+      try {
+        server.closeGracefully().block();
+      } finally {
+        httpServer.stop();
+      }
+    }
+  }
+
+  private static int positiveInteger(Object value) {
+    if (!(value instanceof Number number)) return -1;
+    double numeric = number.doubleValue();
+    if (!Double.isFinite(numeric)
+        || numeric != Math.rint(numeric)
+        || numeric < 1
+        || numeric > Integer.MAX_VALUE) return -1;
+    return (int) numeric;
+  }
+
+  private static McpSchema.CallToolResult diceResult(
+      Map<String, Object> arguments, boolean render) {
+    int sides = positiveInteger(arguments.get("sides"));
+    if (sides < 2)
+      return McpSchema.CallToolResult.builder()
+          .isError(true)
+          .addTextContent("sides must be an integer between 2 and 2147483647")
+          .build();
+    int value =
+        render
+            ? positiveInteger(arguments.get("value"))
+            : ThreadLocalRandom.current().nextInt(sides) + 1;
+    if (value < 1 || value > sides)
+      return McpSchema.CallToolResult.builder()
+          .isError(true)
+          .addTextContent("value must be an integer between 1 and sides")
+          .build();
+    return McpSchema.CallToolResult.builder()
+        .content(List.of())
+        .structuredContent(Map.of("sides", sides, "value", value))
+        .isError(false)
+        .build();
+  }
+}
+```
+
 ```ruby
 require "mcp"
 
@@ -26108,6 +26277,115 @@ func main() {
 	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
 		log.Fatal(err)
 	}
+}
+```
+
+```java
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.modelcontextprotocol.json.jackson2.JacksonMcpJsonMapper;
+import io.modelcontextprotocol.server.McpServer;
+import io.modelcontextprotocol.server.McpStatelessServerFeatures;
+import io.modelcontextprotocol.server.transport.DefaultServerTransportSecurityValidator;
+import io.modelcontextprotocol.server.transport.HttpServletStatelessServerTransport;
+import io.modelcontextprotocol.spec.McpSchema;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+
+// UI asset build from src/content/platform/java-examples:
+// ../typescript-examples/node_modules/.bin/esbuild \
+//   ../typescript-examples/apps-sdk-chatgpt-ui/keep-temporary-ui-state-in-the-ui.tsx \
+//   --bundle --format=esm --outfile=web/dist/component.js
+public final class AppsSdkProjectBoard {
+  public static void main(String[] args) throws Exception {
+    var mapper = new JacksonMcpJsonMapper(JsonMapper.builder().build());
+    // Build the existing TypeScript component first; run from the asset directory.
+    String script = Files.readString(Path.of("web/dist/component.js"));
+    script =
+        script.replaceAll("(?i)</script", java.util.regex.Matcher.quoteReplacement("<\\/script"));
+    String html =
+        "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\">"
+            + "<title>Project board</title><body><div id=\"root\"></div><script type=\"module\">"
+            + script
+            + "</script></body></html>";
+    var transport =
+        HttpServletStatelessServerTransport.builder()
+            .jsonMapper(mapper)
+            .messageEndpoint("/mcp")
+            .securityValidator(
+                DefaultServerTransportSecurityValidator.builder()
+                    .allowedHosts(List.of("localhost:*", "127.0.0.1:*"))
+                    .allowedOrigins(List.of("http://localhost:6274", "http://127.0.0.1:6274"))
+                    .build())
+            .build();
+    var resource =
+        McpSchema.Resource.builder()
+            .name("widget")
+            .uri("ui://project-board/v1.html")
+            .mimeType("text/html;profile=mcp-app")
+            .build();
+    var builder =
+        McpServer.sync(transport)
+            .serverInfo("docs-example", "1.0.0")
+            .capabilities(
+                McpSchema.ServerCapabilities.builder().tools(false).resources(false, false).build())
+            .resources(
+                new McpStatelessServerFeatures.SyncResourceSpecification(
+                    resource,
+                    (exchange, request) ->
+                        new McpSchema.ReadResourceResult(
+                            List.of(
+                                new McpSchema.TextResourceContents(
+                                    resource.uri(),
+                                    resource.mimeType(),
+                                    html,
+                                    Map.of(
+                                        "ui",
+                                        Map.of(
+                                            "prefersBorder",
+                                            true,
+                                            "domain",
+                                            "https://example.com",
+                                            "csp",
+                                            Map.of(
+                                                "connectDomains",
+                                                    List.of("https://api.example.com"),
+                                                "resourceDomains",
+                                                    List.of("https://static.example.com")))))))));
+    builder.toolCall(
+        McpSchema.Tool.builder()
+            .name("open_project_board")
+            .title("Open project board")
+            .inputSchema(mapper, "{\"type\":\"object\",\"properties\":{}}")
+            .meta(Map.of("ui", Map.of("resourceUri", resource.uri())))
+            .build(),
+        (exchange, request) ->
+            McpSchema.CallToolResult.builder()
+                .addTextContent("Review the tasks in the project board.")
+                .isError(false)
+                .build());
+    var server = builder.build();
+    var httpServer = new org.eclipse.jetty.server.Server();
+    var connector = new org.eclipse.jetty.server.ServerConnector(httpServer);
+    connector.setHost("127.0.0.1");
+    connector.setPort(3000);
+    httpServer.addConnector(connector);
+    var context = new org.eclipse.jetty.ee10.servlet.ServletContextHandler();
+    context.setContextPath("/");
+    context.addServlet(new org.eclipse.jetty.ee10.servlet.ServletHolder(transport), "/mcp");
+    httpServer.setHandler(context);
+    try {
+      httpServer.start();
+      httpServer.join();
+    } finally {
+      try {
+        server.closeGracefully().block();
+      } finally {
+        httpServer.stop();
+      }
+    }
+  }
 }
 ```
 
@@ -27829,9 +28107,203 @@ structuredContent: {},
 
 ````
 
-   Example: tool that requires authentication
+```go
+// Descriptor-only fixture; tool responses illustrate results without storage.
 
-   ```typescript
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/modelcontextprotocol/go-sdk/mcp"
+)
+
+type toolInput struct {
+	Q *string `json:"q"`
+}
+
+func main() {
+	server := mcp.NewServer(&mcp.Implementation{Name: "auth-example", Version: "1.0.0"}, nil)
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "search",
+		Title:       "Public Search",
+		Description: "Search public documents.",
+		InputSchema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{"q": map[string]any{"type": "string"}},
+			"required":   []string{"q"},
+		},
+		OutputSchema: map[string]any{"type": "object", "properties": map[string]any{}},
+		Meta: mcp.Meta{
+			"securitySchemes": []map[string]any{
+				{"type": "noauth"},
+				{
+					"type":   "oauth2",
+					"scopes": []string{"search.read"},
+				},
+			},
+		},
+	}, func(_ context.Context, _ *mcp.CallToolRequest, input toolInput) (*mcp.CallToolResult, struct{}, error) {
+		if input.Q == nil {
+			return nil, struct{}{}, fmt.Errorf("q must be a string")
+		}
+		return &mcp.CallToolResult{
+			Content: []mcp.Content{&mcp.TextContent{Text: "Results for " + *input.Q}},
+		}, struct{}{}, nil
+	})
+
+	// Descriptor demonstration: no document lookup or storage. Stdio is for
+	// local MCP clients. A hosted ChatGPT app needs authenticated HTTP transport
+	// and an OAuth provider enforcing the advertised scopes.
+	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
+		log.Fatal(err)
+	}
+}
+````
+
+```java
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.modelcontextprotocol.json.jackson2.JacksonMcpJsonMapper;
+import io.modelcontextprotocol.server.McpServer;
+import io.modelcontextprotocol.server.transport.StdioServerTransportProvider;
+import io.modelcontextprotocol.spec.McpSchema;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+
+public final class AppsSdkAuthTriggeringAuthenticationUiExample {
+  public static void main(String[] args) throws Exception {
+    var closed = new CountDownLatch(1);
+    var input =
+        new FilterInputStream(System.in) {
+          @Override
+          public int read(byte[] bytes, int offset, int length) throws IOException {
+            int count = super.read(bytes, offset, length);
+            if (count == -1) closed.countDown();
+            return count;
+          }
+        };
+
+    var mapper = new JacksonMcpJsonMapper(JsonMapper.builder().build());
+    var transport = new StdioServerTransportProvider(mapper, input, System.out);
+    var tool =
+        McpSchema.Tool.builder()
+            .name("search")
+            .title("Public Search")
+            .description("Search public documents.")
+            .inputSchema(
+                mapper,
+                """
+                {"type":"object","properties":{"q":{"type":"string"}},"required":["q"]}
+                """)
+            .outputSchema(
+                mapper,
+                """
+                {"type":"object","properties":{}}
+                """)
+            .meta(
+                Map.of(
+                    "securitySchemes",
+                    List.of(
+                        Map.of("type", "noauth"),
+                        Map.of("type", "oauth2", "scopes", List.of("search.read")))))
+            .build();
+    var server =
+        McpServer.sync(transport)
+            .serverInfo("auth-example", "1.0.0")
+            .capabilities(McpSchema.ServerCapabilities.builder().tools(false).build())
+            .toolCall(
+                tool,
+                (exchange, request) -> {
+                  if (request.arguments() == null
+                      || !(request.arguments().get("q") instanceof String value)) {
+                    return McpSchema.CallToolResult.builder()
+                        .isError(true)
+                        .addTextContent("q must be a string")
+                        .build();
+                  }
+                  return McpSchema.CallToolResult.builder()
+                      .addTextContent("Results for " + value)
+                      .structuredContent(Map.of())
+                      .isError(false)
+                      .build();
+                })
+            .build();
+
+    // Descriptor demonstration: no document storage or lookup. Stdio supports
+    // local MCP clients. Hosted ChatGPT authentication requires an authenticated
+    // HTTP transport and an OAuth provider enforcing the advertised scopes.
+    try {
+      closed.await();
+    } finally {
+      server.closeGracefully();
+    }
+  }
+}
+```
+
+```ruby
+# Descriptor-only fixture; no document lookup or storage.
+# The tool response below illustrates a successful response without performing it.
+
+require "mcp"
+
+class PublicSearchTool < MCP::Tool
+  tool_name("search")
+  title("Public Search")
+  description("Search public documents.")
+  input_schema(
+    {
+      type: "object",
+      properties: { q: { type: "string" } },
+      required: ["q"]
+    }
+  )
+  output_schema(
+    {
+      type: "object",
+      properties: {}
+    }
+  )
+  meta(
+    {
+      securitySchemes: [
+        { type: "noauth" },
+        {
+          type: "oauth2",
+          scopes: ["search.read"]
+        }
+      ]
+    }
+  )
+
+  def self.call(q:, **_context)
+    raise ArgumentError, "q must be a string" unless q.is_a?(String)
+
+    MCP::Tool::Response.new(
+      [
+        {
+          type: "text",
+          text: "Results for #{q}"
+        }
+      ],
+      structured_content: {}
+    )
+  end
+end
+
+server = MCP::Server.new(
+  name: "auth-example",
+  version: "1.0.0",
+  tools: [PublicSearchTool]
+)
+```
+
+Example: tool that requires authentication
+
+```typescript
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
@@ -27857,7 +28329,190 @@ server.registerTool(
     };
   }
 );
-````
+```
+
+```go
+// Descriptor-only fixture; tool responses illustrate results without storage.
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/modelcontextprotocol/go-sdk/mcp"
+)
+
+type toolInput struct {
+	Title *string `json:"title"`
+}
+
+func main() {
+	server := mcp.NewServer(&mcp.Implementation{Name: "auth-example", Version: "1.0.0"}, nil)
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "create_doc",
+		Title:       "Create Document",
+		Description: "Make a new doc in your account.",
+		InputSchema: map[string]any{
+			"type":       "object",
+			"properties": map[string]any{"title": map[string]any{"type": "string"}},
+			"required":   []string{"title"},
+		},
+		OutputSchema: map[string]any{"type": "object", "properties": map[string]any{}},
+		Meta:         mcp.Meta{"securitySchemes": []map[string]any{{"type": "oauth2", "scopes": []string{"docs.write"}}}},
+	}, func(_ context.Context, _ *mcp.CallToolRequest, input toolInput) (*mcp.CallToolResult, struct{}, error) {
+		if input.Title == nil {
+			return nil, struct{}{}, fmt.Errorf("title must be a string")
+		}
+		return &mcp.CallToolResult{
+			Content: []mcp.Content{&mcp.TextContent{Text: "Created doc: " + *input.Title}},
+		}, struct{}{}, nil
+	})
+
+	// Descriptor demonstration: no document lookup or storage. Stdio is for
+	// local MCP clients. A hosted ChatGPT app needs authenticated HTTP transport
+	// and an OAuth provider enforcing the advertised scopes.
+	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+```java
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.modelcontextprotocol.json.jackson2.JacksonMcpJsonMapper;
+import io.modelcontextprotocol.server.McpServer;
+import io.modelcontextprotocol.server.transport.StdioServerTransportProvider;
+import io.modelcontextprotocol.spec.McpSchema;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+
+public final class AppsSdkAuthTriggeringAuthenticationUi2Example {
+  public static void main(String[] args) throws Exception {
+    var closed = new CountDownLatch(1);
+    var input =
+        new FilterInputStream(System.in) {
+          @Override
+          public int read(byte[] bytes, int offset, int length) throws IOException {
+            int count = super.read(bytes, offset, length);
+            if (count == -1) closed.countDown();
+            return count;
+          }
+        };
+
+    var mapper = new JacksonMcpJsonMapper(JsonMapper.builder().build());
+    var transport = new StdioServerTransportProvider(mapper, input, System.out);
+    var tool =
+        McpSchema.Tool.builder()
+            .name("create_doc")
+            .title("Create Document")
+            .description("Make a new doc in your account.")
+            .inputSchema(
+                mapper,
+                """
+                {"type":"object","properties":{"title":{"type":"string"}},"required":["title"]}
+                """)
+            .outputSchema(
+                mapper,
+                """
+                {"type":"object","properties":{}}
+                """)
+            .meta(
+                Map.of(
+                    "securitySchemes",
+                    List.of(Map.of("type", "oauth2", "scopes", List.of("docs.write")))))
+            .build();
+    var server =
+        McpServer.sync(transport)
+            .serverInfo("auth-example", "1.0.0")
+            .capabilities(McpSchema.ServerCapabilities.builder().tools(false).build())
+            .toolCall(
+                tool,
+                (exchange, request) -> {
+                  if (request.arguments() == null
+                      || !(request.arguments().get("title") instanceof String value)) {
+                    return McpSchema.CallToolResult.builder()
+                        .isError(true)
+                        .addTextContent("title must be a string")
+                        .build();
+                  }
+                  return McpSchema.CallToolResult.builder()
+                      .addTextContent("Created doc: " + value)
+                      .structuredContent(Map.of())
+                      .isError(false)
+                      .build();
+                })
+            .build();
+
+    // Descriptor demonstration: no document storage or lookup. Stdio supports
+    // local MCP clients. Hosted ChatGPT authentication requires an authenticated
+    // HTTP transport and an OAuth provider enforcing the advertised scopes.
+    try {
+      closed.await();
+    } finally {
+      server.closeGracefully();
+    }
+  }
+}
+```
+
+```ruby
+# Descriptor-only fixture; no document lookup or storage.
+# The tool response below illustrates a successful response without performing it.
+
+require "mcp"
+
+class CreateDocTool < MCP::Tool
+  tool_name("create_doc")
+  title("Create Document")
+  description("Make a new doc in your account.")
+  input_schema(
+    {
+      type: "object",
+      properties: { title: { type: "string" } },
+      required: ["title"]
+    }
+  )
+  output_schema(
+    {
+      type: "object",
+      properties: {}
+    }
+  )
+  meta(
+    {
+      securitySchemes: [
+        {
+          type: "oauth2",
+          scopes: ["docs.write"]
+        }
+      ]
+    }
+  )
+
+  def self.call(title:, **_context)
+    raise ArgumentError, "title must be a string" unless title.is_a?(String)
+
+    MCP::Tool::Response.new(
+      [
+        {
+          type: "text",
+          text: "Created doc: #{title}"
+        }
+      ],
+      structured_content: {}
+    )
+  end
+end
+
+server = MCP::Server.new(
+  name: "auth-example",
+  version: "1.0.0",
+  tools: [CreateDocTool]
+)
+```
 
 3. **Check tokens inside the tool handler and emit `_meta["mcp/www_authenticate"]`** when you want ChatGPT to trigger the authentication UI. Inspect the token and verify issuer, audience, expiry, and scopes. If no valid token is present, return an error result that includes `_meta["mcp/www_authenticate"]` and make sure the value contains both an `error` and `error_description` parameter. This `WWW-Authenticate` payload is what actually triggers the tool-level OAuth UI once steps 1 and 2 are in place. When a challenge prompts reauthorization, your provider can [preserve the user's existing login context](#preserve-login-context-during-reauthorization) during that flow.
 
@@ -35300,6 +35955,56 @@ func partSelectionSchema(parts []map[string]string) map[string]any {
 }
 ```
 
+```java
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public final class AppsSdkExtendedForms {
+  public record PartChoice(@JsonProperty("const") String value, String title) {}
+
+  public static Map<String, Object> partSelectionSchema(List<PartChoice> parts) {
+    var part = new LinkedHashMap<String, Object>();
+    part.put("type", "string");
+    part.put("title", "Part");
+    part.put("oneOf", List.copyOf(parts));
+    var schema = new LinkedHashMap<String, Object>();
+    schema.put("type", "object");
+    schema.put("properties", Map.of("part", part));
+    schema.put("required", List.of("part"));
+    return schema;
+  }
+
+  public static void main(String[] args) throws Exception {
+    var parts = List.of(new PartChoice("gear", "Gear"));
+    System.out.println(JsonMapper.builder().build().writeValueAsString(partSelectionSchema(parts)));
+  }
+}
+```
+
+```csharp
+using System.Text.Json;
+
+PartChoice[] parts = [new("gear", "Gear")];
+Console.WriteLine(JsonSerializer.Serialize(PartSelectionSchema(parts)));
+
+static object PartSelectionSchema(IReadOnlyList<PartChoice> parts) => new
+{
+    type = "object",
+    properties = new
+    {
+        part = new { type = "string", title = "Part", oneOf = parts },
+    },
+    required = new[] { "part" },
+};
+
+internal sealed record PartChoice(
+    [property: System.Text.Json.Serialization.JsonPropertyName("const")] string Value,
+    [property: System.Text.Json.Serialization.JsonPropertyName("title")] string Title);
+```
+
 ```ruby
 def part_selection_schema(parts)
   {
@@ -36697,6 +37402,153 @@ func main() {
 }
 ```
 
+```java
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.modelcontextprotocol.json.jackson2.JacksonMcpJsonMapper;
+import io.modelcontextprotocol.server.McpServer;
+import io.modelcontextprotocol.server.McpStatelessServerFeatures;
+import io.modelcontextprotocol.server.transport.DefaultServerTransportSecurityValidator;
+import io.modelcontextprotocol.server.transport.HttpServletStatelessServerTransport;
+import io.modelcontextprotocol.spec.McpSchema;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+// UI asset build from src/content/platform/java-examples:
+// ../typescript-examples/node_modules/.bin/esbuild \
+//   ../typescript-examples/support/result-widget.ts \
+//   --bundle --format=esm --outfile=widget.js
+public final class AppsSdkReferenceToolDescriptorExample {
+  public static void main(String[] args) throws Exception {
+    var json = JsonMapper.builder().build();
+    var mapper = new JacksonMcpJsonMapper(json);
+    var transport =
+        HttpServletStatelessServerTransport.builder()
+            .jsonMapper(mapper)
+            .messageEndpoint("/mcp")
+            .securityValidator(
+                DefaultServerTransportSecurityValidator.builder()
+                    .allowedHosts(List.of("localhost:*", "127.0.0.1:*"))
+                    .allowedOrigins(List.of("http://localhost:6274", "http://127.0.0.1:6274"))
+                    .build())
+            .build();
+    // Build support/result-widget.ts as widget.js in the working directory first.
+    String script = Files.readString(Path.of("widget.js"));
+    if (script.isBlank())
+      throw new IllegalArgumentException("widget.js must contain the built browser component");
+    String escaped =
+        Pattern.compile("</script", Pattern.CASE_INSENSITIVE)
+            .matcher(script)
+            .replaceAll(Matcher.quoteReplacement("<\\/script"));
+    String html =
+        "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>Tool"
+            + " result</title><body><div id=\"root\"></div><script type=\"module\">"
+            + escaped
+            + "</script></body></html>";
+    var resource =
+        McpSchema.Resource.builder()
+            .name("widget")
+            .uri("ui://widget/story.html")
+            .mimeType("text/html;profile=mcp-app")
+            .build();
+    var tool =
+        McpSchema.Tool.builder()
+            .name("search")
+            .title("Public Search")
+            .description("Search public documents.")
+            .inputSchema(
+                mapper,
+                """
+                {"type":"object","properties":{"q":{"type":"string"}},"required":["q"],"additionalProperties":false}
+                """)
+            // These are discovery hints; this public data example does not implement OAuth.
+            .meta(
+                Map.of(
+                    "securitySchemes",
+                    List.of(
+                        Map.of("type", "noauth"),
+                        Map.of("type", "oauth2", "scopes", List.of("search.read"))),
+                    "ui",
+                    Map.of("resourceUri", resource.uri()),
+                    "openai/toolInvocation/invoking",
+                    "Searching…",
+                    "openai/toolInvocation/invoked",
+                    "Results ready"))
+            .build();
+    var server =
+        McpServer.sync(transport)
+            .serverInfo("docs-example", "1.0.0")
+            .capabilities(
+                McpSchema.ServerCapabilities.builder().tools(false).resources(false, false).build())
+            .resources(
+                new McpStatelessServerFeatures.SyncResourceSpecification(
+                    resource,
+                    (exchange, request) ->
+                        new McpSchema.ReadResourceResult(
+                            List.of(
+                                new McpSchema.TextResourceContents(
+                                    resource.uri(), resource.mimeType(), html)))))
+            .toolCall(
+                tool,
+                (exchange, request) -> {
+                  Object query = request.arguments() == null ? null : request.arguments().get("q");
+                  if (!(query instanceof String q))
+                    return McpSchema.CallToolResult.builder()
+                        .isError(true)
+                        .addTextContent("q must be a string")
+                        .build();
+                  // Public example data; replace with your application's search.
+                  var documents =
+                      List.of(
+                          Map.of(
+                              "id",
+                              "intro",
+                              "title",
+                              "Introduction to Acme",
+                              "url",
+                              "https://example.com/intro"));
+                  var results =
+                      documents.stream()
+                          .filter(
+                              item ->
+                                  item.get("title")
+                                      .toLowerCase(Locale.ROOT)
+                                      .contains(q.toLowerCase(Locale.ROOT)))
+                          .toList();
+                  return McpSchema.CallToolResult.builder()
+                      .structuredContent(Map.of("results", results))
+                      .addTextContent("Found " + results.size() + " results.")
+                      .isError(false)
+                      .build();
+                })
+            .build();
+    var httpServer = new org.eclipse.jetty.server.Server();
+    var connector = new org.eclipse.jetty.server.ServerConnector(httpServer);
+    connector.setHost("127.0.0.1");
+    connector.setPort(3000);
+    httpServer.addConnector(connector);
+    var context = new org.eclipse.jetty.ee10.servlet.ServletContextHandler();
+    context.setContextPath("/");
+    context.addServlet(new org.eclipse.jetty.ee10.servlet.ServletHolder(transport), "/mcp");
+    httpServer.setHandler(context);
+    try {
+      httpServer.start();
+      httpServer.join();
+    } finally {
+      try {
+        server.closeGracefully().block();
+      } finally {
+        httpServer.stop();
+      }
+    }
+  }
+}
+```
+
 ```ruby
 require "mcp"
 
@@ -36912,6 +37764,145 @@ func main() {
 		log.Fatal(err)
 	}
 }
+```
+
+```java
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.modelcontextprotocol.json.jackson2.JacksonMcpJsonMapper;
+import io.modelcontextprotocol.server.McpServer;
+import io.modelcontextprotocol.server.McpSyncServer;
+import io.modelcontextprotocol.server.transport.StdioServerTransportProvider;
+import io.modelcontextprotocol.spec.McpSchema;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+
+public final class AppsSdkReferenceAnnotationsExample {
+  public static McpSyncServer createServer(InputStream input) throws Exception {
+    var json = JsonMapper.builder().build();
+    var mapper = new JacksonMcpJsonMapper(json);
+    var transport = new StdioServerTransportProvider(mapper, input, System.out);
+    var tool =
+        McpSchema.Tool.builder()
+            .name("list_saved_recipes")
+            .title("List saved recipes")
+            .description("Returns the user's saved recipes without modifying them.")
+            .inputSchema(
+                mapper,
+                """
+                {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": false
+                }
+                """)
+            .outputSchema(
+                mapper,
+                """
+                {
+                  "type": "object",
+                  "properties": {
+                    "recipes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {"type": "string"},
+                          "title": {"type": "string"}
+                        },
+                        "required": ["id", "title"]
+                      }
+                    }
+                  },
+                  "required": ["recipes"]
+                }
+                """)
+            .annotations(
+                json.readValue(
+                    """
+                    {"readOnlyHint": true}
+                    """,
+                    McpSchema.ToolAnnotations.class))
+            .build();
+    return McpServer.sync(transport)
+        .serverInfo("docs-example", "1.0.0")
+        .capabilities(McpSchema.ServerCapabilities.builder().tools(false).build())
+        .toolCall(
+            tool,
+            (exchange, request) -> {
+              // Local example data; replace with your application's saved recipes.
+              var output =
+                  Map.of("recipes", List.of(Map.of("id", "pasta", "title", "Tomato pasta")));
+              return McpSchema.CallToolResult.builder()
+                  .structuredContent(output)
+                  .addTextContent(json.valueToTree(output).toString())
+                  .isError(false)
+                  .build();
+            })
+        .build();
+  }
+
+}
+```
+
+```csharp
+using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using ModelContextProtocol.Protocol;
+
+var builder = Host.CreateApplicationBuilder();
+// Reserve stdout for the MCP transport.
+builder.Logging.ClearProviders();
+// Native MCP DTO parsing preserves the schema and exact _meta wire names.
+Tool tool = JsonSerializer.Deserialize<Tool>("""
+    {
+      "name": "list_saved_recipes",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "description": "Returns the user's saved recipes without modifying them.",
+      "annotations": {
+        "readOnlyHint": true
+      }
+    }
+    """) ?? throw new InvalidOperationException("Unable to construct the tool descriptor.");
+var mcp = builder.Services.AddMcpServer(options =>
+{
+    options.ServerInfo = new() { Name = "docs-example", Version = "1.0.0" };
+}).WithStdioServerTransport()
+.WithListToolsHandler((request, cancellationToken) => ValueTask.FromResult(new ListToolsResult { Tools = [tool] }))
+.WithCallToolHandler((request, cancellationToken) =>
+{
+    if (request.Params?.Name != "list_saved_recipes")
+    {
+        return ValueTask.FromResult(Error("Unknown tool."));
+    }
+    // Local example data; replace with your application's saved recipes.
+    var output = new { recipes = new[] { new { id = "pasta", title = "Tomato pasta" } } };
+    return ValueTask.FromResult(Result(output, JsonSerializer.Serialize(output)));
+});
+using IHost host = builder.Build();
+await host.RunAsync();
+
+// Use the SDK's protocol DTOs; the SDK owns serialization and stdio framing.
+static CallToolResult Result(object output, string text) =>
+    JsonSerializer.Deserialize<CallToolResult>(JsonSerializer.Serialize(new
+    {
+        content = new[] { new { type = "text", text } },
+        structuredContent = output,
+        isError = false,
+    })) ?? throw new InvalidOperationException("Unable to construct the tool result.");
+
+static CallToolResult Error(string text) =>
+    JsonSerializer.Deserialize<CallToolResult>(JsonSerializer.Serialize(new
+    {
+        content = new[] { new { type = "text", text } },
+        isError = true,
+    })) ?? throw new InvalidOperationException("Unable to construct the error result.");
 ```
 
 ```ruby
@@ -37140,6 +38131,149 @@ func main() {
 	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
 		log.Fatal(err)
 	}
+}
+```
+
+```java
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.modelcontextprotocol.json.jackson2.JacksonMcpJsonMapper;
+import io.modelcontextprotocol.server.McpServer;
+import io.modelcontextprotocol.server.McpStatelessServerFeatures;
+import io.modelcontextprotocol.server.transport.DefaultServerTransportSecurityValidator;
+import io.modelcontextprotocol.server.transport.HttpServletStatelessServerTransport;
+import io.modelcontextprotocol.spec.McpSchema;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+// UI asset build from src/content/platform/java-examples:
+// ../typescript-examples/node_modules/.bin/esbuild \
+//   ../typescript-examples/support/result-widget.ts \
+//   --bundle --format=esm --outfile=widget.js
+public final class AppsSdkReferenceToolResultsExample {
+  public static void main(String[] args) throws Exception {
+    var json = JsonMapper.builder().build();
+    var mapper = new JacksonMcpJsonMapper(json);
+    var transport =
+        HttpServletStatelessServerTransport.builder()
+            .jsonMapper(mapper)
+            .messageEndpoint("/mcp")
+            .securityValidator(
+                DefaultServerTransportSecurityValidator.builder()
+                    .allowedHosts(List.of("localhost:*", "127.0.0.1:*"))
+                    .allowedOrigins(List.of("http://localhost:6274", "http://127.0.0.1:6274"))
+                    .build())
+            .build();
+    // Build support/result-widget.ts as widget.js in the working directory first.
+    String script = Files.readString(Path.of("widget.js"));
+    if (script.isBlank())
+      throw new IllegalArgumentException("widget.js must contain the built browser component");
+    String escaped =
+        Pattern.compile("</script", Pattern.CASE_INSENSITIVE)
+            .matcher(script)
+            .replaceAll(Matcher.quoteReplacement("<\\/script"));
+    String html =
+        "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>Tool"
+            + " result</title><body><div id=\"root\"></div><script type=\"module\">"
+            + escaped
+            + "</script></body></html>";
+    var resource =
+        McpSchema.Resource.builder()
+            .name("widget")
+            .uri("ui://widget/widget.html")
+            .mimeType("text/html;profile=mcp-app")
+            .build();
+    var tool =
+        McpSchema.Tool.builder()
+            .name("get_zoo_animals")
+            .inputSchema(
+                mapper,
+                """
+                {"type":"object","properties":{"count":{"type":"integer","minimum":1,"maximum":20}},"additionalProperties":false}
+                """)
+            .meta(Map.of("ui", Map.of("resourceUri", resource.uri())))
+            .build();
+    var server =
+        McpServer.sync(transport)
+            .serverInfo("docs-example", "1.0.0")
+            .capabilities(
+                McpSchema.ServerCapabilities.builder().tools(false).resources(false, false).build())
+            .resources(
+                new McpStatelessServerFeatures.SyncResourceSpecification(
+                    resource,
+                    (exchange, request) ->
+                        new McpSchema.ReadResourceResult(
+                            List.of(
+                                new McpSchema.TextResourceContents(
+                                    resource.uri(), resource.mimeType(), html)))))
+            .toolCall(
+                tool,
+                (exchange, request) -> {
+                  Object raw =
+                      request.arguments() == null
+                          ? 10
+                          : request.arguments().getOrDefault("count", 10);
+                  // Reject fractional values, strings, booleans and null, as well as out-of-range
+                  // counts.
+                  Integer count = animalCount(raw);
+                  if (count == null)
+                    return McpSchema.CallToolResult.builder()
+                        .isError(true)
+                        .addTextContent("count must be an integer between 1 and 20")
+                        .build();
+                  // Local example data; replace with your application's zoo data.
+                  var animals = new ArrayList<Map<String, String>>();
+                  var byId = new LinkedHashMap<String, Map<String, String>>();
+                  for (int i = 1; i <= count; i++) {
+                    var animal =
+                        Map.of("id", "animal-" + i, "name", "Penguin " + i, "species", "Penguin");
+                    animals.add(animal);
+                    byId.put(animal.get("id"), animal);
+                  }
+                  return McpSchema.CallToolResult.builder()
+                      .structuredContent(Map.of("animals", animals))
+                      .addTextContent("Here are " + count + " animals.")
+                      // Component-only metadata stays separate from model-visible content.
+                      .meta(Map.of("allAnimalsById", byId))
+                      .isError(false)
+                      .build();
+                })
+            .build();
+    var httpServer = new org.eclipse.jetty.server.Server();
+    var connector = new org.eclipse.jetty.server.ServerConnector(httpServer);
+    connector.setHost("127.0.0.1");
+    connector.setPort(3000);
+    httpServer.addConnector(connector);
+    var context = new org.eclipse.jetty.ee10.servlet.ServletContextHandler();
+    context.setContextPath("/");
+    context.addServlet(new org.eclipse.jetty.ee10.servlet.ServletHolder(transport), "/mcp");
+    httpServer.setHandler(context);
+    try {
+      httpServer.start();
+      httpServer.join();
+    } finally {
+      try {
+        server.closeGracefully().block();
+      } finally {
+        httpServer.stop();
+      }
+    }
+  }
+
+  static Integer animalCount(Object value) {
+    if (!(value instanceof Number)) return null;
+    try {
+      int count = new java.math.BigDecimal(value.toString()).intValueExact();
+      return count >= 1 && count <= 20 ? count : null;
+    } catch (NumberFormatException | ArithmeticException error) {
+      return null;
+    }
+  }
 }
 ```
 
@@ -37403,6 +38537,168 @@ func main() {
 		log.Fatal(err)
 	}
 }
+```
+
+```java
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.modelcontextprotocol.json.jackson2.JacksonMcpJsonMapper;
+import io.modelcontextprotocol.server.McpServer;
+import io.modelcontextprotocol.server.McpSyncServer;
+import io.modelcontextprotocol.server.transport.StdioServerTransportProvider;
+import io.modelcontextprotocol.spec.McpSchema;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Map;
+
+public final class AppsSdkReferenceClientMetadataExample {
+  public static McpSyncServer createServer(InputStream input) {
+    var json = JsonMapper.builder().build();
+    var mapper = new JacksonMcpJsonMapper(json);
+    var transport = new StdioServerTransportProvider(mapper, input, System.out);
+    var tool =
+        McpSchema.Tool.builder()
+            .name("recommend_cafe")
+            .title("Recommend a cafe")
+            .inputSchema(
+                mapper,
+                """
+                {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": false
+                }
+                """)
+            .outputSchema(
+                mapper,
+                """
+                {
+                  "type": "object",
+                  "properties": {
+                    "cafes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {"type": "string"},
+                          "address": {"type": "string"}
+                        },
+                        "required": ["name", "address"]
+                      }
+                    }
+                  },
+                  "required": ["cafes"]
+                }
+                """)
+            .build();
+    return McpServer.sync(transport)
+        .serverInfo("docs-example", "1.0.0")
+        .capabilities(McpSchema.ServerCapabilities.builder().tools(false).build())
+        .toolCall(
+            tool,
+            (exchange, request) -> {
+              Map<String, Object> meta = request.meta() == null ? Map.of() : request.meta();
+              // Client locale and location are hints, never authorization inputs.
+              String city = "your area";
+              if (meta.get("openai/userLocation") instanceof Map<?, ?> location
+                  && location.get("city") instanceof String value
+                  && !value.isBlank()) {
+                city = value;
+              }
+              String prefix = "es".equals(meta.get("openai/locale")) ? "Cafés en " : "Cafes in ";
+              // Local example data; replace with your application's cafe search.
+              var cafes = new ArrayList<Map<String, String>>();
+              if ("San Francisco".equals(city)) {
+                cafes.add(
+                    Map.of("name", "Example Cafe", "address", "123 Example Street, San Francisco"));
+              }
+              return McpSchema.CallToolResult.builder()
+                  .structuredContent(Map.of("cafes", cafes))
+                  .addTextContent(prefix + city)
+                  .isError(false)
+                  .build();
+            })
+        .build();
+  }
+
+}
+```
+
+```csharp
+using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using ModelContextProtocol.Protocol;
+
+var builder = Host.CreateApplicationBuilder();
+// Reserve stdout for the MCP transport.
+builder.Logging.ClearProviders();
+// Native MCP DTO parsing preserves the schema and exact _meta wire names.
+Tool tool = JsonSerializer.Deserialize<Tool>("""
+    {
+      "name": "recommend_cafe",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+    """) ?? throw new InvalidOperationException("Unable to construct the tool descriptor.");
+var mcp = builder.Services.AddMcpServer(options =>
+{
+    options.ServerInfo = new() { Name = "docs-example", Version = "1.0.0" };
+}).WithStdioServerTransport()
+.WithListToolsHandler((request, cancellationToken) => ValueTask.FromResult(new ListToolsResult { Tools = [tool] }))
+.WithCallToolHandler((request, cancellationToken) =>
+{
+    if (request.Params?.Name != "recommend_cafe")
+    {
+        return ValueTask.FromResult(Error("Unknown tool."));
+    }
+    // Treat locale and location as untrusted hints, never as authorization.
+    JsonElement parameters = JsonSerializer.SerializeToElement(request.Params);
+    string city = "your area";
+    string locale = "en";
+    if (parameters.TryGetProperty("_meta", out JsonElement meta) && meta.ValueKind == JsonValueKind.Object)
+    {
+        if (meta.TryGetProperty("openai/locale", out JsonElement value) && value.ValueKind == JsonValueKind.String)
+        {
+            locale = value.GetString()!;
+        }
+        if (meta.TryGetProperty("openai/userLocation", out JsonElement location) && location.ValueKind == JsonValueKind.Object &&
+            location.TryGetProperty("city", out JsonElement name) && name.ValueKind == JsonValueKind.String &&
+            !string.IsNullOrWhiteSpace(name.GetString()))
+        {
+            city = name.GetString()!;
+        }
+    }
+    // Local example data; replace with your application's cafe search.
+    var cafes = new List<object>();
+    if (city == "San Francisco")
+    {
+        cafes.Add(new { name = "Example Cafe", address = "123 Example Street, San Francisco" });
+    }
+    string prefix = locale == "es" ? "Cafés en " : "Cafes in ";
+    return ValueTask.FromResult(Result(new { cafes }, prefix + city));
+});
+using IHost host = builder.Build();
+await host.RunAsync();
+
+// Use the SDK's protocol DTOs; the SDK owns serialization and stdio framing.
+static CallToolResult Result(object output, string text) =>
+    JsonSerializer.Deserialize<CallToolResult>(JsonSerializer.Serialize(new
+    {
+        content = new[] { new { type = "text", text } },
+        structuredContent = output,
+        isError = false,
+    })) ?? throw new InvalidOperationException("Unable to construct the tool result.");
+
+static CallToolResult Error(string text) =>
+    JsonSerializer.Deserialize<CallToolResult>(JsonSerializer.Serialize(new
+    {
+        content = new[] { new { type = "text", text } },
+        isError = true,
+    })) ?? throw new InvalidOperationException("Unable to construct the error result.");
 ```
 
 ```ruby
